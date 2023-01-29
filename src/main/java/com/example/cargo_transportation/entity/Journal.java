@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -23,4 +25,6 @@ public class Journal {
     private LocalDateTime outFactDate;
     @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal")
+    private List<RenderFavor> renderFavors = new ArrayList<>();
 }

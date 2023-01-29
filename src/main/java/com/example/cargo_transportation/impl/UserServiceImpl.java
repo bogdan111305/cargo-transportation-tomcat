@@ -7,9 +7,8 @@ import com.example.cargo_transportation.exception.UserExistException;
 import com.example.cargo_transportation.payload.request.SignupRequest;
 import com.example.cargo_transportation.repo.UserRepository;
 import com.example.cargo_transportation.service.UserService;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,10 +17,8 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 
 @Service
+@Log4j2
 public class UserServiceImpl implements UserService {
-
-    public static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
-
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ModelMapper modelMapper;
@@ -33,17 +30,17 @@ public class UserServiceImpl implements UserService {
         this.modelMapper = modelMapper;
     }
     @Override
-    public UserDTO creatUser(SignupRequest userDTO){
+    public UserDTO createUser(SignupRequest userDTO){
         User user = modelMapper.map(userDTO, User.class);
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.getRoles().add(ERole.ROLE_USER);
 
         try {
-            LOG.info("Saving User");
+            log.info("Saving User");
             User userCreated = userRepository.save(user);
             return modelMapper.map(userCreated, UserDTO.class);
         }catch (Exception e){
-            LOG.error("Error during registration. {}" + e.getMessage());
+            log.error("Error during registration. {}" + e.getMessage());
             throw new UserExistException("The user "+ user.getUsername() + " already exist.");
         }
     }
@@ -56,11 +53,11 @@ public class UserServiceImpl implements UserService {
         user.setLastname(userDTO.getLastname());
 
         try {
-            LOG.info("Updating User");
-            User userCreated = userRepository.save(user);
-            return modelMapper.map(userCreated, UserDTO.class);
+            log.info("Updating User");
+            User userUpdated = userRepository.save(user);
+            return modelMapper.map(userUpdated, UserDTO.class);
         }catch (Exception e){
-            LOG.error("Error during registration. {}" + e.getMessage());
+            log.error("Error during registration. {}" + e.getMessage());
             throw new UserExistException("The user "+ user.getUsername() + " already exist.");
         }
     }
@@ -69,10 +66,10 @@ public class UserServiceImpl implements UserService {
         User user = getUserById(userId);
 
         try {
-            LOG.info("Deleting User");
+            log.info("Deleting User");
             userRepository.delete(user);
         }catch (Exception e){
-            LOG.error("Error during registration. {}" + e.getMessage());
+            log.error("Error during registration. {}" + e.getMessage());
             throw new UserExistException("The user "+ user.getUsername() + " already exist.");
         }
     }

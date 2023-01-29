@@ -5,12 +5,14 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Service {
+public class RenderFavor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Favor favor;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Journal journal;
     @Column(nullable = false)
-    private String name;
-    @Column(nullable = false)
-    private String description;
+    private Integer count;
 }

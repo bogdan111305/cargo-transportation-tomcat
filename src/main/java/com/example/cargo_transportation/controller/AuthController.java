@@ -39,7 +39,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public UserDTO registerUser(@Valid @RequestBody SignupRequest signupRequest){
-        return userService.creatUser(signupRequest);
+        return userService.createUser(signupRequest);
     }
 }
 

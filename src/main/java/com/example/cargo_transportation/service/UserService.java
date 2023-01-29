@@ -7,7 +7,7 @@ import com.example.cargo_transportation.payload.request.SignupRequest;
 import java.security.Principal;
 
 public interface UserService {
-    UserDTO creatUser(SignupRequest userDTO);
+    UserDTO createUser(SignupRequest userDTO);
 
     UserDTO updateUser(UserDTO userDTO, Principal principal);
 
