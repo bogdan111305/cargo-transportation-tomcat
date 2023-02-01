@@ -48,7 +48,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car getCarById(Long carId) {
         return carRepository.findCarById(carId)
-                .orElseThrow(() -> new EntityNotFoundException("Car not found with id" + carId));
+                .orElseThrow(() -> new EntityNotFoundException("Car not found with id: " + carId));
     }
 
     @Override
@@ -58,14 +58,8 @@ public class CarServiceImpl implements CarService {
         Car car = modelMapper.map(carDTO, Car.class);
         car.setClient(client);
 
-        try {
-            log.info("Saving Car.");
-            car = carRepository.save(car);
-            log.info("The car was saved successfully.");
-        }catch (Exception e) {
-            log.error("Error during registration. {}" + e.getMessage());
-            throw new EntityConversionException("Car registration error.");
-        }
+        car = carRepository.save(car);
+        log.info("The car: {} is created" + car.getGosNum());
 
         return modelMapper.map(car, CarDTO.class);
     }
@@ -78,19 +72,13 @@ public class CarServiceImpl implements CarService {
         car.setSTS(carDTO.getSTS());
         car.setModel(carDTO.getModel());
 
-        if (car.getClient().equals(carDTO.getClientId())) {
+        if (!car.getClient().getId().equals(carDTO.getClientId())) {
             Client client = clientService.getClientById(carDTO.getClientId());
             car.setClient(client);
         }
 
-        try {
-            log.info("Updating Car");
-            car = carRepository.save(car);
-            log.info("The car was updated successfully.");
-        }catch (Exception e) {
-            log.error("Error during updating. {}" + e.getMessage());
-            throw new EntityConversionException("Car updating error.");
-        }
+        car = carRepository.save(car);
+        log.info("The car: {} is updated" + car.getGosNum());
 
         return modelMapper.map(car, CarDTO.class);
     }
@@ -99,13 +87,7 @@ public class CarServiceImpl implements CarService {
     public void deleteCar(Long carId) {
         Car car = getCarById(carId);
 
-        try {
-            log.info("Deleting Car");
-            carRepository.delete(car);
-            log.info("The car was deleted successfully.");
-        }catch (Exception e){
-            log.error("Error during deleting. {}" + e.getMessage());
-            throw new EntityConversionException("Car deleting error.");
-        }
+        carRepository.delete(car);
+        log.info("The car: {} is deleted" + car.getGosNum());
     }
 }
