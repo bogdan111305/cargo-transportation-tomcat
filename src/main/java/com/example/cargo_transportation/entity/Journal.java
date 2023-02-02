@@ -3,13 +3,21 @@ package com.example.cargo_transportation.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
+@Table
 public class Journal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +33,41 @@ public class Journal {
     private LocalDateTime outFactDate;
     @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal")
+
+    @OneToMany(mappedBy = "journal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RenderFavor> renderFavors = new ArrayList<>();
+
+    public void addFavor(Favor favor, Integer count) {
+        RenderFavor renderFavor = new RenderFavor(favor, this, count);
+        renderFavors.add(renderFavor);
+        favor.getRenderFavors().add(renderFavor);
+    }
+
+    public void removeFavor(Favor favor) {
+        List<RenderFavor> removedRenderFavors = new ArrayList<>();
+        for (RenderFavor renderFavor : renderFavors) {
+            if (renderFavor.getJournal().equals(this) && renderFavor.getFavor().equals(favor)) {
+                removedRenderFavors.add(renderFavor);
+                renderFavor.getFavor().getRenderFavors().remove(renderFavor);
+                renderFavor.setFavor(null);
+                renderFavor.setJournal(null);
+            }
+        }
+        renderFavors.removeAll(removedRenderFavors);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Journal journal = (Journal) o;
+        return Objects.equals(id, journal.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, car);
+    }
 }
