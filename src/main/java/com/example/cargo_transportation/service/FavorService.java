@@ -6,15 +6,17 @@ import com.example.cargo_transportation.entity.Favor;
 import java.util.List;
 
 public interface FavorService {
-    List<FavorDTO> getAllFavor();
+    List<FavorDTO> getAllFavor(List<Long> ids);
 
-    List<Favor> getFavorsByIds(List<Long> ids);
+    List<Favor> findFavorsById(List<Long> ids);
 
-    Favor getFavorById(Long favorId);
+    FavorDTO getFavorById(Long favorId);
+
+    Favor findFavorById(Long favorId);
 
     FavorDTO createFavor(FavorDTO favorDTO);
 
-    FavorDTO updateFavor(FavorDTO favorDTO);
+    FavorDTO updateFavor(FavorDTO favorDTO, Long favorId);
 
     void deleteFavor(Long favorId);
 }

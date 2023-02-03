@@ -32,28 +32,32 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<CarDTO> getAllCar() {
-        return carRepository.findAll().stream()
+    public List<CarDTO> getAllCar(List<Long> ids) {
+        List<Car> cars = null;
+        if (ids != null && !ids.isEmpty())
+            cars = carRepository.findAllById(ids);
+        else
+            cars = carRepository.findAll();
+
+        return cars.stream()
                 .map(car -> modelMapper.map(car, CarDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<CarDTO> getCarsByIds(List<Long> ids) {
-        return carRepository.findAllById(ids).stream()
-                .map(car -> modelMapper.map(car, CarDTO.class))
-                .collect(Collectors.toList());
+    public CarDTO getCarById(Long carId) {
+        return modelMapper.map(getCarById(carId), CarDTO.class);
     }
 
     @Override
-    public Car getCarById(Long carId) {
+    public Car findCarById(Long carId) {
         return carRepository.findCarById(carId)
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with id: " + carId));
     }
 
     @Override
     public CarDTO createCar(CarDTO carDTO) {
-        Client client = clientService.getClientById(carDTO.getClientId());
+        Client client = clientService.findClientById(carDTO.getClientId());
 
         Car car = modelMapper.map(carDTO, Car.class);
         car.setClient(client);
@@ -65,15 +69,15 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarDTO updateCar(CarDTO carDTO) {
-        Car car = getCarById(carDTO.getClientId());
+    public CarDTO updateCar(CarDTO carDTO, Long carId) {
+        Car car = findCarById(carId);
 
         car.setGosNum(carDTO.getGosNum());
         car.setSTS(carDTO.getSTS());
         car.setModel(carDTO.getModel());
 
         if (!car.getClient().getId().equals(carDTO.getClientId())) {
-            Client client = clientService.getClientById(carDTO.getClientId());
+            Client client = clientService.findClientById(carDTO.getClientId());
             car.setClient(client);
         }
 
@@ -85,7 +89,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void deleteCar(Long carId) {
-        Car car = getCarById(carId);
+        Car car = findCarById(carId);
 
         carRepository.delete(car);
         log.info("The car: {} is deleted" + car.getGosNum());

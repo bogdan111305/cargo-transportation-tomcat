@@ -5,15 +5,15 @@ import com.example.cargo_transportation.entity.Car;
 import java.util.List;
 
 public interface CarService {
-    List<CarDTO> getAllCar();
+    List<CarDTO> getAllCar(List<Long> ids);
 
-    List<CarDTO> getCarsByIds(List<Long> ids);
+    CarDTO getCarById(Long carId);
 
-    Car getCarById(Long carId);
+    Car findCarById(Long carId);
 
     CarDTO createCar(CarDTO carDTO);
 
-    CarDTO updateCar(CarDTO carDTO);
+    CarDTO updateCar(CarDTO carDTO, Long carId);
 
     void deleteCar(Long carId);
 }

@@ -27,20 +27,29 @@ public class FavorServiceImpl implements FavorService {
     }
 
     @Override
-    public List<FavorDTO> getAllFavor() {
-        return favorRepository.findAll().stream()
+    public List<FavorDTO> getAllFavor(List<Long> ids) {
+        List<Favor> favors = null;
+        if (ids != null && !ids.isEmpty())
+            favors = findFavorsById(ids);
+        else
+            favors = favorRepository.findAll();
+        return favors.stream()
                 .map(favor -> modelMapper.map(favor, FavorDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Favor> getFavorsByIds(List<Long> ids) {
-        return favorRepository.findAllById(ids).stream()
-                .collect(Collectors.toList());
+    public List<Favor> findFavorsById(List<Long> ids) {
+        return favorRepository.findAllById(ids);
     }
 
     @Override
-    public Favor getFavorById(Long favorId) {
+    public FavorDTO getFavorById(Long favorId) {
+        return modelMapper.map(findFavorById(favorId), FavorDTO.class);
+    }
+
+    @Override
+    public Favor findFavorById(Long favorId) {
         return favorRepository.findById(favorId)
                 .orElseThrow(() -> new EntityNotFoundException("Favor not found with id: " + favorId));
     }
@@ -56,8 +65,8 @@ public class FavorServiceImpl implements FavorService {
     }
 
     @Override
-    public FavorDTO updateFavor(FavorDTO favorDTO) {
-        Favor favor = getFavorById(favorDTO.getId());
+    public FavorDTO updateFavor(FavorDTO favorDTO, Long favorId) {
+        Favor favor = findFavorById(favorId);
 
         favor.setName(favorDTO.getName());
         favor.setDescription(favorDTO.getDescription());
@@ -70,7 +79,7 @@ public class FavorServiceImpl implements FavorService {
 
     @Override
     public void deleteFavor(Long favorId) {
-        Favor favor = getFavorById(favorId);
+        Favor favor = findFavorById(favorId);
 
         favorRepository.delete(favor);
         log.info("The favor: {} is saved" + favor.getName());

@@ -57,8 +57,8 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public ContractDTO createContract(ContractDTO contractDTO) {
-        Car car = carService.getCarById(contractDTO.getCarId());
-        Client client = clientService.getClientById(contractDTO.getClientId());
+        Car car = carService.findCarById(contractDTO.getCarId());
+        Client client = clientService.findClientById(contractDTO.getClientId());
 
         Contract contract = modelMapper.map(contractDTO, Contract.class);
         contract.setCar(car);
@@ -78,12 +78,12 @@ public class ContractServiceImpl implements ContractService {
         contract.setEndDate(contractDTO.getEndDate());
 
         if (!contract.getCar().getId().equals(contractDTO.getCarId())) {
-            Car car = carService.getCarById(contractDTO.getCarId());
+            Car car = carService.findCarById(contractDTO.getCarId());
             contract.setCar(car);
         }
 
         if (!contract.getClient().getId().equals(contractDTO.getClientId())) {
-            Client client = clientService.getClientById(contractDTO.getClientId());
+            Client client = clientService.findClientById(contractDTO.getClientId());
             contract.setClient(client);
         }
 

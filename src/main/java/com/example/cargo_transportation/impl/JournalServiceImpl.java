@@ -29,7 +29,8 @@ public class JournalServiceImpl implements JournalService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public JournalServiceImpl(JournalRepository journalRepository, FavorService favorService, CarService carService, ModelMapper modelMapper) {
+    public JournalServiceImpl(JournalRepository journalRepository, FavorService favorService,
+                              CarService carService, ModelMapper modelMapper) {
         this.journalRepository = journalRepository;
         this.favorService = favorService;
         this.carService = carService;
@@ -60,7 +61,7 @@ public class JournalServiceImpl implements JournalService {
     public JournalDTO createJournal(JournalDTO journalDTO) {
         Journal journal = modelMapper.map(journalDTO, Journal.class);
 
-        Car car = carService.getCarById(journalDTO.getCarId());
+        Car car = carService.findCarById(journalDTO.getCarId());
         journal.setCar(car);
 
         journal = journalRepository.save(journal);
@@ -78,7 +79,7 @@ public class JournalServiceImpl implements JournalService {
         journal.setOutFactDate(journalDTO.getOutFactDate());
 
         if (!journal.getId().equals(journalDTO.getCarId())) {
-            Car car = carService.getCarById(journalDTO.getCarId());
+            Car car = carService.findCarById(journalDTO.getCarId());
             journal.setCar(car);
         }
 
@@ -101,7 +102,7 @@ public class JournalServiceImpl implements JournalService {
         Journal journal = getJournalById(journalId);
 
         Journal finalJournal = journal;
-        List<Favor> receivedFavors = favorService.getFavorsByIds(favors.keySet().stream().toList());
+        List<Favor> receivedFavors = favorService.findFavorsById(favors.keySet().stream().toList());
         receivedFavors.stream()
                 .forEach(favor -> {
                     Integer count = favors.entrySet().stream()
@@ -122,7 +123,7 @@ public class JournalServiceImpl implements JournalService {
     @Override
     public FavorDTO addFavorFromJournal(Long journalId, Long favorId, Integer count) {
         Journal journal = getJournalById(journalId);
-        Favor favor = favorService.getFavorById(favorId);
+        Favor favor = favorService.findFavorById(favorId);
 
         journal.addFavor(favor, count);
         journalRepository.save(journal);
@@ -132,7 +133,7 @@ public class JournalServiceImpl implements JournalService {
 
     public FavorDTO updateFavorFromJournal(Long journalId, Long favorId, Integer count) {
         Journal journal = getJournalById(journalId);
-        Favor favor = favorService.getFavorById(favorId);
+        Favor favor = favorService.findFavorById(favorId);
 
         journal.removeFavor(favor);
         journal.addFavor(favor, count);
@@ -145,7 +146,7 @@ public class JournalServiceImpl implements JournalService {
     @Override
     public void removeFavorFromJournal(Long journalId, Long favorId) {
         Journal journal = getJournalById(journalId);
-        Favor favor = favorService.getFavorById(favorId);
+        Favor favor = favorService.findFavorById(favorId);
 
         journal.removeFavor(favor);
         journalRepository.save(journal);

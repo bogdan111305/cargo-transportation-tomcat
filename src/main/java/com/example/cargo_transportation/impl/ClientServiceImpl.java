@@ -27,21 +27,25 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ClientDTO> getAllClient() {
-        return clientRepository.findAll().stream()
+    public List<ClientDTO> getAllClient(List<Long> ids) {
+        List<Client> clients = null;
+        if (ids != null && !ids.isEmpty())
+            clients = clientRepository.findAllById(ids);
+        else
+            clients = clientRepository.findAll();
+
+        return clients.stream()
                 .map(client -> modelMapper.map(client, ClientDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ClientDTO> getClientsByIds(List<Long> ids) {
-        return clientRepository.findAllById(ids).stream()
-                .map(client -> modelMapper.map(client, ClientDTO.class))
-                .collect(Collectors.toList());
+    public ClientDTO getClientById(Long clientId) {
+        return modelMapper.map(findClientById(clientId), ClientDTO.class);
     }
 
     @Override
-    public Client getClientById(Long clientId) {
+    public Client findClientById(Long clientId) {
         return clientRepository.findClientById(clientId)
                 .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + clientId));
     }
@@ -57,8 +61,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO updateClient(ClientDTO clientDTO) {
-        Client client = getClientById(clientDTO.getId());
+    public ClientDTO updateClient(ClientDTO clientDTO, Long clientId) {
+        Client client = findClientById(clientId);
 
         client.setName(clientDTO.getName());
         client.setAddress(clientDTO.getAddress());
@@ -74,7 +78,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void deleteClient(Long clientId) {
-        Client client = getClientById(clientId);
+        Client client = findClientById(clientId);
 
         clientRepository.delete(client);
         log.info("The client: {} is saved" + client.getName());
