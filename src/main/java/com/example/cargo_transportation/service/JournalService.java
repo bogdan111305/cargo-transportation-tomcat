@@ -1,28 +1,31 @@
 package com.example.cargo_transportation.service;
 
-import com.example.cargo_transportation.dto.FavorDTO;
+import com.example.cargo_transportation.dto.ServiceDTO;
 import com.example.cargo_transportation.dto.JournalDTO;
+import com.example.cargo_transportation.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Journal;
 
 import java.util.List;
 import java.util.Map;
 
 public interface JournalService {
-    List<JournalDTO> getAllJournal();
+    List<JournalDTO> getAllJournal(List<Long> ids);
 
-    List<JournalDTO> getJournalsByIds(List<Long> ids);
+    JournalDTO getJournalById(Long journalId);
 
-    Journal getJournalById(Long journalId);
+    Journal findJournalById(Long journalId);
 
     JournalDTO createJournal(JournalDTO journalDTO);
 
-    JournalDTO updateJournal(JournalDTO journalDTO);
+    JournalDTO updateJournal(JournalDTO journalDTO, Long journalId);
 
     void deleteJournal(Long journalId);
 
-    List<FavorDTO> addFavorsFromJournal(Long journalId, Map<Long, Integer> favors);
+    List<GetServiceDTO> getServicesFromJournal(Long journalId);
 
-    FavorDTO addFavorFromJournal(Long journalId, Long favorId, Integer count);
+    void addServicesFromJournal(Long journalId, List<GetServiceDTO> services);
 
-    void removeFavorFromJournal(Long journalId, Long favorId);
+    void addServiceFromJournal(Long journalId, Long serviceId, Integer count);
+
+    void removeServiceFromJournal(Long journalId, Long serviceId);
 }

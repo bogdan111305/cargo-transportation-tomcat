@@ -2,14 +2,12 @@ package com.example.cargo_transportation.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -33,24 +31,24 @@ public class Journal {
     private Car car;
 
     @OneToMany(mappedBy = "journal", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RenderFavor> renderFavors = new ArrayList<>();
+    private List<GetService> getServices = new ArrayList<>();
 
-    public void addFavor(Favor favor, Integer count) {
-        RenderFavor renderFavor = new RenderFavor(favor, this, count);
-        renderFavors.add(renderFavor);
-        favor.getRenderFavors().add(renderFavor);
+    public void addService(Service service, Integer count) {
+        GetService getService = new GetService(service, this, count);
+        getServices.add(getService);
+        service.getGetServices().add(getService);
     }
 
-    public void removeFavor(Favor favor) {
-        RenderFavor renderFavor = renderFavors.stream()
-                .filter(rf -> rf.getJournal().equals(this) && rf.getFavor().equals(favor))
+    public void removeService(Service service) {
+        GetService getService = getServices.stream()
+                .filter(rf -> rf.getJournal().equals(this) && rf.getService().equals(service))
                 .findFirst()
                 .orElse(null);
-        if (renderFavor != null) {
-            renderFavor.getFavor().getRenderFavors().remove(renderFavor);
-            renderFavor.setFavor(null);
-            renderFavor.setJournal(null);
-            this.renderFavors.remove(renderFavor);
+        if (getService != null) {
+            getService.getService().getGetServices().remove(getService);
+            getService.setService(null);
+            getService.setJournal(null);
+            this.getServices.remove(getService);
         }
     }
 

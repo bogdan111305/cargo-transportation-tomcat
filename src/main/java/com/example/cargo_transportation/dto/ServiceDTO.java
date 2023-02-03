@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class FavorDTO {
+public class ServiceDTO {
     private Long id;
     @NotEmpty
     private String name;
     @NotEmpty
     private String description;
 
-    private List<RenderFavorDTO> renderFavors = new ArrayList<>();
+    private List<GetServiceDTO> renderServices = new ArrayList<>();
     private List<PriceDTO> prices = new ArrayList<>();
 }

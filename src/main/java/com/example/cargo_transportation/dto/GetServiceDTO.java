@@ -4,12 +4,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class RenderFavorDTO {
-    private Long id;
+public class GetServiceDTO {
     @NotNull
-    private FavorDTO service;
-    @NotNull
-    private JournalDTO journal;
+    private Long serviceId;
     @NotNull
     private Integer count;
+
+    public GetServiceDTO(Long id, Integer count) {
+        this.serviceId = id;
+        this.count = count;
+    }
 }

@@ -6,15 +6,15 @@ import com.example.cargo_transportation.entity.Contract;
 import java.util.List;
 
 public interface ContractService {
-    List<ContractDTO> getAllContract();
+    List<ContractDTO> getAllContract(List<Long> ids);
 
-    List<ContractDTO> getContractsByIds(List<Long> ids);
+    ContractDTO getContractById(Long contractId);
 
-    Contract getContractById(Long contractId);
+    Contract findContractById(Long contractId);
 
     ContractDTO createContract(ContractDTO contractDTO);
 
-    ContractDTO updateContract(ContractDTO contractDTO);
+    ContractDTO updateContract(ContractDTO contractDTO, Long contractId);
 
     void deleteContract(Long contractId);
 }

@@ -11,7 +11,7 @@ public class Price {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Favor favor;
+    private Service service;
     @ManyToOne(fetch = FetchType.LAZY)
     private Contract contract;
     @Column(nullable = false)

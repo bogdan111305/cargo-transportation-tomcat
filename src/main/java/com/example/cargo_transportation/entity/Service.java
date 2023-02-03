@@ -1,7 +1,6 @@
 package com.example.cargo_transportation.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +12,7 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Table
-public class Favor {
+public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,27 +21,27 @@ public class Favor {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "favor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RenderFavor> renderFavors = new ArrayList<>();
-    @OneToMany(mappedBy = "favor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GetService> getServices = new ArrayList<>();
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> prices = new ArrayList<>();
 
     public void addJournal(Journal journal, Integer count) {
-        RenderFavor renderFavor = new RenderFavor(this, journal, count);
-        renderFavors.add(renderFavor);
-        journal.getRenderFavors().add(renderFavor);
+        GetService getService = new GetService(this, journal, count);
+        getServices.add(getService);
+        journal.getGetServices().add(getService);
     }
 
     public void removeJournal(Journal journal) {
-        RenderFavor renderFavor = renderFavors.stream()
-                .filter(rf -> rf.getFavor().equals(this) && rf.getJournal().equals(journal))
+        GetService getService = getServices.stream()
+                .filter(rf -> rf.getService().equals(this) && rf.getJournal().equals(journal))
                 .findFirst()
                 .orElse(null);
-        if (renderFavor != null) {
-            renderFavor.getJournal().getRenderFavors().remove(renderFavor);
-            renderFavor.setJournal(null);
-            renderFavor.setFavor(null);
-            this.renderFavors.remove(renderFavor);
+        if (getService != null) {
+            getService.getJournal().getGetServices().remove(getService);
+            getService.setJournal(null);
+            getService.setService(null);
+            this.getServices.remove(getService);
         }
     }
 
@@ -50,8 +49,8 @@ public class Favor {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Favor favor = (Favor) o;
-        return Objects.equals(id, favor.id);
+        Service service = (Service) o;
+        return Objects.equals(id, service.id);
     }
 
     @Override

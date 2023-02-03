@@ -12,22 +12,22 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RenderFavorId implements Serializable {
+public class GetServiceId implements Serializable {
     @Column
     private Long journalId;
     @Column
-    private Long favorId;
+    private Long serviceId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RenderFavorId that = (RenderFavorId) o;
-        return Objects.equals(journalId, that.journalId) && Objects.equals(favorId, that.favorId);
+        GetServiceId that = (GetServiceId) o;
+        return Objects.equals(journalId, that.journalId) && Objects.equals(serviceId, that.serviceId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(journalId, favorId);
+        return Objects.hash(journalId, serviceId);
     }
 }

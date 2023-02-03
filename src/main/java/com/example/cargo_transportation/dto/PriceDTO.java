@@ -7,7 +7,7 @@ import lombok.Data;
 public class PriceDTO {
     private Long id;
     @NotNull
-    private FavorDTO service;
+    private ServiceDTO service;
     @NotNull
     private ContractDTO contract;
     @NotNull

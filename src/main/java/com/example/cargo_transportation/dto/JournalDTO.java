@@ -23,8 +23,8 @@ public class JournalDTO {
     private LocalDateTime outFactDate;
 
     private Long carId;
-    private Map<Long, Integer> favors;
+    private Map<Long, Integer> services;
 
     private CarDTO car;
-    private List<RenderFavorDTO> renderServices = new ArrayList<>();
+    private List<GetServiceDTO> renderServices = new ArrayList<>();
 }

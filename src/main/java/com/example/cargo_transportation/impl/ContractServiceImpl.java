@@ -36,21 +36,24 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public List<ContractDTO> getAllContract() {
-        return contractRepository.findAll().stream()
+    public List<ContractDTO> getAllContract(List<Long> ids) {
+        List<Contract> contracts = null;
+        if (ids != null && !ids.isEmpty())
+            contracts = contractRepository.findAllById(ids);
+        else
+            contracts = contractRepository.findAll();
+        return contracts.stream()
                 .map(contract -> modelMapper.map(contract, ContractDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ContractDTO> getContractsByIds(List<Long> ids) {
-        return contractRepository.findAllById(ids).stream()
-                .map(contract -> modelMapper.map(contract, ContractDTO.class))
-                .collect(Collectors.toList());
+    public ContractDTO getContractById(Long contractId) {
+        return modelMapper.map(findContractById(contractId), ContractDTO.class);
     }
 
     @Override
-    public Contract getContractById(Long contractId) {
+    public Contract findContractById(Long contractId) {
         return contractRepository.findById(contractId)
                 .orElseThrow(() -> new EntityNotFoundException("Contract not found with id: " + contractId));
     }
@@ -71,8 +74,8 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public ContractDTO updateContract(ContractDTO contractDTO) {
-        Contract contract = getContractById(contractDTO.getId());
+    public ContractDTO updateContract(ContractDTO contractDTO, Long contractId) {
+        Contract contract = findContractById(contractId);
 
         contract.setStartDate(contractDTO.getStartDate());
         contract.setEndDate(contractDTO.getEndDate());
@@ -95,7 +98,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public void deleteContract(Long contractId) {
-        Contract contract = getContractById(contractId);
+        Contract contract = findContractById(contractId);
 
         contractRepository.delete(contract);
         log.info("The contract: {} is deleted" + contract.getId());

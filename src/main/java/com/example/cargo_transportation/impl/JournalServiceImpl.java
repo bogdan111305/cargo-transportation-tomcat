@@ -1,58 +1,60 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.dto.FavorDTO;
+import com.example.cargo_transportation.dto.ServiceDTO;
 import com.example.cargo_transportation.dto.JournalDTO;
+import com.example.cargo_transportation.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Car;
-import com.example.cargo_transportation.entity.Favor;
+import com.example.cargo_transportation.entity.Service;
 import com.example.cargo_transportation.entity.Journal;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
 import com.example.cargo_transportation.repo.JournalRepository;
 import com.example.cargo_transportation.service.CarService;
-import com.example.cargo_transportation.service.FavorService;
+import com.example.cargo_transportation.service.ServiceService;
 import com.example.cargo_transportation.service.JournalService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service
+@org.springframework.stereotype.Service
 @Log4j2
 public class JournalServiceImpl implements JournalService {
 
     private final JournalRepository journalRepository;
-    private final FavorService favorService;
+    private final ServiceService serviceService;
     private final CarService carService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public JournalServiceImpl(JournalRepository journalRepository, FavorService favorService,
+    public JournalServiceImpl(JournalRepository journalRepository, ServiceService serviceService,
                               CarService carService, ModelMapper modelMapper) {
         this.journalRepository = journalRepository;
-        this.favorService = favorService;
+        this.serviceService = serviceService;
         this.carService = carService;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public List<JournalDTO> getAllJournal() {
-        return journalRepository.findAll().stream()
+    public List<JournalDTO> getAllJournal(List<Long> ids) {
+        List<Journal> journals = null;
+        if (ids != null && !ids.isEmpty())
+            journals = journalRepository.findAllById(ids);
+        else
+            journals = journalRepository.findAll();
+        return journals.stream()
                 .map(journal -> modelMapper.map(journal, JournalDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<JournalDTO> getJournalsByIds(List<Long> ids) {
-        return journalRepository.findAllById(ids).stream()
-                .map(journal -> modelMapper.map(journal, JournalDTO.class))
-                .collect(Collectors.toList());
+    public JournalDTO getJournalById(Long journalId) {
+        return modelMapper.map(findJournalById(journalId), JournalDTO.class);
     }
 
     @Override
-    public Journal getJournalById(Long journalId) {
+    public Journal findJournalById(Long journalId) {
         return journalRepository.findById(journalId)
                 .orElseThrow(() -> new EntityNotFoundException("Journal not found with id: " + journalId));
     }
@@ -65,14 +67,14 @@ public class JournalServiceImpl implements JournalService {
         journal.setCar(car);
 
         journal = journalRepository.save(journal);
-        log.info("The favor: {} is saved" + journal.getId());
+        log.info("The journal: {} is saved" + journal.getId());
 
         return modelMapper.map(journal, JournalDTO.class);
     }
 
     @Override
-    public JournalDTO updateJournal(JournalDTO journalDTO) {
-        Journal journal = getJournalById(journalDTO.getId());
+    public JournalDTO updateJournal(JournalDTO journalDTO, Long journalId) {
+        Journal journal = findJournalById(journalId);
 
         journal.setIncomingDate(journalDTO.getIncomingDate());
         journal.setOutPlanDate(journalDTO.getOutPlanDate());
@@ -84,71 +86,63 @@ public class JournalServiceImpl implements JournalService {
         }
 
         journal = journalRepository.save(journal);
-        log.info("The favor: {} is updated" + journal.getId());
+        log.info("The journal: {} is updated" + journal.getId());
 
         return modelMapper.map(journal, JournalDTO.class);
     }
 
     @Override
     public void deleteJournal(Long journalId) {
-        Journal journal = getJournalById(journalId);
+        Journal journal = findJournalById(journalId);
 
         journalRepository.delete(journal);
         log.info("The journal: {} is saved" + journal.getId());
     }
 
     @Override
-    public List<FavorDTO> addFavorsFromJournal(Long journalId, Map<Long, Integer> favors) {
-        Journal journal = getJournalById(journalId);
-
-        Journal finalJournal = journal;
-        List<Favor> receivedFavors = favorService.findFavorsById(favors.keySet().stream().toList());
-        receivedFavors.stream()
-                .forEach(favor -> {
-                    Integer count = favors.entrySet().stream()
-                            .filter(f -> f.getKey().equals(favor.getId()))
-                            .findFirst().get()
-                            .getValue();
-                    finalJournal.addFavor(favor, count);
-                });
-
-        journal = journalRepository.save(journal);
-        log.info("The favor by journal: {} is updated" + journal.getId());
-
-        return receivedFavors.stream()
-                .map(f -> modelMapper.map(f, FavorDTO.class))
+    public List<GetServiceDTO> getServicesFromJournal(Long journalId) {
+        return findJournalById(journalId).getGetServices().stream()
+                .map(rf -> new GetServiceDTO(rf.getService().getId(), rf.getCount()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public FavorDTO addFavorFromJournal(Long journalId, Long favorId, Integer count) {
-        Journal journal = getJournalById(journalId);
-        Favor favor = favorService.findFavorById(favorId);
+    public void addServicesFromJournal(Long journalId, List<GetServiceDTO> services) {
+        Journal journal = findJournalById(journalId);
 
-        journal.addFavor(favor, count);
-        journalRepository.save(journal);
+        Journal finalJournal = journal;
+        List<Long> servicesId = services.stream()
+                .map(s -> s.getServiceId())
+                .collect(Collectors.toList());
+        List<Service> receivedServices = serviceService.findServicesById(servicesId);
+        receivedServices.stream()
+                .forEach(service -> {
+                    Integer count = services.stream()
+                            .filter(f -> f.getServiceId().equals(service.getId()))
+                            .findFirst().get()
+                            .getCount();
+                    finalJournal.addService(service, count);
+                });
 
-        return modelMapper.map(favor, FavorDTO.class);
-    }
-
-    public FavorDTO updateFavorFromJournal(Long journalId, Long favorId, Integer count) {
-        Journal journal = getJournalById(journalId);
-        Favor favor = favorService.findFavorById(favorId);
-
-        journal.removeFavor(favor);
-        journal.addFavor(favor, count);
-
-        journalRepository.save(journal);
-
-        return modelMapper.map(favor, FavorDTO.class);
+        journal = journalRepository.save(journal);
+        log.info("The service by journal: {} is updated" + journal.getId());
     }
 
     @Override
-    public void removeFavorFromJournal(Long journalId, Long favorId) {
-        Journal journal = getJournalById(journalId);
-        Favor favor = favorService.findFavorById(favorId);
+    public void addServiceFromJournal(Long journalId, Long serviceId, Integer count) {
+        Journal journal = findJournalById(journalId);
+        Service service = serviceService.findServiceById(serviceId);
 
-        journal.removeFavor(favor);
+        journal.addService(service, count);
+        journalRepository.save(journal);
+    }
+
+    @Override
+    public void removeServiceFromJournal(Long journalId, Long serviceId) {
+        Journal journal = findJournalById(journalId);
+        Service service = serviceService.findServiceById(serviceId);
+
+        journal.removeService(service);
         journalRepository.save(journal);
     }
 }
