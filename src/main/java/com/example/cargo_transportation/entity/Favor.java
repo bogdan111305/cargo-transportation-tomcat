@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Setter
 @Getter
@@ -37,16 +34,16 @@ public class Favor {
     }
 
     public void removeJournal(Journal journal) {
-        List<RenderFavor> removedRenderFavors = new ArrayList<>();
-        for (RenderFavor renderFavor : renderFavors) {
-            if (renderFavor.getFavor().equals(this) && renderFavor.getJournal().equals(journal)) {
-                removedRenderFavors.add(renderFavor);
-                renderFavor.getJournal().getRenderFavors().remove(renderFavor);
-                renderFavor.setJournal(null);
-                renderFavor.setFavor(null);
-            }
+        RenderFavor renderFavor = renderFavors.stream()
+                .filter(rf -> rf.getFavor().equals(this) && rf.getJournal().equals(journal))
+                .findFirst()
+                .orElse(null);
+        if (renderFavor != null) {
+            renderFavor.getJournal().getRenderFavors().remove(renderFavor);
+            renderFavor.setJournal(null);
+            renderFavor.setFavor(null);
+            this.renderFavors.remove(renderFavor);
         }
-        renderFavors.removeAll(removedRenderFavors);
     }
 
     @Override

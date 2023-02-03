@@ -8,10 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -44,16 +42,16 @@ public class Journal {
     }
 
     public void removeFavor(Favor favor) {
-        List<RenderFavor> removedRenderFavors = new ArrayList<>();
-        for (RenderFavor renderFavor : renderFavors) {
-            if (renderFavor.getJournal().equals(this) && renderFavor.getFavor().equals(favor)) {
-                removedRenderFavors.add(renderFavor);
-                renderFavor.getFavor().getRenderFavors().remove(renderFavor);
-                renderFavor.setFavor(null);
-                renderFavor.setJournal(null);
-            }
+        RenderFavor renderFavor = renderFavors.stream()
+                .filter(rf -> rf.getJournal().equals(this) && rf.getFavor().equals(favor))
+                .findFirst()
+                .orElse(null);
+        if (renderFavor != null) {
+            renderFavor.getFavor().getRenderFavors().remove(renderFavor);
+            renderFavor.setFavor(null);
+            renderFavor.setJournal(null);
+            this.renderFavors.remove(renderFavor);
         }
-        renderFavors.removeAll(removedRenderFavors);
     }
 
     @Override

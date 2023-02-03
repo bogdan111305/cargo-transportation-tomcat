@@ -8,7 +8,7 @@ import java.util.List;
 public interface FavorService {
     List<FavorDTO> getAllFavor();
 
-    List<FavorDTO> getFavorsByIds(List<Long> ids);
+    List<Favor> getFavorsByIds(List<Long> ids);
 
     Favor getFavorById(Long favorId);
 

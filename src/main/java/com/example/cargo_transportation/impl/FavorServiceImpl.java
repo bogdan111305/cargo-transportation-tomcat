@@ -34,9 +34,8 @@ public class FavorServiceImpl implements FavorService {
     }
 
     @Override
-    public List<FavorDTO> getFavorsByIds(List<Long> ids) {
+    public List<Favor> getFavorsByIds(List<Long> ids) {
         return favorRepository.findAllById(ids).stream()
-                .map(favor -> modelMapper.map(favor, FavorDTO.class))
                 .collect(Collectors.toList());
     }
 

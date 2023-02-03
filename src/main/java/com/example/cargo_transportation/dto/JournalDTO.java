@@ -7,6 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class JournalDTO {
@@ -20,6 +21,9 @@ public class JournalDTO {
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @NotNull
     private LocalDateTime outFactDate;
+
+    private Long carId;
+    private Map<Long, Integer> favors;
 
     private CarDTO car;
     private List<RenderFavorDTO> renderServices = new ArrayList<>();
