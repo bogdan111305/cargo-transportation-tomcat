@@ -1,6 +1,5 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.dto.ServiceDTO;
 import com.example.cargo_transportation.dto.JournalDTO;
 import com.example.cargo_transportation.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Car;
@@ -107,15 +106,14 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public void addServicesFromJournal(Long journalId, List<GetServiceDTO> services) {
+    public List<GetServiceDTO> addServicesFromJournal(Long journalId, List<GetServiceDTO> services) {
         Journal journal = findJournalById(journalId);
 
         Journal finalJournal = journal;
         List<Long> servicesId = services.stream()
                 .map(s -> s.getServiceId())
                 .collect(Collectors.toList());
-        List<Service> receivedServices = serviceService.findServicesById(servicesId);
-        receivedServices.stream()
+        serviceService.findServicesById(servicesId)
                 .forEach(service -> {
                     Integer count = services.stream()
                             .filter(f -> f.getServiceId().equals(service.getId()))
@@ -124,8 +122,12 @@ public class JournalServiceImpl implements JournalService {
                     finalJournal.addService(service, count);
                 });
 
-        journal = journalRepository.save(journal);
-        log.info("The service by journal: {} is updated" + journal.getId());
+        journal = journalRepository.save(finalJournal);
+        log.info("The services by journal: {} is saved" + journal.getId());
+
+        return journal.getGetServices().stream()
+                .map(rf -> new GetServiceDTO(rf.getService().getId(), rf.getCount()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -134,7 +136,9 @@ public class JournalServiceImpl implements JournalService {
         Service service = serviceService.findServiceById(serviceId);
 
         journal.addService(service, count);
+
         journalRepository.save(journal);
+        log.info("The service: {} by journal: {} is saved", journal.getId(), service.getId());
     }
 
     @Override
@@ -143,6 +147,8 @@ public class JournalServiceImpl implements JournalService {
         Service service = serviceService.findServiceById(serviceId);
 
         journal.removeService(service);
+
         journalRepository.save(journal);
+        log.info("The service: {} by journal: {} is deleted", journal.getId(), service.getId());
     }
 }

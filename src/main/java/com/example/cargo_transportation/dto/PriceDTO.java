@@ -5,11 +5,13 @@ import lombok.Data;
 
 @Data
 public class PriceDTO {
-    private Long id;
     @NotNull
-    private ServiceDTO service;
-    @NotNull
-    private ContractDTO contract;
+    private Long serviceId;
     @NotNull
     private Integer cost;
+
+    public PriceDTO(Long id, Integer cost) {
+        this.serviceId = id;
+        this.cost = cost;
+    }
 }

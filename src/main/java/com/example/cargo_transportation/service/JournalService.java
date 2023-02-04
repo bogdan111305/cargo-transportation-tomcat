@@ -23,7 +23,7 @@ public interface JournalService {
 
     List<GetServiceDTO> getServicesFromJournal(Long journalId);
 
-    void addServicesFromJournal(Long journalId, List<GetServiceDTO> services);
+    List<GetServiceDTO> addServicesFromJournal(Long journalId, List<GetServiceDTO> services);
 
     void addServiceFromJournal(Long journalId, Long serviceId, Integer count);
 

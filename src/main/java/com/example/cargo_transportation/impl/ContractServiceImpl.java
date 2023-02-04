@@ -1,6 +1,7 @@
 package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.dto.ContractDTO;
+import com.example.cargo_transportation.dto.PriceDTO;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.entity.Contract;
@@ -9,6 +10,7 @@ import com.example.cargo_transportation.repo.ContractRepository;
 import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ClientService;
 import com.example.cargo_transportation.service.ContractService;
+import com.example.cargo_transportation.service.ServiceService;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +26,16 @@ public class ContractServiceImpl implements ContractService {
     private final ContractRepository contractRepository;
     private final ClientService clientService;
     private final CarService carService;
+    private final ServiceService serviceService;
     private final ModelMapper modelMapper;
 
     @Autowired
     public ContractServiceImpl(ContractRepository contractRepository, ClientService clientService,
-                               CarService carService, ModelMapper modelMapper) {
+                               CarService carService, ServiceService serviceService, ModelMapper modelMapper) {
         this.contractRepository = contractRepository;
         this.clientService = clientService;
         this.carService = carService;
+        this.serviceService = serviceService;
         this.modelMapper = modelMapper;
     }
 
@@ -79,6 +83,7 @@ public class ContractServiceImpl implements ContractService {
 
         contract.setStartDate(contractDTO.getStartDate());
         contract.setEndDate(contractDTO.getEndDate());
+        contract.setDefaultPrice(contractDTO.isDefaultPrice());
 
         if (!contract.getCar().getId().equals(contractDTO.getCarId())) {
             Car car = carService.findCarById(contractDTO.getCarId());
@@ -102,5 +107,59 @@ public class ContractServiceImpl implements ContractService {
 
         contractRepository.delete(contract);
         log.info("The contract: {} is deleted" + contract.getId());
+    }
+
+    @Override
+    public List<PriceDTO> getPricesFromContract(Long contractId) {
+        return findContractById(contractId).getPrices().stream()
+                .map(rf -> new PriceDTO(rf.getService().getId(), rf.getCost()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PriceDTO> addPricesFromContract(Long contractId, List<PriceDTO> services) {
+        Contract contract = findContractById(contractId);
+
+        Contract finalContract = contract;
+        List<Long> servicesId = services.stream()
+                .map(s -> s.getServiceId())
+                .collect(Collectors.toList());
+        serviceService.findServicesById(servicesId)
+                .forEach(service -> {
+                    Integer count = services.stream()
+                            .filter(f -> f.getServiceId().equals(service.getId()))
+                            .findFirst().get()
+                            .getCost();
+                    finalContract.addPrice(service, count);
+                });
+
+        contract = contractRepository.save(finalContract);
+        log.info("The prices for services by contract: {} is saved" + contract.getId());
+
+        return contract.getPrices().stream()
+                .map(rf -> new PriceDTO(rf.getService().getId(), rf.getCost()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void addPriceFromContract(Long contractId, Long serviceId, Integer count) {
+        Contract contract = findContractById(contractId);
+        com.example.cargo_transportation.entity.Service service = serviceService.findServiceById(serviceId);
+
+        contract.addPrice(service, count);
+
+        contractRepository.save(contract);
+        log.info("The price for service: {} by contract: {} is saved", contract.getId(), service.getId());
+    }
+
+    @Override
+    public void removePriceFromContract(Long contractId, Long serviceId) {
+        Contract contract = findContractById(contractId);
+        com.example.cargo_transportation.entity.Service service = serviceService.findServiceById(serviceId);
+
+        contract.removePrice(service);
+
+        contractRepository.save(contract);
+        log.info("The price for service: {} by contract: {} is deleted", contract.getId(), service.getId());
     }
 }

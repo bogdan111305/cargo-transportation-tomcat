@@ -15,6 +15,7 @@ public class ContractDTO {
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @NotNull
     private LocalDateTime endDate;
+    private boolean defaultPrice;
 
     private Long carId;
     private Long clientId;

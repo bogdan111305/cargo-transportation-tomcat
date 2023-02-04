@@ -54,9 +54,9 @@ public class JournalRestController {
     }
 
     @PostMapping("/{journalId}/services")
-    public void addServicesFromJournal(@PathVariable Long journalId,
+    public List<GetServiceDTO> addServicesFromJournal(@PathVariable Long journalId,
                                                  @RequestBody List<GetServiceDTO> services) {
-        journalService.addServicesFromJournal(journalId, services);
+        return journalService.addServicesFromJournal(journalId, services);
     }
 
     @PostMapping("/{journalId}/service/{serviceId}")
