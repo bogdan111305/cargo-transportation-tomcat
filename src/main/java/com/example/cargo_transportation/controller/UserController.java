@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -24,17 +24,17 @@ public class UserController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public UserDTO getUserProfile(Principal principal){
         return userService.getCurrentUser(principal);
     }
 
-    @PostMapping("/update")
+    @PutMapping()
     public UserDTO updateUser(@Valid @RequestBody UserDTO userDTO, Principal principal){
         return userService.updateUser(userDTO, principal);
     }
 
-    @PostMapping("/admin/delete/{userId}")
+    @DeleteMapping("/{userId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable("userId")Long userId){

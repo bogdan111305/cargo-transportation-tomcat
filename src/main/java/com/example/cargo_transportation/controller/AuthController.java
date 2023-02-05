@@ -7,6 +7,7 @@ import com.example.cargo_transportation.payload.request.SignupRequest;
 import com.example.cargo_transportation.payload.response.JWTTokenSuccessResponse;
 import com.example.cargo_transportation.service.UserService;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@PreAuthorize("permitAll()")
 public class AuthController {
-
-    public static final Logger LOG = LoggerFactory.getLogger(AuthController.class);
 
     private final UserService userService;
     private final AuthenticatedServiceImpl authenticatedService;

@@ -16,7 +16,7 @@ import java.util.Objects;
 @Table
 public class Price {
     @EmbeddedId
-    private GetServiceId id;
+    private PriceId id;
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("contractId")
     private Contract contract;

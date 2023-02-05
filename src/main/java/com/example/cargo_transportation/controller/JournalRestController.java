@@ -1,6 +1,5 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.dto.ServiceDTO;
 import com.example.cargo_transportation.dto.JournalDTO;
 import com.example.cargo_transportation.dto.GetServiceDTO;
 import com.example.cargo_transportation.service.JournalService;
@@ -9,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/api/journal")
+@RequestMapping("/journal")
 public class JournalRestController {
 
     private final JournalService journalService;

@@ -21,6 +21,4 @@ public class CarDTO {
     private Long clientId;
 
     private ClientDTO client;
-    private List<ContractDTO> contracts;
-    private List<JournalDTO> journals;
 }

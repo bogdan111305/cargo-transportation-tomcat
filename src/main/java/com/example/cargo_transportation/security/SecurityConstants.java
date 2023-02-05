@@ -2,7 +2,7 @@ package com.example.cargo_transportation.security;
 
 public class SecurityConstants {
 
-    public static final String[] SIGN_UP_URLS = {"/api/auth/**", "/api/test/**"};
+    public static final String[] SIGN_UP_URLS = {"/api/auth/**", "/swagger-ui/**", "/api-docs/**"};
 
     public static final String SECRET = "SecretKeyGenJWT";
     public static final String TOKEN_PREFIX = "Bearer ";
