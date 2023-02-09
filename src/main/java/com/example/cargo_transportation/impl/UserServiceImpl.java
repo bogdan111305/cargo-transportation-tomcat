@@ -39,12 +39,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserById(userId).orElseThrow(() -> new EntityNotFoundException("User not found with username: " + userId));
     }
 
-    private User getUserByPrincipal(Principal principal){
-        String username = principal.getName();
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
-    }
-
     @Override
     public UserDTO createUser(SignupRequest userDTO){
         User user = modelMapper.map(userDTO, User.class);
@@ -78,5 +72,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(user);
         log.info("The user: {} is deleted" + user.getUsername());
+    }
+
+    public User getUserByPrincipal(Principal principal) {
+        String username = principal.getName();
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
     }
 }

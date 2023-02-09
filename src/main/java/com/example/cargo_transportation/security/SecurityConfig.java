@@ -30,7 +30,8 @@ public class SecurityConfig {
     private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
-    public SecurityConfig(JWTAuthenticationFilter jwtAuthenticationFilter, JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+    public SecurityConfig(JWTAuthenticationFilter jwtAuthenticationFilter,
+                          JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }

@@ -1,12 +1,19 @@
 package com.example.cargo_transportation.security;
 
+import com.example.cargo_transportation.dto.UserDTO;
 import com.example.cargo_transportation.entity.User;
-import io.jsonwebtoken.*;
+import com.example.cargo_transportation.service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
+import java.security.Principal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +23,17 @@ public class JWTTokenProvider {
 
     public static final Logger LOG = LoggerFactory.getLogger(JWTTokenProvider.class);
 
+    private final UserService userService;
+
+    @Autowired
+    public JWTTokenProvider(UserService userService) {
+        this.userService = userService;
+    }
+
     public String generateToken(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        Principal principal = (Principal) authentication.getPrincipal();
+        User user = userService.getUserByPrincipal(principal);
+
         Date now = new Date(System.currentTimeMillis());
         Date expiryDate = new Date(now.getTime() + SecurityConstants.EXPIRATION_TIME);
 
@@ -29,12 +45,14 @@ public class JWTTokenProvider {
         claimsMap.put("firstname", user.getFirstname());
         claimsMap.put("lastname", user.getLastname());
 
+        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
         return Jwts.builder()
                 .setSubject(userId)
                 .addClaims(claimsMap)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
+                .signWith(key)
                 .compact();
     }
 
