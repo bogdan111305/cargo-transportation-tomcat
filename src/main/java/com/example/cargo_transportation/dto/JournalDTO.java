@@ -1,6 +1,7 @@
 package com.example.cargo_transportation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -21,10 +22,10 @@ public class JournalDTO {
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @NotNull
     private LocalDateTime outFactDate;
-
+    @NotNull
     private Long carId;
-    private Map<Long, Integer> services;
-
-    private CarDTO car;
-    private List<GetServiceDTO> renderServices = new ArrayList<>();
+    @NotEmpty
+    private String waybill;
+    @NotEmpty
+    private String nameDriver;
 }

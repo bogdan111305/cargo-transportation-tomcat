@@ -18,10 +18,11 @@ public class ClientDTO {
     @NotEmpty
     private String email;
     @NotEmpty
-    private String INN;
+    private String inn;
     @NotEmpty
-    private String KPP;
-
-    private List<CarDTO> cars = new ArrayList<>();
-    private List<ContractDTO> contracts = new ArrayList<>();
+    private String kpp;
+    private String rs;
+    private String bank;
+    private String bik;
+    private String ks;
 }

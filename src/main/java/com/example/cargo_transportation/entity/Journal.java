@@ -29,6 +29,8 @@ public class Journal {
     private LocalDateTime outFactDate;
     @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
+    private String waybill;
+    private String nameDriver;
 
     @OneToMany(mappedBy = "journal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GetService> getServices = new ArrayList<>();

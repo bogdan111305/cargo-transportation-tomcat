@@ -7,6 +7,10 @@ import java.util.List;
 public interface CarService {
     List<CarDTO> getAllCar(List<Long> ids);
 
+    CarDTO getCarBySts(String sts);
+
+    CarDTO getCarByGosNum(String gosNum);
+
     CarDTO getCarById(Long carId);
 
     Car findCarById(Long carId);

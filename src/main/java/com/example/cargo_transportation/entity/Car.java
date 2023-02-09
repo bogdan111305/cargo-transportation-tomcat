@@ -15,7 +15,7 @@ public class Car {
     @Column(nullable = false, unique = true)
     private String gosNum;
     @Column(nullable = false, unique = true)
-    private String STS;
+    private String sts;
     @Column(nullable = false)
     private String model;
 

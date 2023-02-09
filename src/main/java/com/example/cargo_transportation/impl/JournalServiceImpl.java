@@ -78,6 +78,8 @@ public class JournalServiceImpl implements JournalService {
         journal.setIncomingDate(journalDTO.getIncomingDate());
         journal.setOutPlanDate(journalDTO.getOutPlanDate());
         journal.setOutFactDate(journalDTO.getOutFactDate());
+        journal.setWaybill(journalDTO.getWaybill());
+        journal.setNameDriver(journalDTO.getNameDriver());
 
         if (!journal.getId().equals(journalDTO.getCarId())) {
             Car car = carService.findCarById(journalDTO.getCarId());

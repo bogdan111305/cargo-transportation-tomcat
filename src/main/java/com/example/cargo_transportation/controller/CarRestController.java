@@ -24,19 +24,29 @@ public class CarRestController {
         return carService.getAllCar(ids);
     }
 
+    @GetMapping("/findBySTS/{sts}")
+    public CarDTO getCarBySts(@PathVariable("sts") String sts) {
+        return carService.getCarBySts(sts);
+    }
+
+    @GetMapping("/findByGosNum/{gosNum}")
+    public CarDTO getCarByGosNum(@PathVariable("gosNum") String gosNum) {
+        return carService.getCarByGosNum(gosNum);
+    }
+
     @GetMapping("/{carId}")
     public CarDTO getCarById(@PathVariable Long carId) {
         return carService.getCarById(carId);
     }
 
     @PostMapping()
-    public CarDTO createCar(@Valid @RequestBody CarDTO carDTO) {
-        return carService.createCar(carDTO);
+    public CarDTO createCar(@Valid @RequestBody CarDTO car) {
+        return carService.createCar(car);
     }
 
     @PutMapping("/{carId}")
-    public CarDTO updateCar(@Valid @RequestBody CarDTO carDTO, @PathVariable Long carId) {
-        return carService.updateCar(carDTO, carId);
+    public CarDTO updateCar(@Valid @RequestBody CarDTO car, @PathVariable Long carId) {
+        return carService.updateCar(car, carId);
     }
 
     @DeleteMapping("/{carId}")

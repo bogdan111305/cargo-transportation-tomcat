@@ -20,9 +20,6 @@ public class Service {
     private String name;
     @Column(nullable = false)
     private String description;
-    @Column(nullable = false)
-    private Integer defaultCost;
-
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GetService> getServices = new ArrayList<>();

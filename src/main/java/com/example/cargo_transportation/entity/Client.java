@@ -18,9 +18,13 @@ public class Client{
     @Column(unique = true)
     private String email;
     @Column(unique = true)
-    private String INN;
+    private String inn;
     @Column(unique = true)
-    private String KPP;
+    private String kpp;
+    private String rs;
+    private String bank;
+    private String bik;
+    private String ks;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "client", orphanRemoval = true)
     private List<Car> cars = new ArrayList<>();

@@ -30,13 +30,13 @@ public class ServiceRestController {
     }
 
     @PostMapping()
-    public ServiceDTO createService(@Valid @RequestBody ServiceDTO serviceDTO) {
-        return serviceService.createService(serviceDTO);
+    public ServiceDTO createService(@Valid @RequestBody ServiceDTO service) {
+        return serviceService.createService(service);
     }
 
     @PutMapping("/{serviceId}")
-    public ServiceDTO updateService(@Valid @RequestBody ServiceDTO serviceDTO, @PathVariable Long serviceId) {
-        return serviceService.updateService(serviceDTO, serviceId);
+    public ServiceDTO updateService(@Valid @RequestBody ServiceDTO service, @PathVariable Long serviceId) {
+        return serviceService.updateService(service, serviceId);
     }
 
     @DeleteMapping("/{serviceId}")

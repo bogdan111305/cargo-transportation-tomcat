@@ -19,7 +19,4 @@ public class ContractDTO {
 
     private Long carId;
     private Long clientId;
-
-    private CarDTO car;
-    private ClientDTO client;
 }

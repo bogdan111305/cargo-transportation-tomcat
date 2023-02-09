@@ -13,7 +13,4 @@ public class ServiceDTO {
     private String name;
     @NotEmpty
     private String description;
-
-    private List<GetServiceDTO> renderServices = new ArrayList<>();
-    private List<PriceDTO> prices = new ArrayList<>();
 }

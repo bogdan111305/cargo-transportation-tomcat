@@ -31,13 +31,13 @@ public class ClientRestController {
     }
 
     @PostMapping()
-    public ClientDTO createClient(@Valid @RequestBody ClientDTO clientDTO) {
-        return clientService.createClient(clientDTO);
+    public ClientDTO createClient(@Valid @RequestBody ClientDTO client) {
+        return clientService.createClient(client);
     }
 
     @PutMapping("/{clientId}")
-    public ClientDTO updateClient(@Valid @RequestBody ClientDTO clientDTO, @PathVariable Long clientId) {
-        return clientService.updateClient(clientDTO, clientId);
+    public ClientDTO updateClient(@Valid @RequestBody ClientDTO client, @PathVariable Long clientId) {
+        return clientService.updateClient(client, clientId);
     }
 
     @DeleteMapping("/{clientId}")

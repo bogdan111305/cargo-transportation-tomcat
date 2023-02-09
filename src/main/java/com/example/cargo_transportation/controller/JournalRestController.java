@@ -31,14 +31,14 @@ public class JournalRestController {
     }
 
     @PostMapping()
-    public JournalDTO createJournal(@Valid @RequestBody JournalDTO journalDTO) {
-        return journalService.createJournal(journalDTO);
+    public JournalDTO createJournal(@Valid @RequestBody JournalDTO journal) {
+        return journalService.createJournal(journal);
     }
 
     @PutMapping("/{journalId}")
-    public JournalDTO updateJournal(@Valid @RequestBody JournalDTO journalDTO,
+    public JournalDTO updateJournal(@Valid @RequestBody JournalDTO journal,
                                     @PathVariable Long journalId) {
-        return journalService.updateJournal(journalDTO, journalId);
+        return journalService.updateJournal(journal, journalId);
     }
 
     @DeleteMapping("/{journalId}")

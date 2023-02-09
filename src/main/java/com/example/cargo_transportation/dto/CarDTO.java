@@ -1,12 +1,8 @@
 package com.example.cargo_transportation.dto;
 
-import com.example.cargo_transportation.entity.Client;
-import com.example.cargo_transportation.entity.Contract;
-import com.example.cargo_transportation.entity.Journal;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class CarDTO {
@@ -14,11 +10,9 @@ public class CarDTO {
     @NotEmpty
     private String gosNum;
     @NotEmpty
-    private String STS;
+    private String sts;
     @NotEmpty
     private String model;
-
+    @NotNull
     private Long clientId;
-
-    private ClientDTO client;
 }

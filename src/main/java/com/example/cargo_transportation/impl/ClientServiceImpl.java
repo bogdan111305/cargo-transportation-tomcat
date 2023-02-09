@@ -67,8 +67,12 @@ public class ClientServiceImpl implements ClientService {
         client.setName(clientDTO.getName());
         client.setAddress(clientDTO.getAddress());
         client.setEmail(clientDTO.getEmail());
-        client.setINN(clientDTO.getINN());
-        client.setKPP(clientDTO.getKPP());
+        client.setInn(clientDTO.getInn());
+        client.setKpp(clientDTO.getKpp());
+        client.setRs(clientDTO.getRs());
+        client.setBank(clientDTO.getBank());
+        client.setBik(clientDTO.getBik());
+        client.setKs(clientDTO.getKs());
 
         client = clientRepository.save(client);
         log.info("The client: {} is updated" + client.getName());

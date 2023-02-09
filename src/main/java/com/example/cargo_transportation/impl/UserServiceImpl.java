@@ -40,14 +40,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO createUser(SignupRequest userDTO){
-        User user = modelMapper.map(userDTO, User.class);
+    public UserDTO createUser(SignupRequest signupRequest){
+        User user = modelMapper.map(signupRequest, User.class);
 
-        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
         user.getRoles().add(ERole.ROLE_USER);
 
         user = userRepository.save(user);
-        log.info("The user: {} is saved" + user.getUsername());
+        log.info("The user: {} is saved", user.getUsername());
 
         return modelMapper.map(user, UserDTO.class);
     }
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         user.setLastname(userDTO.getLastname());
 
         user = userRepository.save(user);
-        log.info("The user: {} is updated" + user.getUsername());
+        log.info("The user: {} is updated", user.getUsername());
 
         return modelMapper.map(user, UserDTO.class);
     }
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
         User user = getUserById(userId);
 
         userRepository.delete(user);
-        log.info("The user: {} is deleted" + user.getUsername());
+        log.info("The user: {} is deleted", user.getUsername());
     }
 
     public User getUserByPrincipal(Principal principal) {

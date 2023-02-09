@@ -45,6 +45,20 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    public CarDTO getCarBySts(String sts) {
+        Car car = carRepository.findCarBySts(sts)
+                .orElseThrow(() -> new EntityNotFoundException("Car not found with sts: " + sts));
+        return modelMapper.map(car, CarDTO.class);
+    }
+
+    @Override
+    public CarDTO getCarByGosNum(String gosNum) {
+        Car car = carRepository.findCarByGosNum(gosNum)
+                .orElseThrow(() -> new EntityNotFoundException("Car not found with gosNum: " + gosNum));
+        return modelMapper.map(car, CarDTO.class);
+    }
+
+    @Override
     public CarDTO getCarById(Long carId) {
         return modelMapper.map(getCarById(carId), CarDTO.class);
     }
@@ -73,7 +87,7 @@ public class CarServiceImpl implements CarService {
         Car car = findCarById(carId);
 
         car.setGosNum(carDTO.getGosNum());
-        car.setSTS(carDTO.getSTS());
+        car.setSts(carDTO.getSts());
         car.setModel(carDTO.getModel());
 
         if (!car.getClient().getId().equals(carDTO.getClientId())) {

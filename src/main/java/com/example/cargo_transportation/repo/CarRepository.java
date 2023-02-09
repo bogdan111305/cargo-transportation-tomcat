@@ -10,7 +10,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     Optional<Car> findCarByGosNum(String gosNum);
 
-    Optional<Car> findCarBySTS(String sts);
+    Optional<Car> findCarBySts(String sts);
 
     Optional<Car> findCarByClientId(Long clientId);
 }

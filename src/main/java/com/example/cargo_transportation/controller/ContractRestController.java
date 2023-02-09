@@ -31,14 +31,14 @@ public class ContractRestController {
     }
 
     @PostMapping()
-    public ContractDTO createContract(@Valid @RequestBody ContractDTO contractDTO) {
-        return contractService.createContract(contractDTO);
+    public ContractDTO createContract(@Valid @RequestBody ContractDTO contract) {
+        return contractService.createContract(contract);
     }
 
     @PutMapping("/{contractId}")
-    public ContractDTO updateContract(@Valid @RequestBody ContractDTO contractDTO,
+    public ContractDTO updateContract(@Valid @RequestBody ContractDTO contract,
                                       @PathVariable Long contractId) {
-        return contractService.updateContract(contractDTO, contractId);
+        return contractService.updateContract(contract, contractId);
     }
 
     @DeleteMapping("/{contractId}")

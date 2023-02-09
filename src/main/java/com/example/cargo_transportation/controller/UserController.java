@@ -30,8 +30,8 @@ public class UserController {
     }
 
     @PutMapping()
-    public UserDTO updateUser(@Valid @RequestBody UserDTO userDTO, Principal principal){
-        return userService.updateUser(userDTO, principal);
+    public UserDTO updateUser(@Valid @RequestBody UserDTO user, Principal principal){
+        return userService.updateUser(user, principal);
     }
 
     @DeleteMapping("/{userId}")
