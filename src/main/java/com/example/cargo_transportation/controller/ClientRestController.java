@@ -5,12 +5,13 @@ import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.service.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/client")
+@RequestMapping("/api/client")
 public class ClientRestController {
 
     private final ClientService clientService;
@@ -30,7 +31,7 @@ public class ClientRestController {
         return clientService.getClientById(clientId);
     }
 
-    @PostMapping()
+    @PostMapping
     public ClientDTO createClient(@Valid @RequestBody ClientDTO client) {
         return clientService.createClient(client);
     }

@@ -2,6 +2,7 @@ package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.entity.User;
 import com.example.cargo_transportation.repo.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,16 +25,20 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found username: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found by username: " + username));
 
         return build(user);
     }
 
+    @Transactional
     public User loadUserById(Long id){
-        return userRepository.findUserById(id).orElse(null);
+        User user =  userRepository.findUserById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found by id: " + id));
+
+        return build(user);
     }
 
     public static User build(User user){

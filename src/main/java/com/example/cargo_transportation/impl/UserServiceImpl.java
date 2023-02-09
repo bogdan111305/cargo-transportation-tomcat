@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -19,13 +20,13 @@ import java.security.Principal;
 @Log4j2
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ModelMapper modelMapper){
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper){
         this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
 
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO createUser(SignupRequest signupRequest){
         User user = modelMapper.map(signupRequest, User.class);
 
-        user.setPassword(bCryptPasswordEncoder.encode(signupRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.getRoles().add(ERole.ROLE_USER);
 
         user = userRepository.save(user);
