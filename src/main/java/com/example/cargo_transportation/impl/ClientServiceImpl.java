@@ -6,10 +6,13 @@ import com.example.cargo_transportation.exception.EntityNotFoundException;
 import com.example.cargo_transportation.repo.ClientRepository;
 import com.example.cargo_transportation.service.ClientService;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.exception.ConstraintViolationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.cargo_transportation.exception.ValidationException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,8 +57,13 @@ public class ClientServiceImpl implements ClientService {
     public ClientDTO createClient(ClientDTO clientDTO) {
         Client client = modelMapper.map(clientDTO, Client.class);
 
-        client = clientRepository.save(client);
-        log.info("The client: {} is saved" + client.getName());
+        try {
+            client = clientRepository.save(client);
+            log.info("The client: {} is saved" + client.getName());
+        } catch (ConstraintViolationException e) {
+            log.error(e.getMessage());
+        }
+
 
         return modelMapper.map(client, ClientDTO.class);
     }
@@ -86,5 +94,21 @@ public class ClientServiceImpl implements ClientService {
 
         clientRepository.delete(client);
         log.info("The client: {} is saved" + client.getName());
+    }
+
+    private boolean validateCredentialClient(ClientDTO clientDTO) {
+        List<Client> clients = clientRepository
+                .findAllByNameOrInnOrEmailOrRs(clientDTO.getName(), clientDTO.getInn(), clientDTO.getEmail(),clientDTO.getRs());
+        if (clients != null && !clients.isEmpty()) {
+            List<String> validateMessages = new ArrayList<>();
+          clients.stream().forEach(client -> {
+              if (client.getName().equals(clientDTO.getName())) validateMessages.add("Имя не уникально");
+              if (client.getInn().equals(clientDTO.getInn())) validateMessages.add("ИНН не уникален");
+              if (client.getEmail().equals(clientDTO.getEmail())) validateMessages.add("Почта не уникальна");
+              if (client.getRs().equals(clientDTO.getRs())) validateMessages.add("Расчетный счет не уникален");
+          });
+          throw new ValidationException(validateMessages);
+        }
+        return true;
     }
 }

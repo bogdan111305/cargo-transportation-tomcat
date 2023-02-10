@@ -12,15 +12,15 @@ public class Client{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
     private String address;
     @Column(unique = true)
     private String email;
     @Column(unique = true)
     private String inn;
-    @Column(unique = true)
     private String kpp;
+    @Column(unique = true)
     private String rs;
     private String bank;
     private String bik;
