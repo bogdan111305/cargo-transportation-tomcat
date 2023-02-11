@@ -95,20 +95,4 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.delete(client);
         log.info("The client: {} is saved" + client.getName());
     }
-
-    private boolean validateCredentialClient(ClientDTO clientDTO) {
-        List<Client> clients = clientRepository
-                .findAllByNameOrInnOrEmailOrRs(clientDTO.getName(), clientDTO.getInn(), clientDTO.getEmail(),clientDTO.getRs());
-        if (clients != null && !clients.isEmpty()) {
-            List<String> validateMessages = new ArrayList<>();
-          clients.stream().forEach(client -> {
-              if (client.getName().equals(clientDTO.getName())) validateMessages.add("Имя не уникально");
-              if (client.getInn().equals(clientDTO.getInn())) validateMessages.add("ИНН не уникален");
-              if (client.getEmail().equals(clientDTO.getEmail())) validateMessages.add("Почта не уникальна");
-              if (client.getRs().equals(clientDTO.getRs())) validateMessages.add("Расчетный счет не уникален");
-          });
-          throw new ValidationException(validateMessages);
-        }
-        return true;
-    }
 }
