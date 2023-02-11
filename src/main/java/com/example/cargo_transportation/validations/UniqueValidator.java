@@ -11,6 +11,8 @@ import com.example.cargo_transportation.annotations.UniqueColumn;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +24,8 @@ import org.springframework.context.MessageSourceAware;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
-
-public class UniqueValidator extends SessionAwareConstraintValidator<Object> implements ConstraintValidator<Unique, Object>, MessageSourceAware{
+@Service
+public class UniqueValidator<T> extends SessionAwareConstraintValidator<T> implements ConstraintValidator<Unique, T>, MessageSourceAware{
 
     private UniqueColumn[] columns;
     private MessageSource _messageSource;
@@ -82,16 +84,23 @@ public class UniqueValidator extends SessionAwareConstraintValidator<Object> imp
                 .collect(toListOrEmpty());
     }
 
-    private boolean _hasRecord(Object value, Map<String, Object> fieldMap, ClassMetadata meta){
-        DetachedCriteria criteria = DetachedCriteria
-                .forClass(value.getClass())
+    private boolean _hasRecord(T value, Map<String, Object> fieldMap, ClassMetadata meta){
+
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Object> cq = criteriaBuilder.createQuery(value);
+        cq.from(value.getClass());
+
+        List<Book> books = em.createQuery(cq).getResultList();
+
+
+        CriteriaBuilder criteria = forClass(value.getClass())
                 .setProjection(Projections.rowCount());
 
         for(Map.Entry<String, Object> fieldEntry: fieldMap.entrySet()){
             criteria.add(Restrictions.eq(fieldEntry.getKey(), fieldEntry.getValue()));
         }
 
-        Serializable idValue = meta.getIdentifier(value, (SessionImplementor)getTmpSession());
+        Serializable idValue = meta.getIdentifier(value, (SessionImplementor) getTmpSession());
         if(idValue != null){
             criteria.add(Restrictions.ne(meta.getIdentifierPropertyName(), idValue));
         }

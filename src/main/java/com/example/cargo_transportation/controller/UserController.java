@@ -16,12 +16,10 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper){
+    public UserController(UserService userService){
         this.userService = userService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping()
