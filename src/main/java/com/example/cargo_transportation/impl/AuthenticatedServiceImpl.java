@@ -6,6 +6,7 @@ import com.example.cargo_transportation.security.JWTTokenProvider;
 import com.example.cargo_transportation.security.SecurityConstants;
 import com.example.cargo_transportation.service.AuthenticatedService;
 import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
+@Log4j2
 public class AuthenticatedServiceImpl implements AuthenticatedService {
 
     private final JWTTokenProvider jwtTokenProvider;
@@ -36,6 +38,8 @@ public class AuthenticatedServiceImpl implements AuthenticatedService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = SecurityConstants.TOKEN_PREFIX + jwtTokenProvider.generateToken(authentication);
+
+        log.info(token);
 
         return new JWTTokenSuccessResponse(true, token);
     }

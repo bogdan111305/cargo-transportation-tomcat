@@ -11,26 +11,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper){
+    public UserController(UserService userService){
         this.userService = userService;
-        this.modelMapper = modelMapper;
     }
 
-    @GetMapping()
+    @GetMapping
     public UserDTO getUserProfile(Principal principal){
         return userService.getCurrentUser(principal);
     }
 
-    @PutMapping()
+    @PutMapping
     public UserDTO updateUser(@Valid @RequestBody UserDTO user, Principal principal){
         return userService.updateUser(user, principal);
     }
