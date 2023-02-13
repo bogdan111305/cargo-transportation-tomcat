@@ -1,13 +1,14 @@
 package com.example.cargo_transportation.dto;
 
-import com.example.cargo_transportation.entity.Car;
-import com.example.cargo_transportation.entity.Contract;
+import com.example.cargo_transportation.annotations.Unique;
+import com.example.cargo_transportation.annotations.UniqueColumn;
+import com.example.cargo_transportation.entity.Client;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
 
+@Unique(entity = Client.class,
+        columns = @UniqueColumn(fields = {"name", "email", "inn"}))
 @Data
 public class ClientDTO {
     private Long id;

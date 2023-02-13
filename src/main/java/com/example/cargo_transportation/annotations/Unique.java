@@ -25,4 +25,6 @@ public @interface Unique{
 
     Class<? extends Payload>[] payload() default {};
 
+    Class<?> entity();
+
 }
