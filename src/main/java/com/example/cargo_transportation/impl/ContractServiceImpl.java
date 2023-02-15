@@ -83,7 +83,6 @@ public class ContractServiceImpl implements ContractService {
 
         contract.setStartDate(contractDTO.getStartDate());
         contract.setEndDate(contractDTO.getEndDate());
-        contract.setDefaultPrice(contractDTO.isDefaultPrice());
 
         if (!contract.getCar().getId().equals(contractDTO.getCarId())) {
             Car car = carService.findCarById(contractDTO.getCarId());

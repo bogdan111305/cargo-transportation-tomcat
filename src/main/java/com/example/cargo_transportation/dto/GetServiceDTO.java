@@ -10,6 +10,8 @@ public class GetServiceDTO {
     @NotNull
     private Integer count;
 
+    public GetServiceDTO() {}
+
     public GetServiceDTO(Long id, Integer count) {
         this.serviceId = id;
         this.count = count;
