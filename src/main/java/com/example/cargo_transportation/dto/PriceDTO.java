@@ -10,6 +10,8 @@ public class PriceDTO {
     @NotNull
     private Integer cost;
 
+    public PriceDTO() {}
+
     public PriceDTO(Long id, Integer cost) {
         this.serviceId = id;
         this.cost = cost;

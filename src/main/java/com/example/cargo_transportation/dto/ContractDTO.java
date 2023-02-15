@@ -9,13 +9,12 @@ import java.time.LocalDateTime;
 @Data
 public class ContractDTO {
     private Long id;
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @NotNull
     private LocalDateTime startDate;
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @NotNull
     private LocalDateTime endDate;
-    private boolean defaultPrice;
 
     private Long carId;
     private Long clientId;

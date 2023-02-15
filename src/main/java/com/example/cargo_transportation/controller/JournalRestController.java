@@ -60,7 +60,7 @@ public class JournalRestController {
     @PostMapping("/{journalId}/service/{serviceId}")
     public void addServiceFromJournal(@PathVariable("journalId") Long journalId,
                                           @PathVariable("serviceId") Long serviceId,
-                                          @RequestBody Integer count) {
+                                      @RequestParam Integer count) {
         journalService.addServiceFromJournal(journalId, serviceId, count);
     }
 

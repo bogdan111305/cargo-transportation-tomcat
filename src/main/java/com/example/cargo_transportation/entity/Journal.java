@@ -18,13 +18,10 @@ public class Journal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime incomingDate;
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime outPlanDate;
-    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime outFactDate;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,13 +29,14 @@ public class Journal {
     private String waybill;
     private String nameDriver;
 
-    @OneToMany(mappedBy = "journal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "journal",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<GetService> getServices = new ArrayList<>();
 
     public void addService(Service service, Integer count) {
         GetService getService = new GetService(service, this, count);
         getServices.add(getService);
-        service.getGetServices().add(getService);
     }
 
     public void removeService(Service service) {
@@ -47,7 +45,6 @@ public class Journal {
                 .findFirst()
                 .orElse(null);
         if (getService != null) {
-            getService.getService().getGetServices().remove(getService);
             getService.setService(null);
             getService.setJournal(null);
             this.getServices.remove(getService);

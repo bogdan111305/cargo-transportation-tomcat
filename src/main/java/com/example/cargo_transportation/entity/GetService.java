@@ -29,6 +29,7 @@ public class GetService {
         this.service = service;
         this.journal = journal;
         this.count = count;
+        this.id = new GetServiceId(journal.getId(), service.getId());
     }
 
     @Override

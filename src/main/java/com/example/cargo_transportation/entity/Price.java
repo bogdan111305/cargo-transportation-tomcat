@@ -30,6 +30,7 @@ public class Price {
         this.contract = contract;
         this.service = service;
         this.cost = cost;
+        this.id = new PriceId(contract.getId(), service.getId());
     }
 
     @Override

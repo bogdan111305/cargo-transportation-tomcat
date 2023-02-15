@@ -22,12 +22,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping
     public UserDTO getUserProfile(Principal principal){
         return userService.getCurrentUser(principal);
     }
 
-    @PutMapping()
+    @PutMapping
     public UserDTO updateUser(@Valid @RequestBody UserDTO user, Principal principal){
         return userService.updateUser(user, principal);
     }
