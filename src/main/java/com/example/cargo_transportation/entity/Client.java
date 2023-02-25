@@ -16,8 +16,6 @@ public class Client{
     private String name;
     private String address;
     @Column(unique = true)
-    private String email;
-    @Column(unique = true)
     private String inn;
     private String kpp;
     @Column(unique = true)

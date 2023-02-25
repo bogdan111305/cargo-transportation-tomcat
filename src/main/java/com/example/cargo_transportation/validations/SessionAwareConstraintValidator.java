@@ -16,10 +16,7 @@ public abstract class SessionAwareConstraintValidator<T>{
     public abstract boolean isValidInSession(T value, ConstraintValidatorContext context);
 
     public boolean isValid(T value, ConstraintValidatorContext context){
-        getEntityManager().getTransaction().begin();
-        boolean result = isValidInSession(value, context);
-        getEntityManager().getTransaction().commit();
-        return result;
+        return isValidInSession(value, context);
     }
 
     public EntityManager getEntityManager(){

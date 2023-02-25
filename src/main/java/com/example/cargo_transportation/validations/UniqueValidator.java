@@ -1,69 +1,65 @@
 package com.example.cargo_transportation.validations;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.example.cargo_transportation.annotations.Unique;
-import com.example.cargo_transportation.annotations.UniqueColumn;
 import jakarta.persistence.Column;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.kafka.common.protocol.types.Field;
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
-import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceAware;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UniqueValidator extends SessionAwareConstraintValidator implements ConstraintValidator<Unique, Object>, MessageSourceAware{
+public class UniqueValidator extends SessionAwareConstraintValidator<Object> implements ConstraintValidator<Unique, Object>{
 
     private Class<?> entity;
-    private MessageSource _messageSource;
 
     @Override
     public void initialize(Unique annotation){
-        entity = annotation.entity();
+        this.entity = annotation.entity();
     }
 
     public boolean isValidInSession(Object value, ConstraintValidatorContext context){
         if(value == null) return true;
 
         Map<String, Object> fieldMap = sendQueryByParam(value);
-        if(fieldMap != null){
-            String message = getMessageSource().getMessage(context.getDefaultConstraintMessageTemplate(), null, LocaleContextHolder.getLocale());
-            Map.Entry<String, Object> field = fieldMap.entrySet().iterator().next();
-            context.unwrap(HibernateConstraintValidatorContext.class)
-                    .addExpressionVariable("name", value.getClass().getSimpleName())
-                    .addExpressionVariable("fullName", value.getClass().getName())
-                    .addExpressionVariable("field", field.getKey())
-                    .addExpressionVariable("value", field.getValue())
-                    .addExpressionVariable("allFields", StringUtils.join(fieldMap.keySet(), ", "))
-                    .addExpressionVariable("values", StringUtils.join(fieldMap.values(), ", "))
-                    .buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode(field.getKey())
-                    .addConstraintViolation()
-                    .disableDefaultConstraintViolation();
-
+        if(fieldMap != null && !fieldMap.isEmpty()){
+            setConstraintValidatorContext(fieldMap, context);
             return false;
         }
 
         return true;
     }
 
-    private Map<String, Object> sendQueryByParam(Object value) {
-        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery criteriaQuery = criteriaBuilder.createQuery();
+    private void setConstraintValidatorContext(Map<String, Object> fieldMap, ConstraintValidatorContext context) {
+        for (Map.Entry<String, Object> field : fieldMap.entrySet()) {
+            HibernateConstraintValidatorContext constraintValidator = context.unwrap(HibernateConstraintValidatorContext.class);
+            constraintValidator.disableDefaultConstraintViolation();
 
-        Root root = criteriaQuery.from(entity);
-        List<Predicate> predicates = new ArrayList<>();
-        return new HashMap<>();
+            constraintValidator.buildConstraintViolationWithTemplate(
+                    "Already " + entity.getSimpleName().toLowerCase(Locale.ROOT) +
+                    " with field: " + field.getKey() + " = " + field.getValue())
+                    .addPropertyNode(field.getKey())
+                    .addConstraintViolation();
+        }
+    }
+
+    private Map<String, Object> sendQueryByParam(Object value) {
+        Map<String, Object> searchField = getMapFieldFromDTO(value);
+        Map<String, Object> result = new HashMap<>();
+        for (Map.Entry<String, Object> field : searchField.entrySet()) {
+            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery cq = cb.createQuery();
+            Root r = cq.from(entity);
+            ParameterExpression<String> pe = cb.parameter(String.class, field.getKey());
+            cq.select(r).where(cb.equal(r.get(field.getKey()), pe));
+            if (getEntityManager().createQuery(cq).setParameter(field.getKey(), field.getValue()).getSingleResult() != null) {
+                result.put(field.getKey(), field.getValue());
+            }
+        }
+        return result;
     }
 
     private Map<String, Object> getMapFieldFromDTO(Object value) {
@@ -87,21 +83,4 @@ public class UniqueValidator extends SessionAwareConstraintValidator implements 
                         })
                 );
     }
-
-    @Override
-    public void setMessageSource(MessageSource messageSource){
-        this._messageSource = messageSource;
-    }
-
-    public MessageSource getMessageSource(){
-        return this._messageSource;
-    }
-
-    private static <T> Collector<T, ?, List<T>> toListOrEmpty() {
-        return Collectors.collectingAndThen(
-                Collectors.toList(),
-                l -> l.isEmpty() ? new ArrayList<>() : l
-        );
-    }
-
 }

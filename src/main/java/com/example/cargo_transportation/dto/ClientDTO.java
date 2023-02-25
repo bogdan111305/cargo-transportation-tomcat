@@ -1,14 +1,12 @@
 package com.example.cargo_transportation.dto;
 
 import com.example.cargo_transportation.annotations.Unique;
-import com.example.cargo_transportation.annotations.UniqueColumn;
 import com.example.cargo_transportation.entity.Client;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 
-@Unique(entity = Client.class,
-        columns = @UniqueColumn(fields = {"name", "email", "inn"}))
+@Unique(entity = Client.class)
 @Data
 public class ClientDTO {
     private Long id;
@@ -16,8 +14,6 @@ public class ClientDTO {
     private String name;
     @NotEmpty
     private String address;
-    @NotEmpty
-    private String email;
     @NotEmpty
     private String inn;
     @NotEmpty

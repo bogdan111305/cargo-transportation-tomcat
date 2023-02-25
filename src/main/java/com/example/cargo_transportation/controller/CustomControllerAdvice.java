@@ -1,6 +1,6 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.exception.UserExistException;
+import com.example.cargo_transportation.exception.EntityNotFoundException;
 import com.example.cargo_transportation.payload.response.ResponseError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class CustomControllerAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UserExistException.class)
+    @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseError handleUserExist(UserExistException e) {
+    public ResponseError handleUserExist(EntityNotFoundException e) {
         String message = String.format("%s %s", LocalDateTime.now(), e.getMessage());
         ResponseError responseError = new ResponseError(message, "Please check credentials");
         return responseError;
@@ -56,9 +56,11 @@ public class CustomControllerAdvice extends ResponseEntityExceptionHandler {
                 .map(x -> x.getDefaultMessage())
                 .collect(Collectors.toList());
 
-        ResponseError responseError = new ResponseError("Validation failed", "Please check credentials", errors);
+        ResponseError responseError = new ResponseError(
+                "Validation failed",
+                "Please check the data to be filled in",
+                errors);
         return new ResponseEntity<>(responseError, status);
     }
-
 }
 

@@ -74,7 +74,6 @@ public class ClientServiceImpl implements ClientService {
 
         client.setName(clientDTO.getName());
         client.setAddress(clientDTO.getAddress());
-        client.setEmail(clientDTO.getEmail());
         client.setInn(clientDTO.getInn());
         client.setKpp(clientDTO.getKpp());
         client.setRs(clientDTO.getRs());

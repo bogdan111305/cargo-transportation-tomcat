@@ -4,7 +4,6 @@ import com.example.cargo_transportation.dto.CarDTO;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
-import com.example.cargo_transportation.exception.EntityConversionException;
 import com.example.cargo_transportation.repo.CarRepository;
 import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ClientService;
