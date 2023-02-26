@@ -72,7 +72,7 @@ public class ContractServiceImpl implements ContractService {
         contract.setClient(client);
 
         contract = contractRepository.save(contract);
-        log.info("The contract: {} is created" + contract.getId());
+        log.info("The contract: {} is created", contract.getId());
 
         return customMapper.mapWithSpecificFields(contract, ContractDTO.class);
     }
@@ -95,7 +95,7 @@ public class ContractServiceImpl implements ContractService {
         }
 
         contract = contractRepository.save(contract);
-        log.info("The contract: {} is updated" + contract.getId());
+        log.info("The contract: {} is updated", contract.getId());
 
         return customMapper.mapWithSpecificFields(contract, ContractDTO.class);
     }
@@ -105,7 +105,7 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = findContractById(contractId);
 
         contractRepository.delete(contract);
-        log.info("The contract: {} is deleted" + contract.getId());
+        log.info("The contract: {} is deleted", contract.getId());
     }
 
     @Override
@@ -133,7 +133,7 @@ public class ContractServiceImpl implements ContractService {
                 });
 
         contract = contractRepository.save(finalContract);
-        log.info("The prices for services by contract: {} is saved" + contract.getId());
+        log.info("The prices for services by contract: {} is saved", contract.getId());
 
         return contract.getPrices().stream()
                 .map(rf -> new PriceDTO(rf.getService().getId(), rf.getCost()))

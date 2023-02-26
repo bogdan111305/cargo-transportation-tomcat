@@ -66,7 +66,7 @@ public class JournalServiceImpl implements JournalService {
         journal.setCar(car);
 
         journal = journalRepository.save(journal);
-        log.info("The journal: {} is saved" + journal.getId());
+        log.info("The journal: {} is saved", journal.getId());
 
         return customMapper.mapWithSpecificFields(journal, JournalDTO.class);
     }
@@ -87,7 +87,7 @@ public class JournalServiceImpl implements JournalService {
         }
 
         journal = journalRepository.save(journal);
-        log.info("The journal: {} is updated" + journal.getId());
+        log.info("The journal: {} is updated", journal.getId());
 
         return customMapper.mapWithSpecificFields(journal, JournalDTO.class);
     }
@@ -97,7 +97,7 @@ public class JournalServiceImpl implements JournalService {
         Journal journal = findJournalById(journalId);
 
         journalRepository.delete(journal);
-        log.info("The journal: {} is saved" + journal.getId());
+        log.info("The journal: {} is saved", journal.getId());
     }
 
     @Override
@@ -125,7 +125,7 @@ public class JournalServiceImpl implements JournalService {
                 });
 
         journal = journalRepository.save(finalJournal);
-        log.info("The services by journal: {} is saved" + journal.getId());
+        log.info("The services by journal: {} is saved", journal.getId());
 
         return journal.getGetServices().stream()
                 .map(rf -> new GetServiceDTO(rf.getService().getId(), rf.getCount()))

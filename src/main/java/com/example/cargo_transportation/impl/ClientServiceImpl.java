@@ -57,7 +57,7 @@ public class ClientServiceImpl implements ClientService {
 
         try {
             client = clientRepository.save(client);
-            log.info("The client: {} is saved" + client.getName());
+            log.info("The client: {} is saved", client.getName());
         } catch (ConstraintViolationException e) {
             log.error(e.getMessage());
         }
@@ -80,7 +80,7 @@ public class ClientServiceImpl implements ClientService {
         client.setKs(clientDTO.getKs());
 
         client = clientRepository.save(client);
-        log.info("The client: {} is updated" + client.getName());
+        log.info("The client: {} is updated", client.getName());
 
         return customMapper.map(client, ClientDTO.class);
     }
@@ -90,6 +90,6 @@ public class ClientServiceImpl implements ClientService {
         Client client = findClientById(clientId);
 
         clientRepository.delete(client);
-        log.info("The client: {} is saved" + client.getName());
+        log.info("The client: {} is saved", client.getName());
     }
 }

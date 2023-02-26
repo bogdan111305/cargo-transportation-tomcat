@@ -56,7 +56,7 @@ public class ServiceServiceImpl implements ServiceService {
         Service service = customMapper.map(serviceDTO, Service.class);
 
         service = serviceRepository.save(service);
-        log.info("The service: {} is saved" + service.getName());
+        log.info("The service: {} is saved", service.getName());
 
         return customMapper.mapWithSpecificFields(service, ServiceDTO.class);
     }
@@ -69,7 +69,7 @@ public class ServiceServiceImpl implements ServiceService {
         service.setDescription(serviceDTO.getDescription());
 
         service = serviceRepository.save(service);
-        log.info("The service: {} is updated" + service.getName());
+        log.info("The service: {} is updated", service.getName());
 
         return customMapper.mapWithSpecificFields(service, ServiceDTO.class);
     }
@@ -79,6 +79,6 @@ public class ServiceServiceImpl implements ServiceService {
         Service service = findServiceById(serviceId);
 
         serviceRepository.delete(service);
-        log.info("The service: {} is saved" + service.getName());
+        log.info("The service: {} is saved", service.getName());
     }
 }

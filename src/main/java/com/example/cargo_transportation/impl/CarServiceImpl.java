@@ -77,7 +77,7 @@ public class CarServiceImpl implements CarService {
         car.setClient(client);
 
         car = carRepository.save(car);
-        log.info("The car: {} is created" + car.getGosNum());
+        log.info("The car: {} is created", car.getGosNum());
 
         return customMapper.mapWithSpecificFields(car, CarDTO.class);
     }
@@ -96,7 +96,7 @@ public class CarServiceImpl implements CarService {
         }
 
         car = carRepository.save(car);
-        log.info("The car: {} is updated" + car.getGosNum());
+        log.info("The car: {} is updated", car.getGosNum());
 
         return customMapper.mapWithSpecificFields(car, CarDTO.class);
     }
@@ -106,6 +106,6 @@ public class CarServiceImpl implements CarService {
         Car car = findCarById(carId);
 
         carRepository.delete(car);
-        log.info("The car: {} is deleted" + car.getGosNum());
+        log.info("The car: {} is deleted", car.getGosNum());
     }
 }
