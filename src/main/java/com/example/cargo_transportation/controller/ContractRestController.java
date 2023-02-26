@@ -21,7 +21,7 @@ public class ContractRestController {
     }
 
     @GetMapping("/contracts")
-    public List<ContractDTO> getAllContract(@RequestBody List<Long> ids) {
+    public List<ContractDTO> getAllContract(@RequestBody(required = false) List<Long> ids) {
         return contractService.getAllContract(ids);
     }
 

@@ -2,6 +2,7 @@ package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.dto.ContractDTO;
 import com.example.cargo_transportation.dto.PriceDTO;
+import com.example.cargo_transportation.dto.mapper.CustomMapper;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.entity.Contract;
@@ -12,7 +13,6 @@ import com.example.cargo_transportation.service.ClientService;
 import com.example.cargo_transportation.service.ContractService;
 import com.example.cargo_transportation.service.ServiceService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +27,16 @@ public class ContractServiceImpl implements ContractService {
     private final ClientService clientService;
     private final CarService carService;
     private final ServiceService serviceService;
-    private final ModelMapper modelMapper;
+    private final CustomMapper customMapper;
 
     @Autowired
     public ContractServiceImpl(ContractRepository contractRepository, ClientService clientService,
-                               CarService carService, ServiceService serviceService, ModelMapper modelMapper) {
+                               CarService carService, ServiceService serviceService, CustomMapper customMapper) {
         this.contractRepository = contractRepository;
         this.clientService = clientService;
         this.carService = carService;
         this.serviceService = serviceService;
-        this.modelMapper = modelMapper;
+        this.customMapper = customMapper;
     }
 
     @Override
@@ -47,13 +47,13 @@ public class ContractServiceImpl implements ContractService {
         else
             contracts = contractRepository.findAll();
         return contracts.stream()
-                .map(contract -> modelMapper.map(contract, ContractDTO.class))
+                .map(contract -> customMapper.mapWithSpecificFields(contract, ContractDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public ContractDTO getContractById(Long contractId) {
-        return modelMapper.map(findContractById(contractId), ContractDTO.class);
+        return customMapper.mapWithSpecificFields(findContractById(contractId), ContractDTO.class);
     }
 
     @Override
@@ -67,14 +67,14 @@ public class ContractServiceImpl implements ContractService {
         Car car = carService.findCarById(contractDTO.getCarId());
         Client client = clientService.findClientById(contractDTO.getClientId());
 
-        Contract contract = modelMapper.map(contractDTO, Contract.class);
+        Contract contract = customMapper.map(contractDTO, Contract.class);
         contract.setCar(car);
         contract.setClient(client);
 
         contract = contractRepository.save(contract);
         log.info("The contract: {} is created" + contract.getId());
 
-        return modelMapper.map(contract, ContractDTO.class);
+        return customMapper.mapWithSpecificFields(contract, ContractDTO.class);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ContractServiceImpl implements ContractService {
         contract = contractRepository.save(contract);
         log.info("The contract: {} is updated" + contract.getId());
 
-        return modelMapper.map(contract, ContractDTO.class);
+        return customMapper.mapWithSpecificFields(contract, ContractDTO.class);
     }
 
     @Override

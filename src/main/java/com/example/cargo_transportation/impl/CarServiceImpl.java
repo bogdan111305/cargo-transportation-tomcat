@@ -1,6 +1,7 @@
 package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.dto.CarDTO;
+import com.example.cargo_transportation.dto.mapper.CustomMapper;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
@@ -21,13 +22,13 @@ public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
     private final ClientService clientService;
-    private final ModelMapper modelMapper;
+    private final CustomMapper customMapper;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, ClientService clientService, ModelMapper modelMapper) {
+    public CarServiceImpl(CarRepository carRepository, ClientService clientService, CustomMapper customMapper) {
         this.carRepository = carRepository;
         this.clientService = clientService;
-        this.modelMapper = modelMapper;
+        this.customMapper = customMapper;
     }
 
     @Override
@@ -39,7 +40,7 @@ public class CarServiceImpl implements CarService {
             cars = carRepository.findAll();
 
         return cars.stream()
-                .map(car -> modelMapper.map(car, CarDTO.class))
+                .map(car -> customMapper.mapWithSpecificFields(car, CarDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -47,19 +48,19 @@ public class CarServiceImpl implements CarService {
     public CarDTO getCarBySts(String sts) {
         Car car = carRepository.findCarBySts(sts)
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with sts: " + sts));
-        return modelMapper.map(car, CarDTO.class);
+        return customMapper.mapWithSpecificFields(car, CarDTO.class);
     }
 
     @Override
     public CarDTO getCarByGosNum(String gosNum) {
         Car car = carRepository.findCarByGosNum(gosNum)
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with gosNum: " + gosNum));
-        return modelMapper.map(car, CarDTO.class);
+        return customMapper.mapWithSpecificFields(car, CarDTO.class);
     }
 
     @Override
     public CarDTO getCarById(Long carId) {
-        return modelMapper.map(getCarById(carId), CarDTO.class);
+        return customMapper.mapWithSpecificFields(getCarById(carId), CarDTO.class);
     }
 
     @Override
@@ -72,13 +73,13 @@ public class CarServiceImpl implements CarService {
     public CarDTO createCar(CarDTO carDTO) {
         Client client = clientService.findClientById(carDTO.getClientId());
 
-        Car car = modelMapper.map(carDTO, Car.class);
+        Car car = customMapper.map(carDTO, Car.class);
         car.setClient(client);
 
         car = carRepository.save(car);
         log.info("The car: {} is created" + car.getGosNum());
 
-        return modelMapper.map(car, CarDTO.class);
+        return customMapper.mapWithSpecificFields(car, CarDTO.class);
     }
 
     @Override
@@ -97,7 +98,7 @@ public class CarServiceImpl implements CarService {
         car = carRepository.save(car);
         log.info("The car: {} is updated" + car.getGosNum());
 
-        return modelMapper.map(car, CarDTO.class);
+        return customMapper.mapWithSpecificFields(car, CarDTO.class);
     }
 
     @Override

@@ -11,7 +11,7 @@ import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ServiceService;
 import com.example.cargo_transportation.service.JournalService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
+import com.example.cargo_transportation.dto.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -24,15 +24,15 @@ public class JournalServiceImpl implements JournalService {
     private final JournalRepository journalRepository;
     private final ServiceService serviceService;
     private final CarService carService;
-    private final ModelMapper modelMapper;
+    private final CustomMapper customMapper;
 
     @Autowired
     public JournalServiceImpl(JournalRepository journalRepository, ServiceService serviceService,
-                              CarService carService, ModelMapper modelMapper) {
+                              CarService carService, CustomMapper customMapper) {
         this.journalRepository = journalRepository;
         this.serviceService = serviceService;
         this.carService = carService;
-        this.modelMapper = modelMapper;
+        this.customMapper = customMapper;
     }
 
     @Override
@@ -43,13 +43,13 @@ public class JournalServiceImpl implements JournalService {
         else
             journals = journalRepository.findAll();
         return journals.stream()
-                .map(journal -> modelMapper.map(journal, JournalDTO.class))
+                .map(journal -> customMapper.mapWithSpecificFields(journal, JournalDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public JournalDTO getJournalById(Long journalId) {
-        return modelMapper.map(findJournalById(journalId), JournalDTO.class);
+        return customMapper.mapWithSpecificFields(findJournalById(journalId), JournalDTO.class);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public JournalDTO createJournal(JournalDTO journalDTO) {
-        Journal journal = modelMapper.map(journalDTO, Journal.class);
+        Journal journal = customMapper.map(journalDTO, Journal.class);
 
         Car car = carService.findCarById(journalDTO.getCarId());
         journal.setCar(car);
@@ -68,7 +68,7 @@ public class JournalServiceImpl implements JournalService {
         journal = journalRepository.save(journal);
         log.info("The journal: {} is saved" + journal.getId());
 
-        return modelMapper.map(journal, JournalDTO.class);
+        return customMapper.mapWithSpecificFields(journal, JournalDTO.class);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class JournalServiceImpl implements JournalService {
         journal = journalRepository.save(journal);
         log.info("The journal: {} is updated" + journal.getId());
 
-        return modelMapper.map(journal, JournalDTO.class);
+        return customMapper.mapWithSpecificFields(journal, JournalDTO.class);
     }
 
     @Override

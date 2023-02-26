@@ -18,6 +18,10 @@ public class MapperConfig {
                 .setSkipNullEnabled(true)
                 .setFieldAccessLevel(PRIVATE);
         return mapper;
+    }
 
+    @Bean
+    public CustomMapper customMapper() {
+        return new CustomMapper(modelMapper());
     }
 }

@@ -55,7 +55,8 @@ public class UniqueValidator extends SessionAwareConstraintValidator<Object> imp
             Root r = cq.from(entity);
             ParameterExpression<String> pe = cb.parameter(String.class, field.getKey());
             cq.select(r).where(cb.equal(r.get(field.getKey()), pe));
-            if (getEntityManager().createQuery(cq).setParameter(field.getKey(), field.getValue()).getSingleResult() != null) {
+            List resultQuery = getEntityManager().createQuery(cq).setParameter(field.getKey(), field.getValue()).getResultList();
+            if (resultQuery != null && !resultQuery.isEmpty()) {
                 result.put(field.getKey(), field.getValue());
             }
         }

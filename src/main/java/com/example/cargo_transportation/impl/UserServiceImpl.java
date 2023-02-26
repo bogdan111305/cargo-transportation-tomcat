@@ -8,9 +8,8 @@ import com.example.cargo_transportation.payload.request.SignupRequest;
 import com.example.cargo_transportation.repo.UserRepository;
 import com.example.cargo_transportation.service.UserService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
+import com.example.cargo_transportation.dto.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +20,19 @@ import java.security.Principal;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ModelMapper modelMapper;
+    private final CustomMapper customMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper){
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, CustomMapper customMapper){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.modelMapper = modelMapper;
+        this.customMapper = customMapper;
     }
 
     @Override
     public UserDTO getCurrentUser(Principal principal){
         User user = getUserByPrincipal(principal);
-        return modelMapper.map(user, UserDTO.class);
+        return customMapper.map(user, UserDTO.class);
     }
     @Override
     public User getUserById(Long userId){
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO createUser(SignupRequest signupRequest){
-        User user = modelMapper.map(signupRequest, User.class);
+        User user = customMapper.map(signupRequest, User.class);
 
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.getRoles().add(ERole.ROLE_USER);
@@ -50,7 +49,7 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         log.info("The user: {} is saved", user.getUsername());
 
-        return modelMapper.map(user, UserDTO.class);
+        return customMapper.map(user, UserDTO.class);
     }
 
     @Override
@@ -64,7 +63,7 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         log.info("The user: {} is updated", user.getUsername());
 
-        return modelMapper.map(user, UserDTO.class);
+        return customMapper.map(user, UserDTO.class);
     }
 
     @Override

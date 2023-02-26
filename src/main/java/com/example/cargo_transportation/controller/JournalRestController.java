@@ -21,7 +21,7 @@ public class JournalRestController {
     }
 
     @GetMapping("/journals")
-    public List<JournalDTO> getAllJournal(@RequestBody List<Long> ids) {
+    public List<JournalDTO> getAllJournal(@RequestBody(required = false) List<Long> ids) {
         return journalService.getAllJournal(ids);
     }
 
