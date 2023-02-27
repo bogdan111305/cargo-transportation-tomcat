@@ -17,12 +17,9 @@ public class JournalDTO {
     @NotNull
     private LocalDateTime outPlanDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    @NotNull
     private LocalDateTime outFactDate;
     @NotNull
     private Long carId;
-    @NotEmpty
     private String waybill;
-    @NotEmpty
     private String nameDriver;
 }

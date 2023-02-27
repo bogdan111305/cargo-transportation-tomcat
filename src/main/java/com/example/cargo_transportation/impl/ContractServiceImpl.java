@@ -41,19 +41,19 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public List<ContractDTO> getAllContract(List<Long> ids) {
-        List<Contract> contracts = null;
+        List<Contract> contracts;
         if (ids != null && !ids.isEmpty())
             contracts = contractRepository.findAllById(ids);
         else
             contracts = contractRepository.findAll();
         return contracts.stream()
-                .map(contract -> customMapper.mapWithSpecificFields(contract, ContractDTO.class))
+                .map(contract -> customMapper.mapToDTOWithSpecificFields(contract, ContractDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public ContractDTO getContractById(Long contractId) {
-        return customMapper.mapWithSpecificFields(findContractById(contractId), ContractDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(findContractById(contractId), ContractDTO.class);
     }
 
     @Override
@@ -67,14 +67,14 @@ public class ContractServiceImpl implements ContractService {
         Car car = carService.findCarById(contractDTO.getCarId());
         Client client = clientService.findClientById(contractDTO.getClientId());
 
-        Contract contract = customMapper.map(contractDTO, Contract.class);
+        Contract contract = customMapper.defaultMap(contractDTO, Contract.class);
         contract.setCar(car);
         contract.setClient(client);
 
         contract = contractRepository.save(contract);
         log.info("The contract: {} is created", contract.getId());
 
-        return customMapper.mapWithSpecificFields(contract, ContractDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(contract, ContractDTO.class);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ContractServiceImpl implements ContractService {
         contract = contractRepository.save(contract);
         log.info("The contract: {} is updated", contract.getId());
 
-        return customMapper.mapWithSpecificFields(contract, ContractDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(contract, ContractDTO.class);
     }
 
     @Override

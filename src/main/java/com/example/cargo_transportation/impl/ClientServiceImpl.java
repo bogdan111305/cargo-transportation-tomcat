@@ -29,20 +29,20 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public List<ClientDTO> getAllClient(List<Long> ids) {
-        List<Client> clients = null;
+        List<Client> clients;
         if (ids != null && !ids.isEmpty())
             clients = clientRepository.findAllById(ids);
         else
             clients = clientRepository.findAll();
 
         return clients.stream()
-                .map(client -> customMapper.map(client, ClientDTO.class))
+                .map(client -> customMapper.defaultMap(client, ClientDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public ClientDTO getClientById(Long clientId) {
-        return customMapper.map(findClientById(clientId), ClientDTO.class);
+        return customMapper.defaultMap(findClientById(clientId), ClientDTO.class);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientDTO createClient(ClientDTO clientDTO) {
-        Client client = customMapper.map(clientDTO, Client.class);
+        Client client = customMapper.defaultMap(clientDTO, Client.class);
 
         try {
             client = clientRepository.save(client);
@@ -63,7 +63,7 @@ public class ClientServiceImpl implements ClientService {
         }
 
 
-        return customMapper.map(client, ClientDTO.class);
+        return customMapper.defaultMap(client, ClientDTO.class);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ClientServiceImpl implements ClientService {
         client = clientRepository.save(client);
         log.info("The client: {} is updated", client.getName());
 
-        return customMapper.map(client, ClientDTO.class);
+        return customMapper.defaultMap(client, ClientDTO.class);
     }
 
     @Override

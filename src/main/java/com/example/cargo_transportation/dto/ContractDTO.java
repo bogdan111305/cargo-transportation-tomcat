@@ -16,6 +16,8 @@ public class ContractDTO {
     @NotNull
     private LocalDateTime endDate;
 
+    @NotNull
     private Long carId;
+    @NotNull
     private Long clientId;
 }

@@ -9,7 +9,6 @@ import com.example.cargo_transportation.repo.CarRepository;
 import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ClientService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +32,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<CarDTO> getAllCar(List<Long> ids) {
-        List<Car> cars = null;
+        List<Car> cars;
         if (ids != null && !ids.isEmpty())
             cars = carRepository.findAllById(ids);
         else
             cars = carRepository.findAll();
 
         return cars.stream()
-                .map(car -> customMapper.mapWithSpecificFields(car, CarDTO.class))
+                .map(car -> customMapper.mapToDTOWithSpecificFields(car, CarDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -48,19 +47,19 @@ public class CarServiceImpl implements CarService {
     public CarDTO getCarBySts(String sts) {
         Car car = carRepository.findCarBySts(sts)
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with sts: " + sts));
-        return customMapper.mapWithSpecificFields(car, CarDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(car, CarDTO.class);
     }
 
     @Override
     public CarDTO getCarByGosNum(String gosNum) {
         Car car = carRepository.findCarByGosNum(gosNum)
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with gosNum: " + gosNum));
-        return customMapper.mapWithSpecificFields(car, CarDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(car, CarDTO.class);
     }
 
     @Override
     public CarDTO getCarById(Long carId) {
-        return customMapper.mapWithSpecificFields(getCarById(carId), CarDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(getCarById(carId), CarDTO.class);
     }
 
     @Override
@@ -73,13 +72,13 @@ public class CarServiceImpl implements CarService {
     public CarDTO createCar(CarDTO carDTO) {
         Client client = clientService.findClientById(carDTO.getClientId());
 
-        Car car = customMapper.map(carDTO, Car.class);
+        Car car = customMapper.defaultMap(carDTO, Car.class);
         car.setClient(client);
 
         car = carRepository.save(car);
         log.info("The car: {} is created", car.getGosNum());
 
-        return customMapper.mapWithSpecificFields(car, CarDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(car, CarDTO.class);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class CarServiceImpl implements CarService {
         car = carRepository.save(car);
         log.info("The car: {} is updated", car.getGosNum());
 
-        return customMapper.mapWithSpecificFields(car, CarDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(car, CarDTO.class);
     }
 
     @Override

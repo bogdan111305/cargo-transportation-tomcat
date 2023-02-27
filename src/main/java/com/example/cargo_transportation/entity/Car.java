@@ -1,24 +1,31 @@
 package com.example.cargo_transportation.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@ToString
 @Entity
+@Table
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false,
+            unique = true)
     private String gosNum;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false,
+            unique = true)
     private String sts;
     @Column(nullable = false)
     private String model;
 
+    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "car")

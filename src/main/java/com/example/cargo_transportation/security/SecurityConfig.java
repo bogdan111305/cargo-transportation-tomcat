@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.example.cargo_transportation.security.SecurityConstants.SIGN_UP_URLS;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -29,7 +30,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/swagger-ui/**", "/api-docs/**")
+                .requestMatchers(SIGN_UP_URLS)
                 .permitAll()
                 .anyRequest()
                 .authenticated()

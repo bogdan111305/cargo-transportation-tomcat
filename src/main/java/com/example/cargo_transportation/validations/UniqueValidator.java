@@ -12,7 +12,7 @@ import org.hibernate.validator.constraintvalidation.HibernateConstraintValidator
 import org.springframework.stereotype.Service;
 
 @Service
-public class UniqueValidator extends SessionAwareConstraintValidator<Object> implements ConstraintValidator<Unique, Object>{
+public class UniqueValidator extends EntityManagerConstraintValidator<Object> implements ConstraintValidator<Unique, Object>{
 
     private Class<?> entity;
 
@@ -24,7 +24,7 @@ public class UniqueValidator extends SessionAwareConstraintValidator<Object> imp
     public boolean isValidInSession(Object value, ConstraintValidatorContext context){
         if(value == null) return true;
 
-        Map<String, Object> fieldMap = sendQueryByParam(value);
+        Map<String, Object> fieldMap = sendQueryByValueUniqueFields(value);
         if(fieldMap != null && !fieldMap.isEmpty()){
             setConstraintValidatorContext(fieldMap, context);
             return false;
@@ -46,16 +46,18 @@ public class UniqueValidator extends SessionAwareConstraintValidator<Object> imp
         }
     }
 
-    private Map<String, Object> sendQueryByParam(Object value) {
-        Map<String, Object> searchField = getMapFieldFromDTO(value);
+    private Map<String, Object> sendQueryByValueUniqueFields(Object value) {
+        Map<String, Object> searchField = getMapUniqueFieldFromDTO(value);
         Map<String, Object> result = new HashMap<>();
         for (Map.Entry<String, Object> field : searchField.entrySet()) {
-            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-            CriteriaQuery cq = cb.createQuery();
-            Root r = cq.from(entity);
-            ParameterExpression<String> pe = cb.parameter(String.class, field.getKey());
-            cq.select(r).where(cb.equal(r.get(field.getKey()), pe));
-            List resultQuery = getEntityManager().createQuery(cq).setParameter(field.getKey(), field.getValue()).getResultList();
+            CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery criteriaQuery = criteriaBuilder.createQuery();
+            Root root = criteriaQuery.from(entity);
+            ParameterExpression<String> parameter = criteriaBuilder.parameter(String.class, field.getKey());
+            criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(field.getKey()), parameter));
+            List resultQuery = getEntityManager()
+                    .createQuery(criteriaQuery).setParameter(field.getKey(), field.getValue())
+                    .getResultList();
             if (resultQuery != null && !resultQuery.isEmpty()) {
                 result.put(field.getKey(), field.getValue());
             }
@@ -63,7 +65,7 @@ public class UniqueValidator extends SessionAwareConstraintValidator<Object> imp
         return result;
     }
 
-    private Map<String, Object> getMapFieldFromDTO(Object value) {
+    private Map<String, Object> getMapUniqueFieldFromDTO(Object value) {
         List<String> fields = Arrays.stream(entity.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Column.class) && field.getAnnotation(Column.class).unique())
                 .map(field -> field.getName())

@@ -1,10 +1,7 @@
 package com.example.cargo_transportation.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -12,6 +9,7 @@ import java.util.Objects;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table
 public class Price {

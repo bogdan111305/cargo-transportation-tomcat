@@ -4,7 +4,9 @@ import com.example.cargo_transportation.entity.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,13 +15,15 @@ import java.util.*;
 
 @Setter
 @Getter
+@ToString
 @Entity
 @Table(name = "usr")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
+    @Column(nullable = false,
+            unique = true)
     private String username;
     @Column(nullable = false)
     private String firstname;

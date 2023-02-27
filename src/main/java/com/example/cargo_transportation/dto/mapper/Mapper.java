@@ -4,8 +4,8 @@ import java.lang.Class;
 
 public interface Mapper {
 
-    <D> D map(Object source, Class<D> destinationType);
+    <D> D defaultMap(Object source, Class<D> destinationType);
 
-    <D> D mapWithSpecificFields(Object source, Class<D> destinationType);
+    <D> D mapToDTOWithSpecificFields(Object source, Class<D> destinationType);
 
 }

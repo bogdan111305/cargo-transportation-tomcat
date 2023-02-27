@@ -1,22 +1,28 @@
 package com.example.cargo_transportation.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@ToString
 @Entity
+@Table
 public class Client{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
     private String address;
-    @Column(unique = true)
+    @Column(nullable = false,
+            unique = true)
     private String inn;
+    @Column(nullable = false)
     private String kpp;
     @Column(unique = true)
     private String rs;

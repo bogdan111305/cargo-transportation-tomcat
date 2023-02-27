@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -12,18 +13,19 @@ import java.util.*;
 @Setter
 @Getter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table
 public class Journal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(updatable = false)
+    @Column(nullable = false)
     private LocalDateTime incomingDate;
-    @Column(updatable = false)
+    @Column(nullable = false)
     private LocalDateTime outPlanDate;
-    @Column(updatable = false)
     private LocalDateTime outFactDate;
+    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
     private String waybill;

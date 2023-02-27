@@ -37,19 +37,19 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public List<JournalDTO> getAllJournal(List<Long> ids) {
-        List<Journal> journals = null;
+        List<Journal> journals;
         if (ids != null && !ids.isEmpty())
             journals = journalRepository.findAllById(ids);
         else
             journals = journalRepository.findAll();
         return journals.stream()
-                .map(journal -> customMapper.mapWithSpecificFields(journal, JournalDTO.class))
+                .map(journal -> customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public JournalDTO getJournalById(Long journalId) {
-        return customMapper.mapWithSpecificFields(findJournalById(journalId), JournalDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(findJournalById(journalId), JournalDTO.class);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class JournalServiceImpl implements JournalService {
 
     @Override
     public JournalDTO createJournal(JournalDTO journalDTO) {
-        Journal journal = customMapper.map(journalDTO, Journal.class);
+        Journal journal = customMapper.defaultMap(journalDTO, Journal.class);
 
         Car car = carService.findCarById(journalDTO.getCarId());
         journal.setCar(car);
@@ -68,7 +68,7 @@ public class JournalServiceImpl implements JournalService {
         journal = journalRepository.save(journal);
         log.info("The journal: {} is saved", journal.getId());
 
-        return customMapper.mapWithSpecificFields(journal, JournalDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class JournalServiceImpl implements JournalService {
         journal = journalRepository.save(journal);
         log.info("The journal: {} is updated", journal.getId());
 
-        return customMapper.mapWithSpecificFields(journal, JournalDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class);
     }
 
     @Override

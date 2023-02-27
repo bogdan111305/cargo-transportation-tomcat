@@ -12,7 +12,6 @@ public class ClientDTO {
     private Long id;
     @NotEmpty
     private String name;
-    @NotEmpty
     private String address;
     @NotEmpty
     private String inn;

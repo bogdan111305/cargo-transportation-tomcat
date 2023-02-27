@@ -6,12 +6,12 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public abstract class SessionAwareConstraintValidator<T>{
+public abstract class EntityManagerConstraintValidator<T>{
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public SessionAwareConstraintValidator(){}
+    public EntityManagerConstraintValidator(){}
 
     public abstract boolean isValidInSession(T value, ConstraintValidatorContext context);
 

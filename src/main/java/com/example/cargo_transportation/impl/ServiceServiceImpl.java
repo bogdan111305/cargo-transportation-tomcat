@@ -25,13 +25,13 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<ServiceDTO> getAllService(List<Long> ids) {
-        List<Service> services = null;
+        List<Service> services;
         if (ids != null && !ids.isEmpty())
             services = findServicesById(ids);
         else
             services = serviceRepository.findAll();
         return services.stream()
-                .map(service -> customMapper.mapWithSpecificFields(service, ServiceDTO.class))
+                .map(service -> customMapper.mapToDTOWithSpecificFields(service, ServiceDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +42,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceDTO getServiceById(Long serviceId) {
-        return customMapper.mapWithSpecificFields(findServiceById(serviceId), ServiceDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(findServiceById(serviceId), ServiceDTO.class);
     }
 
     @Override
@@ -53,12 +53,12 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceDTO createService(ServiceDTO serviceDTO) {
-        Service service = customMapper.map(serviceDTO, Service.class);
+        Service service = customMapper.defaultMap(serviceDTO, Service.class);
 
         service = serviceRepository.save(service);
         log.info("The service: {} is saved", service.getName());
 
-        return customMapper.mapWithSpecificFields(service, ServiceDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(service, ServiceDTO.class);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ServiceServiceImpl implements ServiceService {
         service = serviceRepository.save(service);
         log.info("The service: {} is updated", service.getName());
 
-        return customMapper.mapWithSpecificFields(service, ServiceDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(service, ServiceDTO.class);
     }
 
     @Override

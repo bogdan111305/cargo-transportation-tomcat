@@ -32,16 +32,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getCurrentUser(Principal principal){
         User user = getUserByPrincipal(principal);
-        return customMapper.map(user, UserDTO.class);
+        return customMapper.defaultMap(user, UserDTO.class);
     }
     @Override
     public User getUserById(Long userId){
-        return userRepository.findUserById(userId).orElseThrow(() -> new EntityNotFoundException("User not found with username: " + userId));
+        return userRepository.findUserById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + userId));
     }
 
     @Override
     public UserDTO createUser(SignupRequest signupRequest){
-        User user = customMapper.map(signupRequest, User.class);
+        User user = customMapper.defaultMap(signupRequest, User.class);
 
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.getRoles().add(ERole.ROLE_USER);
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         log.info("The user: {} is saved", user.getUsername());
 
-        return customMapper.map(user, UserDTO.class);
+        return customMapper.defaultMap(user, UserDTO.class);
     }
 
     @Override
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         log.info("The user: {} is updated", user.getUsername());
 
-        return customMapper.map(user, UserDTO.class);
+        return customMapper.defaultMap(user, UserDTO.class);
     }
 
     @Override
