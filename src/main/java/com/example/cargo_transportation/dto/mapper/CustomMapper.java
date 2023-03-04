@@ -2,16 +2,13 @@ package com.example.cargo_transportation.dto.mapper;
 
 import jakarta.persistence.Entity;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.CharUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.Locale;
 
 @Log4j2
 public class CustomMapper implements Mapper{
