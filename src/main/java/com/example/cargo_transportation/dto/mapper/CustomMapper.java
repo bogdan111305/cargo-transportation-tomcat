@@ -58,7 +58,7 @@ public class CustomMapper implements Mapper{
                     .getDeclaredMethod("get" + StringUtils.capitalize(searchName))
                     .invoke(source);
             if (model != null) {
-                Method method = d.getClass().getDeclaredMethod("set" + StringUtils.capitalize(field.getName()));
+                Method method = d.getClass().getDeclaredMethod("set" + StringUtils.capitalize(field.getName()), Long.class);
                 Object parameter = model.getClass().getDeclaredMethod("get" + IDENTIFICATION_PARAM).invoke(model);
                 method.invoke(d, parameter);
             }

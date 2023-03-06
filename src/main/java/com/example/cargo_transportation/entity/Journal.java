@@ -25,7 +25,6 @@ public class Journal {
     @Column(nullable = false)
     private LocalDateTime outPlanDate;
     private LocalDateTime outFactDate;
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
     private String waybill;

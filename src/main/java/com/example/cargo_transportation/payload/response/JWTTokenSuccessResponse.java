@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class JWTTokenSuccessResponse {
-    private String accessToken;
+    private boolean success;
     private String refreshToken;
 }

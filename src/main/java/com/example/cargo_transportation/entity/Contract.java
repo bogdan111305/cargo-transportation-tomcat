@@ -26,10 +26,8 @@ public class Contract {
     @Column(nullable = false)
     private LocalDateTime endDate;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
 

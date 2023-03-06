@@ -25,7 +25,6 @@ public class Car {
     @Column(nullable = false)
     private String model;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "car")
