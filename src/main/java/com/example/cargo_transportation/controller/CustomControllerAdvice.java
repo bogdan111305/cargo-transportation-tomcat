@@ -1,7 +1,9 @@
 package com.example.cargo_transportation.controller;
 
 import com.example.cargo_transportation.exception.EntityNotFoundException;
+import com.example.cargo_transportation.exception.TokenRefreshException;
 import com.example.cargo_transportation.payload.response.ResponseError;
+import org.modelmapper.spi.ErrorMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,11 +18,21 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class CustomControllerAdvice extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(value = TokenRefreshException.class)
+    public ResponseEntity handleTokenRefreshException(TokenRefreshException ex) {
+
+        ResponseError responseError = new ResponseError(
+                ex.getMessage(),
+                "Error verify expiration");
+        return new ResponseEntity(responseError, HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

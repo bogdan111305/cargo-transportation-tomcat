@@ -20,6 +20,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.example.cargo_transportation.security.TypeToken.ACCESS_TOKEN;
+
 @Component
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
@@ -38,24 +40,24 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = getJWTFromRequest(request);
-            if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                String username = jwtTokenProvider.getUsernameFromToken(jwt);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            UserDetails userDetails = jwtTokenProvider.getUserByToken(jwt, ACCESS_TOKEN);
+            setAuthentication(userDetails);
         } catch (Exception exception) {
             LOG.error("Cloud not set user authentication");
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void setAuthentication(UserDetails userDetails) {
+        if (userDetails != null) {
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {

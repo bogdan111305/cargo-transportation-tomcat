@@ -4,7 +4,7 @@ import com.example.cargo_transportation.dto.UserDTO;
 import com.example.cargo_transportation.impl.AuthenticatedServiceImpl;
 import com.example.cargo_transportation.payload.request.LoginRequest;
 import com.example.cargo_transportation.payload.request.SignupRequest;
-import com.example.cargo_transportation.payload.response.JWTTokenSuccessResponse;
+import com.example.cargo_transportation.payload.response.JWTToken;
 import com.example.cargo_transportation.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public JWTTokenSuccessResponse authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
+    public JWTToken authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
         return authenticatedService.authenticateUser(loginRequest);
+    }
+
+    @PostMapping("/refresh")
+    public JWTToken authenticateUser(String refreshToken){
+        return authenticatedService.refreshUser(refreshToken);
     }
 
     @PostMapping("/register")

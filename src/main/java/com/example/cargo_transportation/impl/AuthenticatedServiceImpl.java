@@ -1,18 +1,23 @@
 package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.payload.request.LoginRequest;
-import com.example.cargo_transportation.payload.response.JWTTokenSuccessResponse;
+import com.example.cargo_transportation.payload.response.JWTToken;
 import com.example.cargo_transportation.security.JWTTokenProvider;
 import com.example.cargo_transportation.security.SecurityConstants;
 import com.example.cargo_transportation.service.AuthenticatedService;
+import com.example.cargo_transportation.service.RefreshTokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import static com.example.cargo_transportation.security.TypeToken.REFRESH_TOKEN;
 
 @Service
 public class AuthenticatedServiceImpl implements AuthenticatedService {
@@ -21,12 +26,13 @@ public class AuthenticatedServiceImpl implements AuthenticatedService {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthenticatedServiceImpl(JWTTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager){
+    public AuthenticatedServiceImpl(JWTTokenProvider jwtTokenProvider,
+                                    AuthenticationManager authenticationManager){
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
     }
 
-    public JWTTokenSuccessResponse authenticateUser(@RequestBody @Valid LoginRequest loginRequest){
+    public JWTToken authenticateUser(@RequestBody @Valid LoginRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),
@@ -35,9 +41,19 @@ public class AuthenticatedServiceImpl implements AuthenticatedService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = SecurityConstants.TOKEN_PREFIX + jwtTokenProvider.generateToken(authentication);
+        return jwtTokenProvider.getTokens(authentication);
+    }
 
-        return new JWTTokenSuccessResponse(true, token);
+    public JWTToken refreshUser(String token) {
+        UserDetails userDetails = jwtTokenProvider.getUserByToken(token, REFRESH_TOKEN);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return jwtTokenProvider.getTokens(authentication);
     }
 }
 
