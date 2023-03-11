@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/service")
 public class ServiceRestController {
-
     private final ServiceService serviceService;
 
     @Autowired

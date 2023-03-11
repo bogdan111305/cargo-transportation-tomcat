@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 public class CarServiceImpl implements CarService {
-
     private final CarRepository carRepository;
     private final ClientService clientService;
     private final CustomMapper customMapper;

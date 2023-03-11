@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/client")
 public class ClientRestController {
-
     private final ClientService clientService;
 
     @Autowired

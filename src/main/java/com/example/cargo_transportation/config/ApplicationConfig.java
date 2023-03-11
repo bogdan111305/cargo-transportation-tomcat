@@ -1,8 +1,5 @@
 package com.example.cargo_transportation.config;
 
-import jakarta.persistence.EntityManagerFactory;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,10 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
-
     private final UserDetailsService userDetailsService;
+
+    public ApplicationConfig(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -36,11 +35,4 @@ public class ApplicationConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-/*    @Bean
-    public SessionFactory getSessionFactory(EntityManagerFactory entityManagerFactory) {
-        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-        return sessionFactory;
-    }*/
-
 }

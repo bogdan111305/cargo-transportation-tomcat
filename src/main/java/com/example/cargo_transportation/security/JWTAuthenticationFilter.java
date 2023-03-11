@@ -1,19 +1,15 @@
 package com.example.cargo_transportation.security;
 
-import com.example.cargo_transportation.entity.User;
-import com.example.cargo_transportation.impl.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,46 +19,43 @@ import java.io.IOException;
 import static com.example.cargo_transportation.security.TypeToken.ACCESS_TOKEN;
 
 @Component
+@Log4j2
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final Logger LOG = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
-
-    private JWTTokenProvider jwtTokenProvider;
-    private UserDetailsService userDetailsService;
+    @Value("${security-setting.token-prefix}")
+    private String TOKEN_PREFIX;
+    @Value("${security-setting.header-string}")
+    private String HEADER_STRING;
+    private final JWTTokenProvider jwtTokenProvider;
 
     @Autowired
-    public JWTAuthenticationFilter(JWTTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
+    public JWTAuthenticationFilter(JWTTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.userDetailsService = userDetailsService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = getJWTFromRequest(request);
-            UserDetails userDetails = jwtTokenProvider.getUserByToken(jwt, ACCESS_TOKEN);
-            setAuthentication(userDetails);
+            String token = getJWTFromRequest(request);
+            UserDetails userDetails = jwtTokenProvider.getUserDetailsByToken(token, ACCESS_TOKEN);
+            if (userDetails != null) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         } catch (Exception exception) {
-            LOG.error("Cloud not set user authentication");
+            log.error("Cloud not set user authentication");
         }
 
         filterChain.doFilter(request, response);
     }
 
-    private void setAuthentication(UserDetails userDetails) {
-        if (userDetails != null) {
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
-    }
-
     private String getJWTFromRequest(HttpServletRequest request) {
-        String bearToken = request.getHeader(SecurityConstants.HEADER_STRING);
-        if (StringUtils.hasText(bearToken) && bearToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+        String bearToken = request.getHeader(HEADER_STRING);
+        if (StringUtils.hasText(bearToken) && bearToken.startsWith(TOKEN_PREFIX + " ")) {
             return bearToken.split(" ")[1];
         }
         return null;

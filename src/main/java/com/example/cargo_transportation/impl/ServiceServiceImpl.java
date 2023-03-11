@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 @org.springframework.stereotype.Service
 @Log4j2
 public class ServiceServiceImpl implements ServiceService {
-
     private final ServiceRepository serviceRepository;
     private final CustomMapper customMapper;
 

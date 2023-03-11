@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/journal")
 public class JournalRestController {
-
     private final JournalService journalService;
 
     @Autowired

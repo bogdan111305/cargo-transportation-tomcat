@@ -37,6 +37,10 @@ public class User implements UserDetails {
     @Column(updatable = false)
     private LocalDateTime createdDate;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private SessionJWT sessionJWT;
+
     @ElementCollection(targetClass = ERole.class)
     @CollectionTable(name = "usr_role", joinColumns = @JoinColumn(name = "usr_id"))
     private Set<ERole> roles = new HashSet<>();

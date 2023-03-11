@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
         User user = getUserByPrincipal(principal);
         return customMapper.defaultMap(user, UserDTO.class);
     }
+
     @Override
     public User getUserById(Long userId){
         return userRepository.findUserById(userId)

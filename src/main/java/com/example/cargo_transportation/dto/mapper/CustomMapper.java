@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class CustomMapper implements Mapper{
 
     private static final String IDENTIFICATION_PARAM = "Id";
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public CustomMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;

@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 public class ContractServiceImpl implements ContractService {
-
     private final ContractRepository contractRepository;
     private final ClientService clientService;
     private final CarService carService;

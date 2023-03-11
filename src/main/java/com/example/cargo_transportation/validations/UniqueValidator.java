@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UniqueValidator extends EntityManagerConstraintValidator<Object> implements ConstraintValidator<Unique, Object>{
-
     private Class<?> entity;
 
     @Override

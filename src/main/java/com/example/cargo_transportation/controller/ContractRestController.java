@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/contract")
 public class ContractRestController {
-
     private final ContractService contractService;
 
     @Autowired

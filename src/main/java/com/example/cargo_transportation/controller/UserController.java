@@ -14,7 +14,6 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-
     private final UserService userService;
 
     @Autowired

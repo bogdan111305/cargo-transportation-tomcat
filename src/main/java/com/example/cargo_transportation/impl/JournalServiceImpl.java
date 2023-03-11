@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @org.springframework.stereotype.Service
 @Log4j2
 public class JournalServiceImpl implements JournalService {
-
     private final JournalRepository journalRepository;
     private final ServiceService serviceService;
     private final CarService carService;
