@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     @Autowired
@@ -28,14 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found by username: " + username));
-
-        return build(user);
-    }
-
-    @Transactional
-    public User loadUserById(Long id){
-        User user =  userRepository.findUserById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found by id: " + id));
 
         return build(user);
     }

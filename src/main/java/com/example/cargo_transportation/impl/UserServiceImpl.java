@@ -10,6 +10,7 @@ import com.example.cargo_transportation.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import com.example.cargo_transportation.dto.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,19 +31,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getCurrentUser(Principal principal){
+    public UserDTO getCurrentUser(Principal principal) {
         User user = getUserByPrincipal(principal);
         return customMapper.defaultMap(user, UserDTO.class);
     }
 
     @Override
-    public User getUserById(Long userId){
+    public User getUserById(Long userId) {
         return userRepository.findUserById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("User not found with userId: " + userId));
     }
 
     @Override
-    public UserDTO createUser(SignupRequest signupRequest){
+    public User getUserByUsername(String username) {
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    }
+
+    @Override
+    public UserDTO createUser(SignupRequest signupRequest) {
         User user = customMapper.defaultMap(signupRequest, User.class);
 
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
@@ -55,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(UserDTO userDTO, Principal principal){
+    public UserDTO updateUser(UserDTO userDTO, Principal principal) {
         User user = getUserByPrincipal(principal);
 
         user.setUsername(userDTO.getUsername());
@@ -69,7 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId) {
         User user = getUserById(userId);
 
         userRepository.delete(user);

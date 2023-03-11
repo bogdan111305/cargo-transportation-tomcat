@@ -27,8 +27,8 @@ public class AuthController {
         return authenticatedService.authenticateUser(loginRequest);
     }
 
-    @PostMapping("/refresh")
-    public JWTToken authenticateUser(String refreshToken){
+    @PostMapping("/refresh/{token}")
+    public JWTToken authenticateUser(@PathVariable("token") String refreshToken){
         return authenticatedService.refreshUser(refreshToken);
     }
 

@@ -12,39 +12,29 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class CustomControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = SessionJWTException.class)
-    public ResponseEntity handleTokenRefreshException(SessionJWTException ex) {
-
-        ResponseError responseError = new ResponseError(
-                ex.getMessage(),
-                "Error verify expiration");
+    public ResponseEntity<Object> handleTokenRefreshException(SessionJWTException ex) {
+        ResponseError responseError = new ResponseError("Error verify expiration", ex.getMessage());
         return new ResponseEntity(responseError, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseError handleUserExist(EntityNotFoundException e) {
-        String message = String.format("%s %s", LocalDateTime.now(), e.getMessage());
-        ResponseError responseError = new ResponseError(message, "Please check credentials");
-        return responseError;
+    public ResponseEntity<Object> handleUserExist(EntityNotFoundException e) {
+        ResponseError responseError = new ResponseError("Please check credentials", e.getMessage());
+        return new ResponseEntity(responseError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseError handleUsernameNotFound(UsernameNotFoundException e) {
-        String message = String.format("%s %s", LocalDateTime.now(), e.getMessage());
-        ResponseError responseError = new ResponseError(message, "Please check username");
-        return responseError;
+    public ResponseEntity<Object> handleUsernameNotFound(UsernameNotFoundException e) {
+        ResponseError responseError = new ResponseError("Please check username", e.getMessage());
+        return new ResponseEntity(responseError, HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -59,16 +49,15 @@ public class CustomControllerAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatusCode status,
                                                                   WebRequest request) {
-        List<String> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(x -> x.getDefaultMessage())
-                .collect(Collectors.toList());
-
         ResponseError responseError = new ResponseError(
-                "Validation failed",
                 "Please check the data to be filled in",
-                errors);
+                "Validation failed",
+                ex.getBindingResult()
+                        .getFieldErrors()
+                        .stream()
+                        .map(x -> x.getDefaultMessage())
+                        .collect(Collectors.toList())
+        );
         return new ResponseEntity<>(responseError, status);
     }
 }

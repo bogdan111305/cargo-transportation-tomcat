@@ -54,13 +54,8 @@ public class ClientServiceImpl implements ClientService {
     public ClientDTO createClient(ClientDTO clientDTO) {
         Client client = customMapper.defaultMap(clientDTO, Client.class);
 
-        try {
-            client = clientRepository.save(client);
-            log.info("The client: {} is saved", client.getName());
-        } catch (ConstraintViolationException e) {
-            log.error(e.getMessage());
-        }
-
+        client = clientRepository.save(client);
+        log.info("The client: {} is saved", client.getName());
 
         return customMapper.defaultMap(client, ClientDTO.class);
     }

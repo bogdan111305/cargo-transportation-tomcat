@@ -26,6 +26,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private String TOKEN_PREFIX;
     @Value("${security-setting.header-string}")
     private String HEADER_STRING;
+
     private final JWTTokenProvider jwtTokenProvider;
 
     @Autowired

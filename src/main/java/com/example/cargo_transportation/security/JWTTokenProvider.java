@@ -14,13 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
-import java.security.Principal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,13 +38,11 @@ public class JWTTokenProvider {
 
     private final SessionJWTService sessionJWTService;
     private final SigningKeyResolver signingKeyResolver;
-    private final UserDetailsService userDetailsService;
     private final UserService userService;
 
     @Autowired
-    public JWTTokenProvider(SessionJWTService sessionJWTService, UserDetailsService userDetailsService, UserService userService) {
+    public JWTTokenProvider(SessionJWTService sessionJWTService, UserService userService) {
         this.sessionJWTService = sessionJWTService;
-        this.userDetailsService = userDetailsService;
         this.userService = userService;
         this.signingKeyResolver = new SigningKeyResolverAdapter() {
             @Override
@@ -61,18 +57,18 @@ public class JWTTokenProvider {
     public UserDetails getUserDetailsByToken(String token, TypeToken typeToken) {
         if (validateToken(token, typeToken)) {
             String username = getUsernameFromToken(token);
-            return userDetailsService.loadUserByUsername(username);
+            return userService.getUserByUsername(username);
         }
         return null;
     }
 
     public JWTToken getTokens(Authentication authentication) {
-        Principal principal = (Principal) authentication.getPrincipal();
-        User user = userService.getUserByPrincipal(principal);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.getUserByUsername(userDetails.getUsername());
 
         Date now = new Date(System.currentTimeMillis());
-        Date accessExpiryDate = new Date(now.getTime() + Long.getLong(ACCESS_EXPIRATION_TIME));
-        Date expiryRefreshDate = new Date(now.getTime() + Long.getLong(REFRESH_EXPIRATION_TIME));
+        Date accessExpiryDate = new Date(now.getTime() + Long.parseLong(ACCESS_EXPIRATION_TIME));
+        Date expiryRefreshDate = new Date(now.getTime() + Long.parseLong(REFRESH_EXPIRATION_TIME));
 
         SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         String secretKeyString = Encoders.BASE64.encode(secretKey.getEncoded());
@@ -88,6 +84,7 @@ public class JWTTokenProvider {
     private String generateToken(User user, TypeToken typeToken, SecretKey secretKey, Date expiryDate, Date now) {
         Map<String, Object> claimsMap = new HashMap<>();
         claimsMap.put("typeToken", typeToken.toString());
+        claimsMap.put("userId", user.getId());
         claimsMap.put("username", user.getUsername());
         claimsMap.put("firstname", user.getFirstname());
         claimsMap.put("lastname", user.getLastname());
