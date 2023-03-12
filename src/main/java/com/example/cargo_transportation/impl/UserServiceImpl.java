@@ -43,12 +43,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-    }
-
-    @Override
     public UserDTO createUser(SignupRequest signupRequest) {
         User user = customMapper.defaultMap(signupRequest, User.class);
 

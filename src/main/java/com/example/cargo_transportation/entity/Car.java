@@ -27,6 +27,7 @@ public class Car {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "car")
     private List<Contract> contracts = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "car")

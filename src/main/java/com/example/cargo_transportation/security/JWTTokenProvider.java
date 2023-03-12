@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -38,12 +39,12 @@ public class JWTTokenProvider {
 
     private final SessionJWTService sessionJWTService;
     private final SigningKeyResolver signingKeyResolver;
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public JWTTokenProvider(SessionJWTService sessionJWTService, UserService userService) {
+    public JWTTokenProvider(SessionJWTService sessionJWTService, UserDetailsService userDetailsService) {
         this.sessionJWTService = sessionJWTService;
-        this.userService = userService;
+        this.userDetailsService = userDetailsService;
         this.signingKeyResolver = new SigningKeyResolverAdapter() {
             @Override
             public Key resolveSigningKey(JwsHeader header, Claims claims) {
@@ -55,16 +56,14 @@ public class JWTTokenProvider {
     }
 
     public UserDetails getUserDetailsByToken(String token, TypeToken typeToken) {
-        if (validateToken(token, typeToken)) {
-            String username = getUsernameFromToken(token);
-            return userService.getUserByUsername(username);
-        }
-        return null;
+        String username = getUsernameFromToken(token, typeToken);
+        return StringUtils.hasText(username)
+                ? userDetailsService.loadUserByUsername(username)
+                : null;
     }
 
     public JWTToken getTokens(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.getUserByUsername(userDetails.getUsername());
+        User user = (User) authentication.getPrincipal();
 
         Date now = new Date(System.currentTimeMillis());
         Date accessExpiryDate = new Date(now.getTime() + Long.parseLong(ACCESS_EXPIRATION_TIME));
@@ -97,32 +96,22 @@ public class JWTTokenProvider {
                 .compact();
     }
 
-    public boolean validateToken(String token, TypeToken typeToken) {
+    private String getUsernameFromToken(String token, TypeToken typeToken) {
         try {
             if (StringUtils.hasText(token)) {
-                String typeTokenStr = (String) Jwts.parserBuilder()
+                Claims claims = Jwts.parserBuilder()
                         .setAllowedClockSkewSeconds(180)
                         .setSigningKeyResolver(signingKeyResolver)
                         .build()
                         .parseClaimsJws(token)
-                        .getBody()
-                        .get("typeToken");
-                if (TypeToken.valueOf(typeTokenStr).equals(typeToken))
-                    return true;
+                        .getBody();
+                String typeTokenString = (String) claims.get("typeToken");
+                if (TypeToken.valueOf(typeTokenString).equals(typeToken))
+                    return (String) claims.get("username");
             }
         } catch (JwtException | IllegalArgumentException e) {
             log.error(e.getMessage());
         }
-        return false;
-    }
-
-    private String getUsernameFromToken(String token) {
-        return (String) Jwts.parserBuilder()
-                .setAllowedClockSkewSeconds(180)
-                .setSigningKeyResolver(signingKeyResolver)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("username");
+        return null;
     }
 }

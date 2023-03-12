@@ -37,7 +37,7 @@ public class User implements UserDetails {
     @Column(updatable = false)
     private LocalDateTime createdDate;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
     private SessionJWT sessionJWT;
 

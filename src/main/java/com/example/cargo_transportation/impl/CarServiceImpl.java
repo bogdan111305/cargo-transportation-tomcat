@@ -58,7 +58,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarDTO getCarById(Long carId) {
-        return customMapper.mapToDTOWithSpecificFields(getCarById(carId), CarDTO.class);
+        return customMapper.mapToDTOWithSpecificFields(findCarById(carId), CarDTO.class);
     }
 
     @Override
