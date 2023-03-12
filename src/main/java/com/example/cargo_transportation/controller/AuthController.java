@@ -3,8 +3,10 @@ package com.example.cargo_transportation.controller;
 import com.example.cargo_transportation.dto.UserDTO;
 import com.example.cargo_transportation.impl.AuthenticatedServiceImpl;
 import com.example.cargo_transportation.payload.request.LoginRequest;
+import com.example.cargo_transportation.payload.request.RefreshToken;
 import com.example.cargo_transportation.payload.request.SignupRequest;
 import com.example.cargo_transportation.payload.response.JWTToken;
+import com.example.cargo_transportation.service.AuthenticatedService;
 import com.example.cargo_transportation.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final UserService userService;
-    private final AuthenticatedServiceImpl authenticatedService;
+    private final AuthenticatedService authenticatedService;
 
     @Autowired
     public AuthController(UserService userService, AuthenticatedServiceImpl authenticatedService){
@@ -27,8 +29,8 @@ public class AuthController {
         return authenticatedService.authenticateUser(loginRequest);
     }
 
-    @PostMapping("/refresh/{token}")
-    public JWTToken authenticateUser(@PathVariable("token") String refreshToken){
+    @PostMapping("/refresh")
+    public JWTToken refreshUser(@Valid @RequestBody RefreshToken refreshToken){
         return authenticatedService.refreshUser(refreshToken);
     }
 

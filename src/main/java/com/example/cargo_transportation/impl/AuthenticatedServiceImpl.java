@@ -1,6 +1,7 @@
 package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.payload.request.LoginRequest;
+import com.example.cargo_transportation.payload.request.RefreshToken;
 import com.example.cargo_transportation.payload.response.JWTToken;
 import com.example.cargo_transportation.security.JWTTokenProvider;
 import com.example.cargo_transportation.service.AuthenticatedService;
@@ -40,8 +41,8 @@ public class AuthenticatedServiceImpl implements AuthenticatedService {
         return jwtTokenProvider.getTokens(authentication);
     }
 
-    public JWTToken refreshUser(String token) {
-        UserDetails userDetails = jwtTokenProvider.getUserDetailsByToken(token, REFRESH_TOKEN);
+    public JWTToken refreshUser(@Valid @RequestBody RefreshToken refreshToken) {
+        UserDetails userDetails = jwtTokenProvider.getUserDetailsByToken(refreshToken.getToken(), REFRESH_TOKEN);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 null,
