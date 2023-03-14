@@ -9,7 +9,9 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.util.TriConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -36,6 +38,8 @@ public class JWTTokenProvider {
     private String REFRESH_EXPIRATION_TIME;
     @Value("${security-setting.token-prefix}")
     private String TOKEN_PREFIX;
+    @Value("${security-setting.header-string}")
+    private String HEADER_STRING;
 
     private final SessionJWTService sessionJWTService;
     private final SigningKeyResolver signingKeyResolver;
@@ -55,11 +59,15 @@ public class JWTTokenProvider {
         };
     }
 
-    public UserDetails getUserDetailsByToken(String token, TypeToken typeToken) {
-        String username = getUsernameFromToken(token, typeToken);
+    public UserDetails getUserDetailsByRequest(HttpServletRequest request, TypeToken typeToken) {
+        String username = getUsernameFromToken(
+                getJWTFromRequest(request),
+                typeToken
+        );
         return StringUtils.hasText(username)
                 ? userDetailsService.loadUserByUsername(username)
                 : null;
+
     }
 
     public JWTToken getTokens(Authentication authentication) {
@@ -67,17 +75,17 @@ public class JWTTokenProvider {
 
         Date now = new Date(System.currentTimeMillis());
         Date accessExpiryDate = new Date(now.getTime() + Long.parseLong(ACCESS_EXPIRATION_TIME));
-        Date expiryRefreshDate = new Date(now.getTime() + Long.parseLong(REFRESH_EXPIRATION_TIME));
+        Date refreshExpiryDate = new Date(now.getTime() + Long.parseLong(REFRESH_EXPIRATION_TIME));
 
         SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         String secretKeyString = Encoders.BASE64.encode(secretKey.getEncoded());
 
         String accessToken = generateToken(user, ACCESS_TOKEN, secretKey, accessExpiryDate, now);
-        String refreshToken = generateToken(user, REFRESH_TOKEN, secretKey, expiryRefreshDate, now);
+        String refreshToken = generateToken(user, REFRESH_TOKEN, secretKey, refreshExpiryDate, now);
 
         sessionJWTService.saveOrUpdateSession(user, secretKeyString);
 
-        return new JWTToken(true, TOKEN_PREFIX + " ", accessToken, refreshToken);
+        return new JWTToken(200, TOKEN_PREFIX + " ", accessToken, accessExpiryDate, refreshToken, refreshExpiryDate);
     }
 
     private String generateToken(User user, TypeToken typeToken, SecretKey secretKey, Date expiryDate, Date now) {
@@ -111,6 +119,14 @@ public class JWTTokenProvider {
             }
         } catch (JwtException | IllegalArgumentException e) {
             log.error(e.getMessage());
+        }
+        return null;
+    }
+
+    private String getJWTFromRequest(HttpServletRequest request) {
+        String bearToken = request.getHeader(HEADER_STRING);
+        if (StringUtils.hasText(bearToken) && bearToken.startsWith(TOKEN_PREFIX + " ")) {
+            return bearToken.split(" ")[1];
         }
         return null;
     }

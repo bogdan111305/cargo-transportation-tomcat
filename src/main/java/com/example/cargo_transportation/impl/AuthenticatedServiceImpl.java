@@ -5,6 +5,7 @@ import com.example.cargo_transportation.payload.request.RefreshToken;
 import com.example.cargo_transportation.payload.response.JWTToken;
 import com.example.cargo_transportation.security.JWTTokenProvider;
 import com.example.cargo_transportation.service.AuthenticatedService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,8 +42,8 @@ public class AuthenticatedServiceImpl implements AuthenticatedService {
         return jwtTokenProvider.getTokens(authentication);
     }
 
-    public JWTToken refreshUser(@Valid @RequestBody RefreshToken refreshToken) {
-        UserDetails userDetails = jwtTokenProvider.getUserDetailsByToken(refreshToken.getToken(), REFRESH_TOKEN);
+    public JWTToken refreshUser(HttpServletRequest request) {
+        UserDetails userDetails = jwtTokenProvider.getUserDetailsByRequest(request, REFRESH_TOKEN);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 null,

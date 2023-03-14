@@ -8,6 +8,7 @@ import com.example.cargo_transportation.payload.request.SignupRequest;
 import com.example.cargo_transportation.payload.response.JWTToken;
 import com.example.cargo_transportation.service.AuthenticatedService;
 import com.example.cargo_transportation.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +31,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public JWTToken refreshUser(@Valid @RequestBody RefreshToken refreshToken){
-        return authenticatedService.refreshUser(refreshToken);
+    public JWTToken refreshUser(HttpServletRequest request){
+        return authenticatedService.refreshUser(request);
     }
 
     @PostMapping("/register")
