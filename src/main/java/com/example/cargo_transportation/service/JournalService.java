@@ -1,12 +1,11 @@
 package com.example.cargo_transportation.service;
 
-import com.example.cargo_transportation.dto.ServiceDTO;
-import com.example.cargo_transportation.dto.JournalDTO;
-import com.example.cargo_transportation.dto.GetServiceDTO;
+import com.example.cargo_transportation.modal.dto.JournalDTO;
+import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Journal;
+import com.example.cargo_transportation.modal.report.JournalReport;
 
 import java.util.List;
-import java.util.Map;
 
 public interface JournalService {
     List<JournalDTO> getAllJournal(List<Long> ids);
@@ -28,4 +27,6 @@ public interface JournalService {
     void addServiceFromJournal(Long journalId, Long serviceId, Integer count);
 
     void removeServiceFromJournal(Long journalId, Long serviceId);
+
+    List<JournalReport> getJournalReport(String gosNum);
 }

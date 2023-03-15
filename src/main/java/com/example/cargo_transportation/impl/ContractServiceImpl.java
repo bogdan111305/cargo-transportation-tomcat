@@ -1,8 +1,8 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.dto.ContractDTO;
-import com.example.cargo_transportation.dto.PriceDTO;
-import com.example.cargo_transportation.dto.mapper.CustomMapper;
+import com.example.cargo_transportation.modal.dto.ContractDTO;
+import com.example.cargo_transportation.modal.dto.PriceDTO;
+import com.example.cargo_transportation.modal.mapper.CustomMapper;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.entity.Contract;

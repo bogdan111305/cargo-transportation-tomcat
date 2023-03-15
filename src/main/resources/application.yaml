@@ -1,7 +1,7 @@
 spring:
   datasource:
     username: root
-    url: jdbc:postgresql://db:5432/test_db
+    url: jdbc:postgresql://localhost:5432/test_db
     password: root
   jpa:
     hibernate:

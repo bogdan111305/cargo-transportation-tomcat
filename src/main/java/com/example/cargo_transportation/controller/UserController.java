@@ -1,9 +1,8 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.dto.UserDTO;
+import com.example.cargo_transportation.modal.dto.UserDTO;
 import com.example.cargo_transportation.service.UserService;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;

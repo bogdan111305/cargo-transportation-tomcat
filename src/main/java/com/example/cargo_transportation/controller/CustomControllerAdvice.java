@@ -2,7 +2,7 @@ package com.example.cargo_transportation.controller;
 
 import com.example.cargo_transportation.exception.EntityNotFoundException;
 import com.example.cargo_transportation.exception.SessionJWTException;
-import com.example.cargo_transportation.payload.response.ResponseError;
+import com.example.cargo_transportation.modal.payload.response.ResponseError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

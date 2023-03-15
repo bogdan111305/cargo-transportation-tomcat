@@ -9,11 +9,12 @@ import java.util.Objects;
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table
 public class Price {
     @EmbeddedId
+    @ToString.Include
     private PriceId id;
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("contractId")

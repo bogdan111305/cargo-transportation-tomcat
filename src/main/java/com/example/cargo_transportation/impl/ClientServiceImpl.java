@@ -1,13 +1,12 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.dto.ClientDTO;
-import com.example.cargo_transportation.dto.mapper.CustomMapper;
+import com.example.cargo_transportation.modal.dto.ClientDTO;
+import com.example.cargo_transportation.modal.mapper.CustomMapper;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
 import com.example.cargo_transportation.repo.ClientRepository;
 import com.example.cargo_transportation.service.ClientService;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -15,12 +15,13 @@ import java.util.*;
 
 @Setter
 @Getter
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "usr")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ToString.Include
     private Long id;
     @Column(nullable = false,
             unique = true)

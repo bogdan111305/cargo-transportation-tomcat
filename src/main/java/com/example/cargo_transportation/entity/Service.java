@@ -11,12 +11,13 @@ import java.util.*;
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table
 public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ToString.Include
     private Long id;
     @Column(nullable = false)
     private String name;

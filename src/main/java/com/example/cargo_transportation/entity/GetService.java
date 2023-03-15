@@ -11,11 +11,12 @@ import java.util.Objects;
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table
 public class GetService {
     @EmbeddedId
+    @ToString.Include
     private GetServiceId id;
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("journalId")

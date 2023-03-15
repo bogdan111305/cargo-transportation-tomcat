@@ -9,12 +9,13 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ToString.Include
     private Long id;
     @Column(nullable = false,
             unique = true)

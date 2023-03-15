@@ -2,16 +2,14 @@ package com.example.cargo_transportation.security;
 
 import com.example.cargo_transportation.entity.SessionJWT;
 import com.example.cargo_transportation.entity.User;
-import com.example.cargo_transportation.payload.response.JWTToken;
+import com.example.cargo_transportation.modal.payload.response.JWTToken;
 import com.example.cargo_transportation.service.SessionJWTService;
-import com.example.cargo_transportation.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.util.TriConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;

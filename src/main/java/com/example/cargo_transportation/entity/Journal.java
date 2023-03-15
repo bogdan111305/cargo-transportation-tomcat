@@ -1,6 +1,5 @@
 package com.example.cargo_transportation.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,12 +12,13 @@ import java.util.*;
 @Setter
 @Getter
 @NoArgsConstructor
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table
 public class Journal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ToString.Include
     private Long id;
     @Column(nullable = false)
     private LocalDateTime incomingDate;

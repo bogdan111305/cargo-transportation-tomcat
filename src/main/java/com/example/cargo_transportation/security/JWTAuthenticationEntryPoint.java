@@ -1,6 +1,6 @@
 package com.example.cargo_transportation.security;
 
-import com.example.cargo_transportation.payload.response.InvalidLoginResponse;
+import com.example.cargo_transportation.modal.payload.response.InvalidLoginResponse;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

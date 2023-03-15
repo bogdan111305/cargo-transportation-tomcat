@@ -1,7 +1,7 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.dto.ContractDTO;
-import com.example.cargo_transportation.dto.PriceDTO;
+import com.example.cargo_transportation.modal.dto.ContractDTO;
+import com.example.cargo_transportation.modal.dto.PriceDTO;
 import com.example.cargo_transportation.service.ContractService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

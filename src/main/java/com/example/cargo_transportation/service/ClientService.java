@@ -1,7 +1,7 @@
 package com.example.cargo_transportation.service;
 
 
-import com.example.cargo_transportation.dto.ClientDTO;
+import com.example.cargo_transportation.modal.dto.ClientDTO;
 import com.example.cargo_transportation.entity.Client;
 
 import java.util.List;

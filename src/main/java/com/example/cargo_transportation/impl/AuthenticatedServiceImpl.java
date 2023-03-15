@@ -1,8 +1,7 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.payload.request.LoginRequest;
-import com.example.cargo_transportation.payload.request.RefreshToken;
-import com.example.cargo_transportation.payload.response.JWTToken;
+import com.example.cargo_transportation.modal.payload.request.LoginRequest;
+import com.example.cargo_transportation.modal.payload.response.JWTToken;
 import com.example.cargo_transportation.security.JWTTokenProvider;
 import com.example.cargo_transportation.service.AuthenticatedService;
 import jakarta.servlet.http.HttpServletRequest;

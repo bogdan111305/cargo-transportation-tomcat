@@ -1,7 +1,8 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.dto.JournalDTO;
-import com.example.cargo_transportation.dto.GetServiceDTO;
+import com.example.cargo_transportation.modal.dto.JournalDTO;
+import com.example.cargo_transportation.modal.dto.GetServiceDTO;
+import com.example.cargo_transportation.modal.report.JournalReport;
 import com.example.cargo_transportation.service.JournalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +68,10 @@ public class JournalRestController {
     public void removeServiceFromJournal(@PathVariable("journalId") Long journalId,
                                        @PathVariable("serviceId") Long serviceId) {
         journalService.removeServiceFromJournal(journalId, serviceId);
+    }
+
+    @GetMapping("/report")
+    public List<JournalReport> getJournalReport(@RequestParam(value = "gosNum", required = false) String gosNum) {
+        return journalService.getJournalReport(gosNum);
     }
 }

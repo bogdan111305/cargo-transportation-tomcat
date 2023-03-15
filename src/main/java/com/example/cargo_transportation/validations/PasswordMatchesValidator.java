@@ -1,7 +1,7 @@
 package com.example.cargo_transportation.validations;
 
 import com.example.cargo_transportation.annotations.PasswordMatches;
-import com.example.cargo_transportation.payload.request.SignupRequest;
+import com.example.cargo_transportation.modal.payload.request.SignupRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

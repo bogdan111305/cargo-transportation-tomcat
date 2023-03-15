@@ -1,8 +1,8 @@
 package com.example.cargo_transportation.service;
 
-import com.example.cargo_transportation.dto.UserDTO;
+import com.example.cargo_transportation.modal.dto.UserDTO;
 import com.example.cargo_transportation.entity.User;
-import com.example.cargo_transportation.payload.request.SignupRequest;
+import com.example.cargo_transportation.modal.payload.request.SignupRequest;
 
 import java.security.Principal;
 

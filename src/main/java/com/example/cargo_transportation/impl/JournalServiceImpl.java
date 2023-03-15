@@ -1,17 +1,18 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.dto.JournalDTO;
-import com.example.cargo_transportation.dto.GetServiceDTO;
+import com.example.cargo_transportation.modal.dto.JournalDTO;
+import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Service;
 import com.example.cargo_transportation.entity.Journal;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
+import com.example.cargo_transportation.modal.report.JournalReport;
 import com.example.cargo_transportation.repo.JournalRepository;
 import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ServiceService;
 import com.example.cargo_transportation.service.JournalService;
 import lombok.extern.log4j.Log4j2;
-import com.example.cargo_transportation.dto.mapper.CustomMapper;
+import com.example.cargo_transportation.modal.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -124,7 +125,7 @@ public class JournalServiceImpl implements JournalService {
                 });
 
         journal = journalRepository.save(finalJournal);
-        log.info("The services by journal: {} is saved", journal.getId());
+        log.info("The services by journal: {} is saved", journalId);
 
         return journal.getGetServices().stream()
                 .map(rf -> new GetServiceDTO(rf.getService().getId(), rf.getCount()))
@@ -139,7 +140,7 @@ public class JournalServiceImpl implements JournalService {
         journal.addService(service, count);
 
         journalRepository.save(journal);
-        log.info("The service: {} by journal: {} is saved", journal.getId(), service.getId());
+        log.info("The service: {} by journal: {} is saved", journalId, serviceId);
     }
 
     @Override
@@ -150,6 +151,11 @@ public class JournalServiceImpl implements JournalService {
         journal.removeService(service);
 
         journalRepository.save(journal);
-        log.info("The service: {} by journal: {} is deleted", journal.getId(), service.getId());
+        log.info("The service: {} by journal: {} is deleted", journalId, serviceId);
+    }
+
+    @Override
+    public List<JournalReport> getJournalReport(String gosNum) {
+        return journalRepository.getJournalReport(gosNum);
     }
 }

@@ -1,12 +1,12 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.dto.ServiceDTO;
+import com.example.cargo_transportation.modal.dto.ServiceDTO;
 import com.example.cargo_transportation.entity.Service;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
 import com.example.cargo_transportation.repo.ServiceRepository;
 import com.example.cargo_transportation.service.ServiceService;
 import lombok.extern.log4j.Log4j2;
-import com.example.cargo_transportation.dto.mapper.CustomMapper;
+import com.example.cargo_transportation.modal.mapper.CustomMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,11 +1,10 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.dto.UserDTO;
+import com.example.cargo_transportation.modal.dto.UserDTO;
 import com.example.cargo_transportation.impl.AuthenticatedServiceImpl;
-import com.example.cargo_transportation.payload.request.LoginRequest;
-import com.example.cargo_transportation.payload.request.RefreshToken;
-import com.example.cargo_transportation.payload.request.SignupRequest;
-import com.example.cargo_transportation.payload.response.JWTToken;
+import com.example.cargo_transportation.modal.payload.request.LoginRequest;
+import com.example.cargo_transportation.modal.payload.request.SignupRequest;
+import com.example.cargo_transportation.modal.payload.response.JWTToken;
 import com.example.cargo_transportation.service.AuthenticatedService;
 import com.example.cargo_transportation.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,16 +1,15 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.dto.UserDTO;
+import com.example.cargo_transportation.modal.dto.UserDTO;
 import com.example.cargo_transportation.entity.User;
 import com.example.cargo_transportation.entity.enums.ERole;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
-import com.example.cargo_transportation.payload.request.SignupRequest;
+import com.example.cargo_transportation.modal.payload.request.SignupRequest;
 import com.example.cargo_transportation.repo.UserRepository;
 import com.example.cargo_transportation.service.UserService;
 import lombok.extern.log4j.Log4j2;
-import com.example.cargo_transportation.dto.mapper.CustomMapper;
+import com.example.cargo_transportation.modal.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

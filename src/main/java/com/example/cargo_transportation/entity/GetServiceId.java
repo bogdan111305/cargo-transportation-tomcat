@@ -7,17 +7,19 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-@ToString
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(onlyExplicitlyIncluded = true)
 @Embeddable
 public class GetServiceId implements Serializable {
 
     @Column(name = "journal_id")
+    @ToString.Include
     private Long journalId;
     @Column(name = "service_id")
+    @ToString.Include
     private Long serviceId;
 
     @Override

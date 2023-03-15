@@ -1,7 +1,7 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.dto.CarDTO;
-import com.example.cargo_transportation.dto.mapper.CustomMapper;
+import com.example.cargo_transportation.modal.dto.CarDTO;
+import com.example.cargo_transportation.modal.mapper.CustomMapper;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.exception.EntityNotFoundException;

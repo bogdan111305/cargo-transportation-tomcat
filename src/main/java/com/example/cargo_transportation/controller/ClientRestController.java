@@ -1,11 +1,9 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.dto.ClientDTO;
-import com.example.cargo_transportation.entity.Client;
+import com.example.cargo_transportation.modal.dto.ClientDTO;
 import com.example.cargo_transportation.service.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
