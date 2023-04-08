@@ -22,3 +22,4 @@ security-setting:
   content-type: application/json
   access-expiration-time: 600_000
   refresh-expiration-time: 3_600_000
+  allowed-clock-skew-seconds: 180

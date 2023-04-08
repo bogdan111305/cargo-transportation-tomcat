@@ -38,6 +38,8 @@ public class JWTTokenProvider {
     private String TOKEN_PREFIX;
     @Value("${security-setting.header-string}")
     private String HEADER_STRING;
+    @Value("${security-setting.allowed-clock-skew-seconds}")
+    private Long ALLOWED_CLOCK_SKEW_SECONDS;
 
     private final SessionJWTService sessionJWTService;
     private final SigningKeyResolver signingKeyResolver;
@@ -106,7 +108,7 @@ public class JWTTokenProvider {
         try {
             if (StringUtils.hasText(token)) {
                 Claims claims = Jwts.parserBuilder()
-                        .setAllowedClockSkewSeconds(180)
+                        .setAllowedClockSkewSeconds(ALLOWED_CLOCK_SKEW_SECONDS)
                         .setSigningKeyResolver(signingKeyResolver)
                         .build()
                         .parseClaimsJws(token)
