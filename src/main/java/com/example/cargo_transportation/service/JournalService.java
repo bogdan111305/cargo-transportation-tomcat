@@ -5,6 +5,7 @@ import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Journal;
 import com.example.cargo_transportation.modal.report.JournalReport;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface JournalService {
@@ -27,6 +28,4 @@ public interface JournalService {
     void addServiceFromJournal(Long journalId, Long serviceId, Integer count);
 
     void removeServiceFromJournal(Long journalId, Long serviceId);
-
-    List<JournalReport> getJournalReport(String gosNum);
 }

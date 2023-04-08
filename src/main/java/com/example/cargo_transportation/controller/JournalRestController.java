@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -68,10 +70,5 @@ public class JournalRestController {
     public void removeServiceFromJournal(@PathVariable("journalId") Long journalId,
                                        @PathVariable("serviceId") Long serviceId) {
         journalService.removeServiceFromJournal(journalId, serviceId);
-    }
-
-    @GetMapping("/report")
-    public List<JournalReport> getJournalReport(@RequestParam(value = "gosNum", required = false) String gosNum) {
-        return journalService.getJournalReport(gosNum);
     }
 }

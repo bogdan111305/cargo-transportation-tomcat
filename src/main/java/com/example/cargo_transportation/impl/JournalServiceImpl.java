@@ -15,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import com.example.cargo_transportation.modal.mapper.CustomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -152,10 +153,5 @@ public class JournalServiceImpl implements JournalService {
 
         journalRepository.save(journal);
         log.info("The service: {} by journal: {} is deleted", journalId, serviceId);
-    }
-
-    @Override
-    public List<JournalReport> getJournalReport(String gosNum) {
-        return journalRepository.getJournalReport(gosNum);
     }
 }
