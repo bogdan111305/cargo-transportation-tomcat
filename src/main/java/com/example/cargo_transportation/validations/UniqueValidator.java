@@ -53,9 +53,12 @@ public class UniqueValidator extends EntityManagerConstraintValidator<Object> im
             CriteriaQuery criteriaQuery = criteriaBuilder.createQuery();
             Root root = criteriaQuery.from(entity);
             ParameterExpression<String> parameter = criteriaBuilder.parameter(String.class, field.getKey());
-            criteriaQuery.select(root).where(criteriaBuilder.equal(root.get(field.getKey()), parameter));
             List resultQuery = getEntityManager()
-                    .createQuery(criteriaQuery).setParameter(field.getKey(), field.getValue())
+                    .createQuery(
+                            criteriaQuery
+                                    .select(root)
+                                    .where(criteriaBuilder.equal(root.get(field.getKey()), parameter)))
+                    .setParameter(field.getKey(), field.getValue())
                     .getResultList();
             if (resultQuery != null && !resultQuery.isEmpty()) {
                 result.put(field.getKey(), field.getValue());
