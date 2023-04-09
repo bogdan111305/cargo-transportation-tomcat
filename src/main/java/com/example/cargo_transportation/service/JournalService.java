@@ -15,11 +15,13 @@ public interface JournalService {
 
     Journal findJournalById(Long journalId);
 
+    List<JournalDTO> getUnclosedJournalByCarId(Long carId);
+
     JournalDTO createJournal(JournalDTO journalDTO);
 
     JournalDTO updateJournal(JournalDTO journalDTO, Long journalId);
 
-    JournalDTO departureByCar(Long carId);
+    JournalDTO updateJournalAsDeparture(Long journalId);
 
     void deleteJournal(Long journalId);
 

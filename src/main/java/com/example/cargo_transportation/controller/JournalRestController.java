@@ -22,14 +22,24 @@ public class JournalRestController {
         this.journalService = journalService;
     }
 
+    @GetMapping("/{journalId}")
+    public JournalDTO getJournalById(@PathVariable Long journalId) {
+        return journalService.getJournalById(journalId);
+    }
+
     @GetMapping("/journals")
     public List<JournalDTO> getAllJournal(@RequestBody(required = false) List<Long> ids) {
         return journalService.getAllJournal(ids);
     }
 
-    @GetMapping("/{journalId}")
-    public JournalDTO getJournalById(@PathVariable Long journalId) {
-        return journalService.getJournalById(journalId);
+    @GetMapping("/findUncloseJournalByCar/{carId}")
+    public List<JournalDTO> getUnclosedJournalByCarId(@PathVariable Long carId) {
+        return journalService.getUnclosedJournalByCarId(carId);
+    }
+
+    @GetMapping("/{journalId}/services")
+    public List<GetServiceDTO> getServicesFromJournal(@PathVariable Long journalId) {
+        return journalService.getServicesFromJournal(journalId);
     }
 
     @PostMapping()
@@ -38,25 +48,19 @@ public class JournalRestController {
     }
 
     @PutMapping("/{journalId}")
-    public JournalDTO updateJournal(@Valid @RequestBody JournalDTO journal,
+    public JournalDTO updateJournal(@Valid @RequestBody(required = false) JournalDTO journal,
                                     @PathVariable Long journalId) {
         return journalService.updateJournal(journal, journalId);
     }
 
-    @PutMapping("/departure/{carId}")
-    public JournalDTO departureJournal(@RequestParam(value = "gosNum", required = false) String gosNum,
-                                       @RequestParam(value = "sts", required = false) String sts) {
-        return journalService.departureByGosNumOrSts(gosNum, sts);
+    @PutMapping("/departure/{journalId}")
+    public JournalDTO updateJournalAsDeparture(@PathVariable Long journalId) {
+        return journalService.updateJournalAsDeparture(journalId);
     }
 
     @DeleteMapping("/{journalId}")
     public void deleteJournal(@PathVariable Long journalId) {
         journalService.deleteJournal(journalId);
-    }
-
-    @GetMapping("/{journalId}/services")
-    public List<GetServiceDTO> getServicesFromJournal(@PathVariable Long journalId) {
-        return journalService.getServicesFromJournal(journalId);
     }
 
     @PostMapping("/{journalId}/services")

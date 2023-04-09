@@ -1,5 +1,6 @@
 package com.example.cargo_transportation.impl;
 
+import com.example.cargo_transportation.exception.ValidationException;
 import com.example.cargo_transportation.modal.dto.CarDTO;
 import com.example.cargo_transportation.modal.dto.JournalDTO;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
@@ -7,7 +8,6 @@ import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Service;
 import com.example.cargo_transportation.entity.Journal;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
-import com.example.cargo_transportation.modal.report.JournalReport;
 import com.example.cargo_transportation.repo.JournalRepository;
 import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ServiceService;
@@ -38,6 +38,11 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
+    public JournalDTO getJournalById(Long journalId) {
+        return customMapper.mapToDTOWithSpecificFields(findJournalById(journalId), JournalDTO.class);
+    }
+
+    @Override
     public List<JournalDTO> getAllJournal(List<Long> ids) {
         List<Journal> journals;
         if (ids != null && !ids.isEmpty())
@@ -50,8 +55,18 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public JournalDTO getJournalById(Long journalId) {
-        return customMapper.mapToDTOWithSpecificFields(findJournalById(journalId), JournalDTO.class);
+    public List<JournalDTO> getUnclosedJournalByCarId(Long carId) {
+        List<Journal> journals = journalRepository.findJournalsByOutFactDateNullAndCar_Id(carId);
+        return journals.stream()
+                .map(journal -> customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetServiceDTO> getServicesFromJournal(Long journalId) {
+        return findJournalById(journalId).getGetServices().stream()
+                .map(rf -> new GetServiceDTO(rf.getService().getId(), rf.getCount()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -89,14 +104,13 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public JournalDTO departureByCar(Long carId) {
-        Car car = carService.findCarById(carId);
+    public JournalDTO updateJournalAsDeparture(Long journalId) {
         Journal journal = findJournalById(journalId);
 
         journal.setOutFactDate(LocalDateTime.now());
 
         journal = journalRepository.save(journal);
-        log.info("The journal: {} is updated", journal.getId());
+        log.info("The journal: {} is updated as departure", journal.getId());
 
         return customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class);
     }
@@ -107,13 +121,6 @@ public class JournalServiceImpl implements JournalService {
 
         journalRepository.delete(journal);
         log.info("The journal: {} is saved", journal.getId());
-    }
-
-    @Override
-    public List<GetServiceDTO> getServicesFromJournal(Long journalId) {
-        return findJournalById(journalId).getGetServices().stream()
-                .map(rf -> new GetServiceDTO(rf.getService().getId(), rf.getCount()))
-                .collect(Collectors.toList());
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/report")
 public class ReportRestController {
-/*    private ReportService reportService;
+    private ReportService reportService;
 
     @Autowired
     public ReportRestController(ReportService reportService) {
@@ -32,5 +32,5 @@ public class ReportRestController {
                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                         LocalDateTime endDate) {
         return reportService.getJournalReport(gosNum, clientId, startDate, endDate);
-    }*/
+    }
 }
