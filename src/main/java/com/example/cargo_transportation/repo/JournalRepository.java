@@ -20,9 +20,10 @@ public interface JournalRepository extends JpaRepository<Journal, Long> {
                     "JOIN client as cl on c.client_id = cl.id \n" +
                     "LEFT JOIN get_service as gs on j.id = gs.journal_id \n" +
                     "LEFT JOIN service as s on gs.service_id = s.id \n" +
-                    "WHERE c.gos_num = COALESCE(:gosNum, c.gos_num) and cl.id = COALESCE(:clientId, cl.id) and " +
+                    "WHERE c.gos_num = COALESCE(:gosNum, c.gos_num) and \n" +
+                    "cl.id = COALESCE(:clientId, cl.id) and \n" +
                     "j.incoming_date between :startDate and :endDate")
-    List<JournalReport> getJournalReport(@Param("gosNum") String gosNum,
+    List<Journal> getJournalReport(@Param("gosNum") String gosNum,
                                          @Param("clientId") Long clientId,
                                          @Param("startDate") LocalDateTime startDateReport,
                                          @Param("endDate") LocalDateTime endDateReport);

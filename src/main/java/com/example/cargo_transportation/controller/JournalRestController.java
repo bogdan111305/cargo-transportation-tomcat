@@ -43,6 +43,12 @@ public class JournalRestController {
         return journalService.updateJournal(journal, journalId);
     }
 
+    @PutMapping("/departure/{carId}")
+    public JournalDTO departureJournal(@RequestParam(value = "gosNum", required = false) String gosNum,
+                                       @RequestParam(value = "sts", required = false) String sts) {
+        return journalService.departureByGosNumOrSts(gosNum, sts);
+    }
+
     @DeleteMapping("/{journalId}")
     public void deleteJournal(@PathVariable Long journalId) {
         journalService.deleteJournal(journalId);

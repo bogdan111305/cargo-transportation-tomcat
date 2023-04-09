@@ -6,5 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReportService {
-    List<JournalReport> getJournalReport(String gosNum, Long clientId, LocalDateTime startDateReport, LocalDateTime endDateReport);
+/*    List<JournalReport> getJournalReport(String gosNum, Long clientId,
+                                         LocalDateTime startDateReport,
+                                         LocalDateTime endDateReport);*/
 }

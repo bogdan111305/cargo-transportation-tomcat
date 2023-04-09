@@ -1,5 +1,6 @@
 package com.example.cargo_transportation.impl;
 
+import com.example.cargo_transportation.modal.dto.CarDTO;
 import com.example.cargo_transportation.modal.dto.JournalDTO;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Car;
@@ -54,12 +55,6 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public Journal findJournalById(Long journalId) {
-        return journalRepository.findById(journalId)
-                .orElseThrow(() -> new EntityNotFoundException("Journal not found with id: " + journalId));
-    }
-
-    @Override
     public JournalDTO createJournal(JournalDTO journalDTO) {
         Journal journal = customMapper.defaultMap(journalDTO, Journal.class);
 
@@ -86,6 +81,19 @@ public class JournalServiceImpl implements JournalService {
             Car car = carService.findCarById(journalDTO.getCarId());
             journal.setCar(car);
         }
+
+        journal = journalRepository.save(journal);
+        log.info("The journal: {} is updated", journal.getId());
+
+        return customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class);
+    }
+
+    @Override
+    public JournalDTO departureByCar(Long carId) {
+        Car car = carService.findCarById(carId);
+        Journal journal = findJournalById(journalId);
+
+        journal.setOutFactDate(LocalDateTime.now());
 
         journal = journalRepository.save(journal);
         log.info("The journal: {} is updated", journal.getId());
@@ -153,5 +161,11 @@ public class JournalServiceImpl implements JournalService {
 
         journalRepository.save(journal);
         log.info("The service: {} by journal: {} is deleted", journalId, serviceId);
+    }
+
+    @Override
+    public Journal findJournalById(Long journalId) {
+        return journalRepository.findById(journalId)
+                .orElseThrow(() -> new EntityNotFoundException("Journal not found with id: " + journalId));
     }
 }

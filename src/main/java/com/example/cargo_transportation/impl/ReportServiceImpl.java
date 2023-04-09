@@ -10,10 +10,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.example.cargo_transportation.common.Common.DEFAULT_END_DATE;
+import static com.example.cargo_transportation.common.Common.DEFAULT_START_DATE;
+
 @Service
 @Log4j2
 public class ReportServiceImpl implements ReportService {
-    private final JournalRepository journalRepository;
+/*    private final JournalRepository journalRepository;
 
     @Autowired
     public ReportServiceImpl(JournalRepository journalRepository) {
@@ -21,7 +24,11 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<JournalReport> getJournalReport(String gosNum, Long clientId, LocalDateTime startDateReport, LocalDateTime endDateReport) {
+    public List<JournalReport> getJournalReport(String gosNum, Long clientId,
+                                                LocalDateTime startDateReport,
+                                                LocalDateTime endDateReport) {
+        if (startDateReport == null) startDateReport = DEFAULT_START_DATE;
+        if (endDateReport == null) endDateReport = DEFAULT_END_DATE;
         return journalRepository.getJournalReport(gosNum, clientId, startDateReport, endDateReport);
-    }
+    }*/
 }

@@ -19,6 +19,8 @@ public interface JournalService {
 
     JournalDTO updateJournal(JournalDTO journalDTO, Long journalId);
 
+    JournalDTO departureByCar(Long carId);
+
     void deleteJournal(Long journalId);
 
     List<GetServiceDTO> getServicesFromJournal(Long journalId);
