@@ -15,7 +15,7 @@ public interface JournalService {
 
     Journal findJournalById(Long journalId);
 
-    List<JournalDTO> getUnclosedJournalByCarId(Long carId);
+    List<JournalDTO> getUnclosedJournalsByCarId(Long carId);
 
     JournalDTO createJournal(JournalDTO journalDTO);
 

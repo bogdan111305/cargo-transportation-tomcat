@@ -2,14 +2,11 @@ package com.example.cargo_transportation.controller;
 
 import com.example.cargo_transportation.modal.dto.JournalDTO;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
-import com.example.cargo_transportation.modal.report.JournalReport;
 import com.example.cargo_transportation.service.JournalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -32,9 +29,9 @@ public class JournalRestController {
         return journalService.getAllJournal(ids);
     }
 
-    @GetMapping("/findUncloseJournalByCar/{carId}")
+    @GetMapping("/findUncloseJournalsByCar/{carId}")
     public List<JournalDTO> getUnclosedJournalByCarId(@PathVariable Long carId) {
-        return journalService.getUnclosedJournalByCarId(carId);
+        return journalService.getUnclosedJournalsByCarId(carId);
     }
 
     @GetMapping("/{journalId}/services")
@@ -65,20 +62,20 @@ public class JournalRestController {
 
     @PostMapping("/{journalId}/services")
     public List<GetServiceDTO> addServicesFromJournal(@PathVariable Long journalId,
-                                                 @RequestBody List<GetServiceDTO> services) {
+                                                      @RequestBody List<GetServiceDTO> services) {
         return journalService.addServicesFromJournal(journalId, services);
     }
 
     @PostMapping("/{journalId}/service/{serviceId}")
     public void addServiceFromJournal(@PathVariable("journalId") Long journalId,
-                                          @PathVariable("serviceId") Long serviceId,
+                                      @PathVariable("serviceId") Long serviceId,
                                       @RequestParam Integer count) {
         journalService.addServiceFromJournal(journalId, serviceId, count);
     }
 
     @DeleteMapping("/{journalId}/service/{serviceId}")
     public void removeServiceFromJournal(@PathVariable("journalId") Long journalId,
-                                       @PathVariable("serviceId") Long serviceId) {
+                                         @PathVariable("serviceId") Long serviceId) {
         journalService.removeServiceFromJournal(journalId, serviceId);
     }
 }

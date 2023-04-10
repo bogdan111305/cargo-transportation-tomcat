@@ -1,6 +1,5 @@
 package com.example.cargo_transportation.repo;
 
-import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Journal;
 import com.example.cargo_transportation.modal.report.JournalReport;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,11 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface JournalRepository extends JpaRepository<Journal, Long> {
-    @Query(nativeQuery = true,
-            value = "SELECT j.waybill as waybill, \n" +
+    List<Journal> findJournalsByOutFactDateNullAndCar_Id(Long carId);
+
+    @Query(value = "SELECT j.waybill as waybill, \n" +
                     "       j.incoming_date as incomingDateTime, \n" +
                     "       c.gos_num as gosNum, \n" +
                     "       s.name as service \n" +
@@ -24,11 +23,10 @@ public interface JournalRepository extends JpaRepository<Journal, Long> {
                     "LEFT JOIN service as s on gs.service_id = s.id \n" +
                     "WHERE c.gos_num = COALESCE(:gosNum, c.gos_num) and \n" +
                     "cl.id = COALESCE(:clientId, cl.id) and \n" +
-                    "j.incoming_date between :startDate and :endDate")
+                    "j.incoming_date between :startDate and :endDate",
+            nativeQuery = true)
     List<JournalReport> getJournalReport(@Param("gosNum") String gosNum,
                                          @Param("clientId") Long clientId,
                                          @Param("startDate") LocalDateTime startDateReport,
                                          @Param("endDate") LocalDateTime endDateReport);
-
-    List<Journal> findJournalsByOutFactDateNullAndCar_Id(Long carId);
 }

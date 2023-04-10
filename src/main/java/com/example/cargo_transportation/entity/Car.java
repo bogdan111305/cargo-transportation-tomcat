@@ -1,6 +1,7 @@
 package com.example.cargo_transportation.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class Car {
     @Column(nullable = false)
     private String model;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
 

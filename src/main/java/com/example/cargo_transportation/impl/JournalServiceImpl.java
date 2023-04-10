@@ -1,7 +1,5 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.exception.ValidationException;
-import com.example.cargo_transportation.modal.dto.CarDTO;
 import com.example.cargo_transportation.modal.dto.JournalDTO;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Car;
@@ -55,7 +53,7 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<JournalDTO> getUnclosedJournalByCarId(Long carId) {
+    public List<JournalDTO> getUnclosedJournalsByCarId(Long carId) {
         List<Journal> journals = journalRepository.findJournalsByOutFactDateNullAndCar_Id(carId);
         return journals.stream()
                 .map(journal -> customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class))
