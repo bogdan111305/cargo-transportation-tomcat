@@ -7,6 +7,7 @@ import com.example.cargo_transportation.modal.report.JournalReport;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface JournalService {
     List<JournalDTO> getAllJournal(List<Long> ids);
@@ -15,7 +16,7 @@ public interface JournalService {
 
     Journal findJournalById(Long journalId);
 
-    List<JournalDTO> getUnclosedJournalsByCarId(Long carId);
+    List<JournalDTO> getUnclosedJournals(Long carId, String gosNum, String sts);
 
     JournalDTO createJournal(JournalDTO journalDTO);
 

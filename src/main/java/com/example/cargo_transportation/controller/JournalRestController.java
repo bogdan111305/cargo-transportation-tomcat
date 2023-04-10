@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/journal")
@@ -29,9 +30,11 @@ public class JournalRestController {
         return journalService.getAllJournal(ids);
     }
 
-    @GetMapping("/findUncloseJournalsByCar/{carId}")
-    public List<JournalDTO> getUnclosedJournalByCarId(@PathVariable Long carId) {
-        return journalService.getUnclosedJournalsByCarId(carId);
+    @GetMapping("/findUncloseJournals")
+    public List<JournalDTO> getUnclosedJournal(@RequestParam(name = "carId", required = false) Long carId,
+                                               @RequestParam(name = "gosNum", required = false) String gosNum,
+                                               @RequestParam(name = "sts", required = false) String sts) {
+        return journalService.getUnclosedJournals(carId, gosNum, sts);
     }
 
     @GetMapping("/{journalId}/services")

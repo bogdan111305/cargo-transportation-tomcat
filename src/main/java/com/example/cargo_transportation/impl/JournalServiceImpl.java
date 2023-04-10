@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
@@ -53,8 +54,8 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public List<JournalDTO> getUnclosedJournalsByCarId(Long carId) {
-        List<Journal> journals = journalRepository.findJournalsByOutFactDateNullAndCar_Id(carId);
+    public List<JournalDTO> getUnclosedJournals(Long carId, String gosNum, String sts) {
+        List<Journal> journals = journalRepository.findUnclosedJournals(carId, gosNum, sts);
         return journals.stream()
                 .map(journal -> customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class))
                 .collect(Collectors.toList());

@@ -10,7 +10,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface JournalRepository extends JpaRepository<Journal, Long> {
-    List<Journal> findJournalsByOutFactDateNullAndCar_Id(Long carId);
+    @Query(value = "SELECT j \n" +
+            "FROM Journal j \n" +
+            "JOIN Car c on j.car.id = c.id \n" +
+            "WHERE c.id = COALESCE(:carId, c.id) and \n" +
+            "c.gosNum = COALESCE(:gosNum, c.gosNum) and \n" +
+            "c.sts = COALESCE(:sts, c.sts)")
+    List<Journal> findUnclosedJournals(@Param("carId") Long carId,
+                                       @Param("carId") String gosNum,
+                                       @Param("carId") String sts);
 
     @Query(value = "SELECT j.waybill as waybill, \n" +
                     "       j.incoming_date as incomingDateTime, \n" +
