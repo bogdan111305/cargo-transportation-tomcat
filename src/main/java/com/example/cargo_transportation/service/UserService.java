@@ -7,15 +7,15 @@ import com.example.cargo_transportation.modal.payload.request.SignupRequest;
 import java.security.Principal;
 
 public interface UserService {
+    UserDTO getCurrentUser(Principal principal);
+
     UserDTO createUser(SignupRequest userDTO);
 
     UserDTO updateUser(UserDTO userDTO, Principal principal);
 
-    UserDTO getCurrentUser(Principal principal);
+    void deleteUser(Long userId);
 
     User getUserById(Long userId);
-
-    void deleteUser(Long userId);
 
     User getUserByPrincipal(Principal principal);
 }

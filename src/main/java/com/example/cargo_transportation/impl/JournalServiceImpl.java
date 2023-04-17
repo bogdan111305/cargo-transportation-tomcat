@@ -1,5 +1,6 @@
 package com.example.cargo_transportation.impl;
 
+import com.example.cargo_transportation.entity.enums.JournalStatus;
 import com.example.cargo_transportation.modal.dto.JournalDTO;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Car;
@@ -11,12 +12,10 @@ import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ServiceService;
 import com.example.cargo_transportation.service.JournalService;
 import lombok.extern.log4j.Log4j2;
-import com.example.cargo_transportation.modal.mapper.CustomMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
@@ -25,60 +24,57 @@ public class JournalServiceImpl implements JournalService {
     private final JournalRepository journalRepository;
     private final ServiceService serviceService;
     private final CarService carService;
-    private final CustomMapper customMapper;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public JournalServiceImpl(JournalRepository journalRepository, ServiceService serviceService,
-                              CarService carService, CustomMapper customMapper) {
+                              CarService carService, ModelMapper modelMapper) {
         this.journalRepository = journalRepository;
         this.serviceService = serviceService;
         this.carService = carService;
-        this.customMapper = customMapper;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public JournalDTO getJournalById(Long journalId) {
-        return customMapper.mapToDTOWithSpecificFields(findJournalById(journalId), JournalDTO.class);
+        return modelMapper.map(findJournalById(journalId), JournalDTO.class);
     }
 
     @Override
-    public List<JournalDTO> getAllJournal(List<Long> ids) {
-        List<Journal> journals;
-        if (ids != null && !ids.isEmpty())
-            journals = journalRepository.findAllById(ids);
-        else
-            journals = journalRepository.findAll();
+    public List<JournalDTO> getAllJournal() {
+        List<Journal> journals = journalRepository.findAll();
         return journals.stream()
-                .map(journal -> customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class))
+                .map(journal -> modelMapper.map(journal, JournalDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<JournalDTO> getUnclosedJournals(Long carId, String gosNum, String sts) {
-        List<Journal> journals = journalRepository.findUnclosedJournals(carId, gosNum, sts);
+    public List<JournalDTO> getOpenJournals(Long carId, String gosNum, String sts) {
+        List<Journal> journals = journalRepository.findOpenJournals(carId, gosNum, sts);
         return journals.stream()
-                .map(journal -> customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class))
+                .map(journal -> modelMapper.map(journal, JournalDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<GetServiceDTO> getServicesFromJournal(Long journalId) {
         return findJournalById(journalId).getGetServices().stream()
-                .map(rf -> new GetServiceDTO(rf.getService().getId(), rf.getCount()))
+                .map(GetServiceDTO::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     public JournalDTO createJournal(JournalDTO journalDTO) {
-        Journal journal = customMapper.defaultMap(journalDTO, Journal.class);
+        Journal journal = modelMapper.map(journalDTO, Journal.class);
 
         Car car = carService.findCarById(journalDTO.getCarId());
         journal.setCar(car);
+        journal.setStatus(JournalStatus.OPEN);
 
         journal = journalRepository.save(journal);
         log.info("The journal: {} is saved", journal.getId());
 
-        return customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class);
+        return modelMapper.map(journal, JournalDTO.class);
     }
 
     @Override
@@ -86,10 +82,13 @@ public class JournalServiceImpl implements JournalService {
         Journal journal = findJournalById(journalId);
 
         journal.setIncomingDate(journalDTO.getIncomingDate());
-        journal.setOutPlanDate(journalDTO.getOutPlanDate());
-        journal.setOutFactDate(journalDTO.getOutFactDate());
+        journal.setOutDate(journalDTO.getOutDate());
         journal.setWaybill(journalDTO.getWaybill());
         journal.setNameDriver(journalDTO.getNameDriver());
+
+        if (journalDTO.getStatus() != null) {
+            journal.setStatus(journalDTO.getStatus());
+        }
 
         if (!journal.getId().equals(journalDTO.getCarId())) {
             Car car = carService.findCarById(journalDTO.getCarId());
@@ -99,19 +98,19 @@ public class JournalServiceImpl implements JournalService {
         journal = journalRepository.save(journal);
         log.info("The journal: {} is updated", journal.getId());
 
-        return customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class);
+        return modelMapper.map(journal, JournalDTO.class);
     }
 
     @Override
-    public JournalDTO updateJournalAsDeparture(Long journalId) {
+    public JournalDTO updateJournalStatus(Long journalId, JournalStatus status) {
         Journal journal = findJournalById(journalId);
 
-        journal.setOutFactDate(LocalDateTime.now());
+        journal.setStatus(status);
 
         journal = journalRepository.save(journal);
         log.info("The journal: {} is updated as departure", journal.getId());
 
-        return customMapper.mapToDTOWithSpecificFields(journal, JournalDTO.class);
+        return modelMapper.map(journal, JournalDTO.class);
     }
 
     @Override
@@ -143,7 +142,7 @@ public class JournalServiceImpl implements JournalService {
         log.info("The services by journal: {} is saved", journalId);
 
         return journal.getGetServices().stream()
-                .map(rf -> new GetServiceDTO(rf.getService().getId(), rf.getCount()))
+                .map(GetServiceDTO::new)
                 .collect(Collectors.toList());
     }
 

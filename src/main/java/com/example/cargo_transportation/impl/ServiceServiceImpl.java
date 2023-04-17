@@ -6,7 +6,7 @@ import com.example.cargo_transportation.exception.EntityNotFoundException;
 import com.example.cargo_transportation.repo.ServiceRepository;
 import com.example.cargo_transportation.service.ServiceService;
 import lombok.extern.log4j.Log4j2;
-import com.example.cargo_transportation.modal.mapper.CustomMapper;
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,22 +15,19 @@ import java.util.stream.Collectors;
 @Log4j2
 public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepository serviceRepository;
-    private final CustomMapper customMapper;
+    private final ModelMapper modelMapper;
 
-    public ServiceServiceImpl(ServiceRepository serviceRepository, CustomMapper customMapper) {
+    public ServiceServiceImpl(ServiceRepository serviceRepository, ModelMapper modelMapper) {
         this.serviceRepository = serviceRepository;
-        this.customMapper = customMapper;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public List<ServiceDTO> getAllService(List<Long> ids) {
-        List<Service> services;
-        if (ids != null && !ids.isEmpty())
-            services = findServicesById(ids);
-        else
-            services = serviceRepository.findAll();
+    public List<ServiceDTO> getAllService() {
+        List<Service> services = serviceRepository.findAll();
+
         return services.stream()
-                .map(service -> customMapper.mapToDTOWithSpecificFields(service, ServiceDTO.class))
+                .map(service -> modelMapper.map(service, ServiceDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -41,7 +38,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceDTO getServiceById(Long serviceId) {
-        return customMapper.mapToDTOWithSpecificFields(findServiceById(serviceId), ServiceDTO.class);
+        return modelMapper.map(findServiceById(serviceId), ServiceDTO.class);
     }
 
     @Override
@@ -52,12 +49,12 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceDTO createService(ServiceDTO serviceDTO) {
-        Service service = customMapper.defaultMap(serviceDTO, Service.class);
+        Service service = modelMapper.map(serviceDTO, Service.class);
 
         service = serviceRepository.save(service);
         log.info("The service: {} is saved", service.getName());
 
-        return customMapper.mapToDTOWithSpecificFields(service, ServiceDTO.class);
+        return modelMapper.map(service, ServiceDTO.class);
     }
 
     @Override
@@ -70,7 +67,7 @@ public class ServiceServiceImpl implements ServiceService {
         service = serviceRepository.save(service);
         log.info("The service: {} is updated", service.getName());
 
-        return customMapper.mapToDTOWithSpecificFields(service, ServiceDTO.class);
+        return modelMapper.map(service, ServiceDTO.class);
     }
 
     @Override

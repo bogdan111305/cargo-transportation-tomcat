@@ -2,7 +2,7 @@ package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.modal.dto.ContractDTO;
 import com.example.cargo_transportation.modal.dto.PriceDTO;
-import com.example.cargo_transportation.modal.mapper.CustomMapper;
+import org.modelmapper.ModelMapper;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.entity.Contract;
@@ -26,39 +26,30 @@ public class ContractServiceImpl implements ContractService {
     private final ClientService clientService;
     private final CarService carService;
     private final ServiceService serviceService;
-    private final CustomMapper customMapper;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public ContractServiceImpl(ContractRepository contractRepository, ClientService clientService,
-                               CarService carService, ServiceService serviceService, CustomMapper customMapper) {
+                               CarService carService, ServiceService serviceService, ModelMapper modelMapper) {
         this.contractRepository = contractRepository;
         this.clientService = clientService;
         this.carService = carService;
         this.serviceService = serviceService;
-        this.customMapper = customMapper;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public List<ContractDTO> getAllContract(List<Long> ids) {
-        List<Contract> contracts;
-        if (ids != null && !ids.isEmpty())
-            contracts = contractRepository.findAllById(ids);
-        else
-            contracts = contractRepository.findAll();
+    public List<ContractDTO> getAllContract() {
+        List<Contract> contracts = contractRepository.findAll();
+
         return contracts.stream()
-                .map(contract -> customMapper.mapToDTOWithSpecificFields(contract, ContractDTO.class))
+                .map(contract -> modelMapper.map(contract, ContractDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
     public ContractDTO getContractById(Long contractId) {
-        return customMapper.mapToDTOWithSpecificFields(findContractById(contractId), ContractDTO.class);
-    }
-
-    @Override
-    public Contract findContractById(Long contractId) {
-        return contractRepository.findById(contractId)
-                .orElseThrow(() -> new EntityNotFoundException("Contract not found with id: " + contractId));
+        return modelMapper.map(findContractById(contractId), ContractDTO.class);
     }
 
     @Override
@@ -66,14 +57,14 @@ public class ContractServiceImpl implements ContractService {
         Car car = carService.findCarById(contractDTO.getCarId());
         Client client = clientService.findClientById(contractDTO.getClientId());
 
-        Contract contract = customMapper.defaultMap(contractDTO, Contract.class);
+        Contract contract = modelMapper.map(contractDTO, Contract.class);
         contract.setCar(car);
         contract.setClient(client);
 
         contract = contractRepository.save(contract);
         log.info("The contract: {} is created", contract.getId());
 
-        return customMapper.mapToDTOWithSpecificFields(contract, ContractDTO.class);
+        return modelMapper.map(contract, ContractDTO.class);
     }
 
     @Override
@@ -96,7 +87,7 @@ public class ContractServiceImpl implements ContractService {
         contract = contractRepository.save(contract);
         log.info("The contract: {} is updated", contract.getId());
 
-        return customMapper.mapToDTOWithSpecificFields(contract, ContractDTO.class);
+        return modelMapper.map(contract, ContractDTO.class);
     }
 
     @Override
@@ -110,7 +101,7 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<PriceDTO> getPricesFromContract(Long contractId) {
         return findContractById(contractId).getPrices().stream()
-                .map(rf -> new PriceDTO(rf.getService().getId(), rf.getCost()))
+                .map(PriceDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -135,7 +126,7 @@ public class ContractServiceImpl implements ContractService {
         log.info("The prices for services by contract: {} is saved", contract.getId());
 
         return contract.getPrices().stream()
-                .map(rf -> new PriceDTO(rf.getService().getId(), rf.getCost()))
+                .map(PriceDTO::new)
                 .collect(Collectors.toList());
     }
 
@@ -159,5 +150,11 @@ public class ContractServiceImpl implements ContractService {
 
         contractRepository.save(contract);
         log.info("The price for service: {} by contract: {} is deleted", contract.getId(), service.getId());
+    }
+
+    @Override
+    public Contract findContractById(Long contractId) {
+        return contractRepository.findById(contractId)
+                .orElseThrow(() -> new EntityNotFoundException("Contract not found with id: " + contractId));
     }
 }

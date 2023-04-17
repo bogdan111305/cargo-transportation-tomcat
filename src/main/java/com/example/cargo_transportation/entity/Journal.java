@@ -1,5 +1,6 @@
 package com.example.cargo_transportation.entity;
 
+import com.example.cargo_transportation.entity.enums.JournalStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,12 +24,15 @@ public class Journal {
     @Column(nullable = false)
     private LocalDateTime incomingDate;
     @Column(nullable = false)
-    private LocalDateTime outPlanDate;
-    private LocalDateTime outFactDate;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Car car;
+    private LocalDateTime outDate;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private JournalStatus status;
     private String waybill;
     private String nameDriver;
+
+    @ManyToOne
+    private Car car;
 
     @OneToMany(mappedBy = "journal",
             cascade = CascadeType.ALL,

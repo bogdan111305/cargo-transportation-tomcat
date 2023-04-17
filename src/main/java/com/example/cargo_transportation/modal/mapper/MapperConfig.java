@@ -19,9 +19,4 @@ public class MapperConfig {
                 .setFieldAccessLevel(PRIVATE);
         return mapper;
     }
-
-    @Bean
-    public CustomMapper customMapper() {
-        return new CustomMapper(modelMapper());
-    }
 }

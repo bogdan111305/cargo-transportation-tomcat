@@ -3,6 +3,7 @@ package com.example.cargo_transportation.modal.mapper;
 import jakarta.persistence.Entity;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -10,14 +11,22 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
+
 @Log4j2
 public class CustomMapper implements Mapper{
 
     private static final String IDENTIFICATION_PARAM = "Id";
     private final ModelMapper modelMapper;
 
-    public CustomMapper(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
+    public CustomMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setFieldMatchingEnabled(true)
+                .setSkipNullEnabled(true)
+                .setFieldAccessLevel(PRIVATE);
+        this.modelMapper = mapper;
     }
 
     @Override

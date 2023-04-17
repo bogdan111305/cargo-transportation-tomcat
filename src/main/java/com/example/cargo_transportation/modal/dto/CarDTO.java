@@ -16,6 +16,8 @@ public class CarDTO {
     private String sts;
     @NotEmpty
     private String model;
+
     @NotNull
     private Long clientId;
+    private ClientDTO client;
 }

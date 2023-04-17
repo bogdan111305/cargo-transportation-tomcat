@@ -19,8 +19,8 @@ public class CarRestController {
     }
 
     @GetMapping("/cars")
-    public List<CarDTO> getAllCar(@RequestBody(required = false) List<Long> ids) {
-        return carService.getAllCar(ids);
+    public List<CarDTO> getAllCar() {
+        return carService.getAllCar();
     }
 
     @GetMapping("/findBySTS/{sts}")

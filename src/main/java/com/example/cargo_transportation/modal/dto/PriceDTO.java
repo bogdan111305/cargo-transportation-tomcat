@@ -1,5 +1,6 @@
 package com.example.cargo_transportation.modal.dto;
 
+import com.example.cargo_transportation.entity.Price;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -15,5 +16,10 @@ public class PriceDTO {
     public PriceDTO(Long id, Integer cost) {
         this.serviceId = id;
         this.cost = cost;
+    }
+
+    public PriceDTO(Price price) {
+        this.serviceId = price.getService().getId();
+        this.cost = price.getCost();
     }
 }

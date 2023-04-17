@@ -19,8 +19,8 @@ public class ServiceRestController {
     }
 
     @GetMapping("/services")
-    public List<ServiceDTO> getAllService(@RequestBody(required = false) List<Long> ids) {
-        return serviceService.getAllService(ids);
+    public List<ServiceDTO> getAllService() {
+        return serviceService.getAllService();
     }
 
     @GetMapping("/{serviceId}")

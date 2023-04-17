@@ -1,5 +1,6 @@
 package com.example.cargo_transportation.controller;
 
+import com.example.cargo_transportation.entity.enums.JournalStatus;
 import com.example.cargo_transportation.modal.dto.JournalDTO;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.service.JournalService;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/journal")
@@ -26,15 +26,15 @@ public class JournalRestController {
     }
 
     @GetMapping("/journals")
-    public List<JournalDTO> getAllJournal(@RequestBody(required = false) List<Long> ids) {
-        return journalService.getAllJournal(ids);
+    public List<JournalDTO> getAllJournal() {
+        return journalService.getAllJournal();
     }
 
-    @GetMapping("/findUncloseJournals")
-    public List<JournalDTO> getUnclosedJournal(@RequestParam(name = "carId", required = false) Long carId,
+    @GetMapping("/findOpenJournals")
+    public List<JournalDTO> getOpenJournals(@RequestParam(name = "carId", required = false) Long carId,
                                                @RequestParam(name = "gosNum", required = false) String gosNum,
                                                @RequestParam(name = "sts", required = false) String sts) {
-        return journalService.getUnclosedJournals(carId, gosNum, sts);
+        return journalService.getOpenJournals(carId, gosNum, sts);
     }
 
     @GetMapping("/{journalId}/services")
@@ -53,9 +53,9 @@ public class JournalRestController {
         return journalService.updateJournal(journal, journalId);
     }
 
-    @PutMapping("/departure/{journalId}")
-    public JournalDTO updateJournalAsDeparture(@PathVariable Long journalId) {
-        return journalService.updateJournalAsDeparture(journalId);
+    @PutMapping("/status/{journalId}")
+    public JournalDTO updateJournalStatus(@PathVariable Long journalId, @RequestParam JournalStatus status) {
+        return journalService.updateJournalStatus(journalId, status);
     }
 
     @DeleteMapping("/{journalId}")

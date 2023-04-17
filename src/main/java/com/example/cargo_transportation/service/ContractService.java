@@ -7,11 +7,11 @@ import com.example.cargo_transportation.entity.Contract;
 import java.util.List;
 
 public interface ContractService {
-    List<ContractDTO> getAllContract(List<Long> ids);
-
     ContractDTO getContractById(Long contractId);
 
-    Contract findContractById(Long contractId);
+    List<ContractDTO> getAllContract();
+
+    List<PriceDTO> getPricesFromContract(Long contractId) ;
 
     ContractDTO createContract(ContractDTO contractDTO);
 
@@ -19,11 +19,11 @@ public interface ContractService {
 
     void deleteContract(Long contractId);
 
-    List<PriceDTO> getPricesFromContract(Long contractId) ;
-
     List<PriceDTO> addPricesFromContract(Long contractId, List<PriceDTO> services);
 
     void addPriceFromContract(Long contractId, Long serviceId, Integer count);
 
     void removePriceFromContract(Long contractId, Long serviceId);
+
+    Contract findContractById(Long contractId);
 }

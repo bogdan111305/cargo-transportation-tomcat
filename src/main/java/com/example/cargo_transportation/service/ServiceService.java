@@ -6,7 +6,7 @@ import com.example.cargo_transportation.entity.Service;
 import java.util.List;
 
 public interface ServiceService {
-    List<ServiceDTO> getAllService(List<Long> ids);
+    List<ServiceDTO> getAllService();
 
     List<Service> findServicesById(List<Long> ids);
 

@@ -19,8 +19,8 @@ public class ClientRestController {
     }
 
     @GetMapping("/clients")
-    public List<ClientDTO> getAllClient(@RequestBody(required = false) List<Long> ids) {
-        return clientService.getAllClient(ids);
+    public List<ClientDTO> getAllClient() {
+        return clientService.getAllClient();
     }
 
     @GetMapping("/{clientId}")

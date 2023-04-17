@@ -3,6 +3,7 @@ package com.example.cargo_transportation.controller;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
 import com.example.cargo_transportation.exception.SessionJWTException;
 import com.example.cargo_transportation.modal.payload.response.ResponseError;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -19,6 +20,11 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class CustomControllerAdvice extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(ConversionFailedException.class)
+    public ResponseEntity<String> handleConflict(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = SessionJWTException.class)
     public ResponseEntity<Object> handleTokenRefreshException(SessionJWTException ex) {
         ResponseError responseError = new ResponseError("Error verify expiration", ex.getMessage());
