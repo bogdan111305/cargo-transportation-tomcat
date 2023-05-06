@@ -1,24 +1,25 @@
 package com.example.cargo_transportation.service;
 
 import com.example.cargo_transportation.entity.enums.JournalStatus;
-import com.example.cargo_transportation.modal.dto.JournalDTO;
+import com.example.cargo_transportation.modal.dto.JournalRequest;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Journal;
+import com.example.cargo_transportation.modal.dto.JournalResponse;
 
 import java.util.List;
 
 public interface JournalService {
-    JournalDTO getJournalById(Long journalId);
+    JournalResponse getJournalById(Long journalId);
 
-    List<JournalDTO> getAllJournal();
+    List<JournalResponse> getAllJournal();
 
-    List<JournalDTO> getOpenJournals(Long carId, String gosNum, String sts);
+    List<JournalResponse> getOpenJournals(Long carId, String gosNum, String sts);
 
-    JournalDTO createJournal(JournalDTO journalDTO);
+    JournalResponse createJournal(JournalRequest journalRequest);
 
-    JournalDTO updateJournal(JournalDTO journalDTO, Long journalId);
+    JournalResponse updateJournal(JournalRequest journalRequest, Long journalId);
 
-    JournalDTO updateJournalStatus(Long journalId, JournalStatus status);
+    JournalResponse updateJournalStatus(Long journalId, JournalStatus status);
 
     void deleteJournal(Long journalId);
 

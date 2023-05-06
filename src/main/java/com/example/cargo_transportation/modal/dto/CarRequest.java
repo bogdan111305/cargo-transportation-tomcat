@@ -8,16 +8,13 @@ import lombok.Data;
 
 @Unique(entity = Car.class)
 @Data
-public class CarDTO {
-    private Long id;
+public class CarRequest {
     @NotEmpty
     private String gosNum;
     @NotEmpty
     private String sts;
     @NotEmpty
     private String model;
-
     @NotNull
     private Long clientId;
-    private ClientDTO client;
 }

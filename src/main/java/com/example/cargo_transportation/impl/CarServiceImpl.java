@@ -1,14 +1,15 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.modal.dto.CarDTO;
+import com.example.cargo_transportation.modal.dto.CarRequest;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
+import com.example.cargo_transportation.modal.dto.CarResponse;
+import com.example.cargo_transportation.modal.mapper.CarMapper;
 import com.example.cargo_transportation.repo.CarRepository;
 import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ClientService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,73 +21,73 @@ import java.util.stream.Collectors;
 public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
     private final ClientService clientService;
-    private final ModelMapper modelMapper;
+    private final CarMapper carMapper;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, ClientService clientService, ModelMapper modelMapper) {
+    public CarServiceImpl(CarRepository carRepository, ClientService clientService, CarMapper carMapper) {
         this.carRepository = carRepository;
         this.clientService = clientService;
-        this.modelMapper = modelMapper;
+        this.carMapper = carMapper;
     }
 
     @Override
-    public CarDTO getCarById(Long carId) {
-        return modelMapper.map(findCarById(carId), CarDTO.class);
+    public CarResponse getCarById(Long carId) {
+        return carMapper.toDTO(findCarById(carId));
     }
 
     @Override
-    public CarDTO getCarBySts(String sts) {
+    public CarResponse getCarBySts(String sts) {
         Car car = carRepository.findCarBySts(sts)
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with sts: " + sts));
-        return modelMapper.map(car, CarDTO.class);
+        return carMapper.toDTO(car);
     }
 
     @Override
-    public CarDTO getCarByGosNum(String gosNum) {
+    public CarResponse getCarByGosNum(String gosNum) {
         Car car = carRepository.findCarByGosNum(gosNum)
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with gosNum: " + gosNum));
-        return modelMapper.map(car, CarDTO.class);
+        return carMapper.toDTO(car);
     }
 
     @Override
-    public List<CarDTO> getAllCar() {
+    public List<CarResponse> getAllCar() {
         List<Car> cars = carRepository.findAll();
 
         return cars.stream()
-                .map(car -> modelMapper.map(car, CarDTO.class))
+                .map(carMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CarDTO createCar(CarDTO carDTO) {
-        Client client = clientService.findClientById(carDTO.getClientId());
+    public CarResponse createCar(CarRequest carRequest) {
+        Client client = clientService.findClientById(carRequest.getClientId());
 
-        Car car = modelMapper.map(carDTO, Car.class);
+        Car car = carMapper.toEntity(carRequest);
         car.setClient(client);
 
         car = carRepository.save(car);
         log.info("The car: {} is created", car.getGosNum());
 
-        return modelMapper.map(car, CarDTO.class);
+        return carMapper.toDTO(car);
     }
 
     @Override
-    public CarDTO updateCar(CarDTO carDTO, Long carId) {
+    public CarResponse updateCar(CarRequest carRequest, Long carId) {
         Car car = findCarById(carId);
 
-        car.setGosNum(carDTO.getGosNum());
-        car.setSts(carDTO.getSts());
-        car.setModel(carDTO.getModel());
+        car.setGosNum(carRequest.getGosNum());
+        car.setSts(carRequest.getSts());
+        car.setModel(carRequest.getModel());
 
-        if (!car.getClient().getId().equals(carDTO.getClientId())) {
-            Client client = clientService.findClientById(carDTO.getClientId());
+        if (!car.getClient().getId().equals(carRequest.getClientId())) {
+            Client client = clientService.findClientById(carRequest.getClientId());
             car.setClient(client);
         }
 
         car = carRepository.save(car);
         log.info("The car: {} is updated", car.getGosNum());
 
-        return modelMapper.map(car, CarDTO.class);
+        return carMapper.toDTO(car);
     }
 
     @Override

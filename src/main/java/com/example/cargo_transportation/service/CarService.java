@@ -1,21 +1,23 @@
 package com.example.cargo_transportation.service;
 
-import com.example.cargo_transportation.modal.dto.CarDTO;
+import com.example.cargo_transportation.modal.dto.CarRequest;
 import com.example.cargo_transportation.entity.Car;
+import com.example.cargo_transportation.modal.dto.CarResponse;
+
 import java.util.List;
 
 public interface CarService {
-    CarDTO getCarBySts(String sts);
+    CarResponse getCarBySts(String sts);
 
-    CarDTO getCarByGosNum(String gosNum);
+    CarResponse getCarByGosNum(String gosNum);
 
-    CarDTO getCarById(Long carId);
+    CarResponse getCarById(Long carId);
 
-    List<CarDTO> getAllCar();
+    List<CarResponse> getAllCar();
 
-    CarDTO createCar(CarDTO carDTO);
+    CarResponse createCar(CarRequest carRequest);
 
-    CarDTO updateCar(CarDTO carDTO, Long carId);
+    CarResponse updateCar(CarRequest carRequest, Long carId);
 
     void deleteCar(Long carId);
 

@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ContractDTO {
+public class ContractRequest {
     private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @NotNull
@@ -20,7 +20,4 @@ public class ContractDTO {
     private Long carId;
     @NotNull
     private Long clientId;
-
-    private CarDTO car;
-    private ClientDTO client;
 }

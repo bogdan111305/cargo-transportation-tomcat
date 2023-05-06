@@ -8,8 +8,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class JournalDTO {
-    private Long id;
+public class JournalRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @NotNull
     private LocalDateTime incomingDate;
@@ -18,8 +17,6 @@ public class JournalDTO {
     private JournalStatus status;
     private String waybill;
     private String nameDriver;
-
     @NotNull
     private Long carId;
-    private CarDTO car;
 }

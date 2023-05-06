@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Unique(entity = Client.class)
 @Data
-public class ClientDTO {
+public class ClientRequest {
     private Long id;
     @NotEmpty
     private String name;

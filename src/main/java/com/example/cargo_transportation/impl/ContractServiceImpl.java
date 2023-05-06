@@ -1,9 +1,9 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.modal.dto.ContractDTO;
+import com.example.cargo_transportation.modal.dto.ContractRequest;
+import com.example.cargo_transportation.modal.dto.ContractResponse;
 import com.example.cargo_transportation.modal.dto.PriceDTO;
 import com.example.cargo_transportation.modal.mapper.ContractMapper;
-import org.modelmapper.ModelMapper;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.entity.Contract;
@@ -27,71 +27,68 @@ public class ContractServiceImpl implements ContractService {
     private final ClientService clientService;
     private final CarService carService;
     private final ServiceService serviceService;
-    private final ModelMapper modelMapper;
     private final ContractMapper contractMapper;
 
     @Autowired
     public ContractServiceImpl(ContractRepository contractRepository, ClientService clientService,
-                               CarService carService, ServiceService serviceService, ModelMapper modelMapper,
-                               ContractMapper contractMapper) {
+                               CarService carService, ServiceService serviceService, ContractMapper contractMapper) {
         this.contractRepository = contractRepository;
         this.clientService = clientService;
         this.carService = carService;
         this.serviceService = serviceService;
-        this.modelMapper = modelMapper;
         this.contractMapper = contractMapper;
     }
 
     @Override
-    public List<ContractDTO> getAllContract() {
+    public List<ContractResponse> getAllContract() {
         List<Contract> contracts = contractRepository.findAll();
 
         return contracts.stream()
-                .map(contract -> modelMapper.map(contract, ContractDTO.class))
+                .map(contractMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ContractDTO getContractById(Long contractId) {
+    public ContractResponse getContractById(Long contractId) {
         return contractMapper.toDTO(findContractById(contractId));
     }
 
     @Override
-    public ContractDTO createContract(ContractDTO contractDTO) {
-        Car car = carService.findCarById(contractDTO.getCarId());
-        Client client = clientService.findClientById(contractDTO.getClientId());
+    public ContractResponse createContract(ContractRequest contractRequest) {
+        Car car = carService.findCarById(contractRequest.getCarId());
+        Client client = clientService.findClientById(contractRequest.getClientId());
 
-        Contract contract = modelMapper.map(contractDTO, Contract.class);
+        Contract contract = contractMapper.toEntity(contractRequest);
         contract.setCar(car);
         contract.setClient(client);
 
         contract = contractRepository.save(contract);
         log.info("The contract: {} is created", contract.getId());
 
-        return modelMapper.map(contract, ContractDTO.class);
+        return contractMapper.toDTO(contract);
     }
 
     @Override
-    public ContractDTO updateContract(ContractDTO contractDTO, Long contractId) {
+    public ContractResponse updateContract(ContractRequest contractRequest, Long contractId) {
         Contract contract = findContractById(contractId);
 
-        contract.setStartDate(contractDTO.getStartDate());
-        contract.setEndDate(contractDTO.getEndDate());
+        contract.setStartDate(contractRequest.getStartDate());
+        contract.setEndDate(contractRequest.getEndDate());
 
-        if (!contract.getCar().getId().equals(contractDTO.getCarId())) {
-            Car car = carService.findCarById(contractDTO.getCarId());
+        if (!contract.getCar().getId().equals(contractRequest.getCarId())) {
+            Car car = carService.findCarById(contractRequest.getCarId());
             contract.setCar(car);
         }
 
-        if (!contract.getClient().getId().equals(contractDTO.getClientId())) {
-            Client client = clientService.findClientById(contractDTO.getClientId());
+        if (!contract.getClient().getId().equals(contractRequest.getClientId())) {
+            Client client = clientService.findClientById(contractRequest.getClientId());
             contract.setClient(client);
         }
 
         contract = contractRepository.save(contract);
         log.info("The contract: {} is updated", contract.getId());
 
-        return modelMapper.map(contract, ContractDTO.class);
+        return contractMapper.toDTO(contract);
     }
 
     @Override

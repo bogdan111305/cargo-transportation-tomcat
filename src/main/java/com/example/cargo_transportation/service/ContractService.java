@@ -1,21 +1,22 @@
 package com.example.cargo_transportation.service;
 
-import com.example.cargo_transportation.modal.dto.ContractDTO;
+import com.example.cargo_transportation.modal.dto.ContractRequest;
+import com.example.cargo_transportation.modal.dto.ContractResponse;
 import com.example.cargo_transportation.modal.dto.PriceDTO;
 import com.example.cargo_transportation.entity.Contract;
 
 import java.util.List;
 
 public interface ContractService {
-    ContractDTO getContractById(Long contractId);
+    ContractResponse getContractById(Long contractId);
 
-    List<ContractDTO> getAllContract();
+    List<ContractResponse> getAllContract();
 
     List<PriceDTO> getPricesFromContract(Long contractId) ;
 
-    ContractDTO createContract(ContractDTO contractDTO);
+    ContractResponse createContract(ContractRequest contractRequest);
 
-    ContractDTO updateContract(ContractDTO contractDTO, Long contractId);
+    ContractResponse updateContract(ContractRequest contractRequest, Long contractId);
 
     void deleteContract(Long contractId);
 

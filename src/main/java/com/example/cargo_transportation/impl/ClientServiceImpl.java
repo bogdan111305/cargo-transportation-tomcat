@@ -1,12 +1,13 @@
 package com.example.cargo_transportation.impl;
 
-import com.example.cargo_transportation.modal.dto.ClientDTO;
+import com.example.cargo_transportation.modal.dto.ClientRequest;
 import com.example.cargo_transportation.entity.Client;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
+import com.example.cargo_transportation.modal.dto.ClientResponse;
+import com.example.cargo_transportation.modal.mapper.ClientMapper;
 import com.example.cargo_transportation.repo.ClientRepository;
 import com.example.cargo_transportation.service.ClientService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,26 +18,26 @@ import java.util.stream.Collectors;
 @Log4j2
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
-    private final ModelMapper modelMapper;
+    private final ClientMapper clientMapper;
 
     @Autowired
-    public ClientServiceImpl(ClientRepository clientRepository, ModelMapper modelMapper) {
+    public ClientServiceImpl(ClientRepository clientRepository, ClientMapper clientMapper) {
         this.clientRepository = clientRepository;
-        this.modelMapper = modelMapper;
+        this.clientMapper = clientMapper;
     }
 
     @Override
-    public List<ClientDTO> getAllClient() {
+    public List<ClientResponse> getAllClient() {
         List<Client> clients = clientRepository.findAll();
 
         return clients.stream()
-                .map(client -> modelMapper.map(client, ClientDTO.class))
+                .map(clientMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ClientDTO getClientById(Long clientId) {
-        return modelMapper.map(findClientById(clientId), ClientDTO.class);
+    public ClientResponse getClientById(Long clientId) {
+        return clientMapper.toDTO(findClientById(clientId));
     }
 
     @Override
@@ -46,32 +47,32 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO createClient(ClientDTO clientDTO) {
-        Client client = modelMapper.map(clientDTO, Client.class);
+    public ClientResponse createClient(ClientRequest clientRequest) {
+        Client client = clientMapper.toEntity(clientRequest);
 
         client = clientRepository.save(client);
         log.info("The client: {} is saved", client.getName());
 
-        return modelMapper.map(client, ClientDTO.class);
+        return clientMapper.toDTO(client);
     }
 
     @Override
-    public ClientDTO updateClient(ClientDTO clientDTO, Long clientId) {
+    public ClientResponse updateClient(ClientRequest clientRequest, Long clientId) {
         Client client = findClientById(clientId);
 
-        client.setName(clientDTO.getName());
-        client.setAddress(clientDTO.getAddress());
-        client.setInn(clientDTO.getInn());
-        client.setKpp(clientDTO.getKpp());
-        client.setRs(clientDTO.getRs());
-        client.setBank(clientDTO.getBank());
-        client.setBik(clientDTO.getBik());
-        client.setKs(clientDTO.getKs());
+        client.setName(clientRequest.getName());
+        client.setAddress(clientRequest.getAddress());
+        client.setInn(clientRequest.getInn());
+        client.setKpp(clientRequest.getKpp());
+        client.setRs(clientRequest.getRs());
+        client.setBank(clientRequest.getBank());
+        client.setBik(clientRequest.getBik());
+        client.setKs(clientRequest.getKs());
 
         client = clientRepository.save(client);
         log.info("The client: {} is updated", client.getName());
 
-        return modelMapper.map(client, ClientDTO.class);
+        return clientMapper.toDTO(client);
     }
 
     @Override

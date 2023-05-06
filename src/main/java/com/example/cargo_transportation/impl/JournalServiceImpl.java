@@ -1,18 +1,19 @@
 package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.entity.enums.JournalStatus;
-import com.example.cargo_transportation.modal.dto.JournalDTO;
+import com.example.cargo_transportation.modal.dto.JournalRequest;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Service;
 import com.example.cargo_transportation.entity.Journal;
 import com.example.cargo_transportation.exception.EntityNotFoundException;
+import com.example.cargo_transportation.modal.dto.JournalResponse;
+import com.example.cargo_transportation.modal.mapper.JournalMapper;
 import com.example.cargo_transportation.repo.JournalRepository;
 import com.example.cargo_transportation.service.CarService;
 import com.example.cargo_transportation.service.ServiceService;
 import com.example.cargo_transportation.service.JournalService;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -24,35 +25,35 @@ public class JournalServiceImpl implements JournalService {
     private final JournalRepository journalRepository;
     private final ServiceService serviceService;
     private final CarService carService;
-    private final ModelMapper modelMapper;
+    private final JournalMapper journalMapper;
 
     @Autowired
     public JournalServiceImpl(JournalRepository journalRepository, ServiceService serviceService,
-                              CarService carService, ModelMapper modelMapper) {
+                              CarService carService, JournalMapper journalMapper) {
         this.journalRepository = journalRepository;
         this.serviceService = serviceService;
         this.carService = carService;
-        this.modelMapper = modelMapper;
+        this.journalMapper = journalMapper;
     }
 
     @Override
-    public JournalDTO getJournalById(Long journalId) {
-        return modelMapper.map(findJournalById(journalId), JournalDTO.class);
+    public JournalResponse getJournalById(Long journalId) {
+        return journalMapper.toDTO(findJournalById(journalId));
     }
 
     @Override
-    public List<JournalDTO> getAllJournal() {
+    public List<JournalResponse> getAllJournal() {
         List<Journal> journals = journalRepository.findAll();
         return journals.stream()
-                .map(journal -> modelMapper.map(journal, JournalDTO.class))
+                .map(journalMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<JournalDTO> getOpenJournals(Long carId, String gosNum, String sts) {
+    public List<JournalResponse> getOpenJournals(Long carId, String gosNum, String sts) {
         List<Journal> journals = journalRepository.findOpenJournals(carId, gosNum, sts);
         return journals.stream()
-                .map(journal -> modelMapper.map(journal, JournalDTO.class))
+                .map(journalMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -64,45 +65,45 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
-    public JournalDTO createJournal(JournalDTO journalDTO) {
-        Journal journal = modelMapper.map(journalDTO, Journal.class);
+    public JournalResponse createJournal(JournalRequest journalRequest) {
+        Journal journal = journalMapper.toEntity(journalRequest);
 
-        Car car = carService.findCarById(journalDTO.getCarId());
+        Car car = carService.findCarById(journalRequest.getCarId());
         journal.setCar(car);
         journal.setStatus(JournalStatus.OPEN);
 
         journal = journalRepository.save(journal);
         log.info("The journal: {} is saved", journal.getId());
 
-        return modelMapper.map(journal, JournalDTO.class);
+        return journalMapper.toDTO(journal);
     }
 
     @Override
-    public JournalDTO updateJournal(JournalDTO journalDTO, Long journalId) {
+    public JournalResponse updateJournal(JournalRequest journalRequest, Long journalId) {
         Journal journal = findJournalById(journalId);
 
-        journal.setIncomingDate(journalDTO.getIncomingDate());
-        journal.setOutDate(journalDTO.getOutDate());
-        journal.setWaybill(journalDTO.getWaybill());
-        journal.setNameDriver(journalDTO.getNameDriver());
+        journal.setIncomingDate(journalRequest.getIncomingDate());
+        journal.setOutDate(journalRequest.getOutDate());
+        journal.setWaybill(journalRequest.getWaybill());
+        journal.setNameDriver(journalRequest.getNameDriver());
 
-        if (journalDTO.getStatus() != null) {
-            journal.setStatus(journalDTO.getStatus());
+        if (journalRequest.getStatus() != null) {
+            journal.setStatus(journalRequest.getStatus());
         }
 
-        if (!journal.getId().equals(journalDTO.getCarId())) {
-            Car car = carService.findCarById(journalDTO.getCarId());
+        if (!journal.getId().equals(journalRequest.getCarId())) {
+            Car car = carService.findCarById(journalRequest.getCarId());
             journal.setCar(car);
         }
 
         journal = journalRepository.save(journal);
         log.info("The journal: {} is updated", journal.getId());
 
-        return modelMapper.map(journal, JournalDTO.class);
+        return journalMapper.toDTO(journal);
     }
 
     @Override
-    public JournalDTO updateJournalStatus(Long journalId, JournalStatus status) {
+    public JournalResponse updateJournalStatus(Long journalId, JournalStatus status) {
         Journal journal = findJournalById(journalId);
 
         journal.setStatus(status);
@@ -110,7 +111,7 @@ public class JournalServiceImpl implements JournalService {
         journal = journalRepository.save(journal);
         log.info("The journal: {} is updated as departure", journal.getId());
 
-        return modelMapper.map(journal, JournalDTO.class);
+        return journalMapper.toDTO(journal);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.modal.dto.ClientDTO;
+import com.example.cargo_transportation.modal.dto.ClientRequest;
+import com.example.cargo_transportation.modal.dto.ClientResponse;
 import com.example.cargo_transportation.service.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +20,22 @@ public class ClientRestController {
     }
 
     @GetMapping("/clients")
-    public List<ClientDTO> getAllClient() {
+    public List<ClientResponse> getAllClient() {
         return clientService.getAllClient();
     }
 
     @GetMapping("/{clientId}")
-    public ClientDTO getClientById(@PathVariable Long clientId) {
+    public ClientResponse getClientById(@PathVariable Long clientId) {
         return clientService.getClientById(clientId);
     }
 
     @PostMapping
-    public ClientDTO createClient(@Valid @RequestBody ClientDTO client) {
+    public ClientResponse createClient(@Valid @RequestBody ClientRequest client) {
         return clientService.createClient(client);
     }
 
     @PutMapping("/{clientId}")
-    public ClientDTO updateClient(@Valid @RequestBody ClientDTO client, @PathVariable Long clientId) {
+    public ClientResponse updateClient(@Valid @RequestBody ClientRequest client, @PathVariable Long clientId) {
         return clientService.updateClient(client, clientId);
     }
 

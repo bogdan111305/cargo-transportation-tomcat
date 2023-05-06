@@ -1,6 +1,7 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.modal.dto.ContractDTO;
+import com.example.cargo_transportation.modal.dto.ContractRequest;
+import com.example.cargo_transportation.modal.dto.ContractResponse;
 import com.example.cargo_transportation.modal.dto.PriceDTO;
 import com.example.cargo_transportation.service.ContractService;
 import jakarta.validation.Valid;
@@ -20,23 +21,23 @@ public class ContractRestController {
     }
 
     @GetMapping("/contracts")
-    public List<ContractDTO> getAllContract() {
+    public List<ContractResponse> getAllContract() {
         return contractService.getAllContract();
     }
 
     @GetMapping("/{contractId}")
-    public ContractDTO getContractById(@PathVariable Long contractId) {
+    public ContractResponse getContractById(@PathVariable Long contractId) {
         return contractService.getContractById(contractId);
     }
 
     @PostMapping()
-    public ContractDTO createContract(@Valid @RequestBody ContractDTO contract) {
+    public ContractResponse createContract(@Valid @RequestBody ContractRequest contract) {
         return contractService.createContract(contract);
     }
 
     @PutMapping("/{contractId}")
-    public ContractDTO updateContract(@Valid @RequestBody ContractDTO contract,
-                                      @PathVariable Long contractId) {
+    public ContractResponse updateContract(@Valid @RequestBody ContractRequest contract,
+                                          @PathVariable Long contractId) {
         return contractService.updateContract(contract, contractId);
     }
 

@@ -1,6 +1,7 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.modal.dto.ServiceDTO;
+import com.example.cargo_transportation.modal.dto.ServiceRequest;
+import com.example.cargo_transportation.modal.dto.ServiceResponse;
 import com.example.cargo_transportation.service.ServiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +20,22 @@ public class ServiceRestController {
     }
 
     @GetMapping("/services")
-    public List<ServiceDTO> getAllService() {
+    public List<ServiceResponse> getAllService() {
         return serviceService.getAllService();
     }
 
     @GetMapping("/{serviceId}")
-    public ServiceDTO getServiceById(@PathVariable Long serviceId) {
+    public ServiceResponse getServiceById(@PathVariable Long serviceId) {
         return serviceService.getServiceById(serviceId);
     }
 
     @PostMapping()
-    public ServiceDTO createService(@Valid @RequestBody ServiceDTO service) {
+    public ServiceResponse createService(@Valid @RequestBody ServiceRequest service) {
         return serviceService.createService(service);
     }
 
     @PutMapping("/{serviceId}")
-    public ServiceDTO updateService(@Valid @RequestBody ServiceDTO service, @PathVariable Long serviceId) {
+    public ServiceResponse updateService(@Valid @RequestBody ServiceRequest service, @PathVariable Long serviceId) {
         return serviceService.updateService(service, serviceId);
     }
 

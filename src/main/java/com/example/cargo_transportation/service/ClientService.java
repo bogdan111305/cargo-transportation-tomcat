@@ -1,19 +1,20 @@
 package com.example.cargo_transportation.service;
 
 
-import com.example.cargo_transportation.modal.dto.ClientDTO;
+import com.example.cargo_transportation.modal.dto.ClientRequest;
 import com.example.cargo_transportation.entity.Client;
+import com.example.cargo_transportation.modal.dto.ClientResponse;
 
 import java.util.List;
 
 public interface ClientService {
-    ClientDTO getClientById(Long clientId);
+    ClientResponse getClientById(Long clientId);
 
-    List<ClientDTO> getAllClient();
+    List<ClientResponse> getAllClient();
 
-    ClientDTO createClient(ClientDTO clientDTO);
+    ClientResponse createClient(ClientRequest clientRequest);
 
-    ClientDTO updateClient(ClientDTO clientDTO, Long clientId);
+    ClientResponse updateClient(ClientRequest clientRequest, Long clientId);
 
     void deleteClient(Long clientId);
 

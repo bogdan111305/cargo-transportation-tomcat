@@ -1,8 +1,9 @@
 package com.example.cargo_transportation.controller;
 
 import com.example.cargo_transportation.entity.enums.JournalStatus;
-import com.example.cargo_transportation.modal.dto.JournalDTO;
+import com.example.cargo_transportation.modal.dto.JournalRequest;
 import com.example.cargo_transportation.modal.dto.GetServiceDTO;
+import com.example.cargo_transportation.modal.dto.JournalResponse;
 import com.example.cargo_transportation.service.JournalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +22,19 @@ public class JournalRestController {
     }
 
     @GetMapping("/{journalId}")
-    public JournalDTO getJournalById(@PathVariable Long journalId) {
+    public JournalResponse getJournalById(@PathVariable Long journalId) {
         return journalService.getJournalById(journalId);
     }
 
     @GetMapping("/journals")
-    public List<JournalDTO> getAllJournal() {
+    public List<JournalResponse> getAllJournal() {
         return journalService.getAllJournal();
     }
 
     @GetMapping("/findOpenJournals")
-    public List<JournalDTO> getOpenJournals(@RequestParam(name = "carId", required = false) Long carId,
-                                               @RequestParam(name = "gosNum", required = false) String gosNum,
-                                               @RequestParam(name = "sts", required = false) String sts) {
+    public List<JournalResponse> getOpenJournals(@RequestParam(name = "carId", required = false) Long carId,
+                                                @RequestParam(name = "gosNum", required = false) String gosNum,
+                                                @RequestParam(name = "sts", required = false) String sts) {
         return journalService.getOpenJournals(carId, gosNum, sts);
     }
 
@@ -43,18 +44,18 @@ public class JournalRestController {
     }
 
     @PostMapping()
-    public JournalDTO createJournal(@Valid @RequestBody JournalDTO journal) {
+    public JournalResponse createJournal(@Valid @RequestBody JournalRequest journal) {
         return journalService.createJournal(journal);
     }
 
     @PutMapping("/{journalId}")
-    public JournalDTO updateJournal(@Valid @RequestBody(required = false) JournalDTO journal,
-                                    @PathVariable Long journalId) {
+    public JournalResponse updateJournal(@Valid @RequestBody(required = false) JournalRequest journal,
+                                        @PathVariable Long journalId) {
         return journalService.updateJournal(journal, journalId);
     }
 
     @PutMapping("/status/{journalId}")
-    public JournalDTO updateJournalStatus(@PathVariable Long journalId, @RequestParam JournalStatus status) {
+    public JournalResponse updateJournalStatus(@PathVariable Long journalId, @RequestParam JournalStatus status) {
         return journalService.updateJournalStatus(journalId, status);
     }
 
