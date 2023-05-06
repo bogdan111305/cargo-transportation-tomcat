@@ -2,6 +2,7 @@ package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.modal.dto.ContractDTO;
 import com.example.cargo_transportation.modal.dto.PriceDTO;
+import com.example.cargo_transportation.modal.mapper.ContractMapper;
 import org.modelmapper.ModelMapper;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
@@ -27,15 +28,18 @@ public class ContractServiceImpl implements ContractService {
     private final CarService carService;
     private final ServiceService serviceService;
     private final ModelMapper modelMapper;
+    private final ContractMapper contractMapper;
 
     @Autowired
     public ContractServiceImpl(ContractRepository contractRepository, ClientService clientService,
-                               CarService carService, ServiceService serviceService, ModelMapper modelMapper) {
+                               CarService carService, ServiceService serviceService, ModelMapper modelMapper,
+                               ContractMapper contractMapper) {
         this.contractRepository = contractRepository;
         this.clientService = clientService;
         this.carService = carService;
         this.serviceService = serviceService;
         this.modelMapper = modelMapper;
+        this.contractMapper = contractMapper;
     }
 
     @Override
@@ -49,7 +53,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public ContractDTO getContractById(Long contractId) {
-        return modelMapper.map(findContractById(contractId), ContractDTO.class);
+        return contractMapper.toDTO(findContractById(contractId));
     }
 
     @Override

@@ -27,9 +27,9 @@ public class Contract {
     @Column(nullable = false)
     private LocalDateTime endDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Client client;
 
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -20,5 +20,7 @@ public class ContractDTO {
     private Long carId;
     @NotNull
     private Long clientId;
+
     private CarDTO car;
+    private ClientDTO client;
 }

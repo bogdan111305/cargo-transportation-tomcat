@@ -8,6 +8,10 @@ group = 'com.example'
 version = '0.0.1'
 sourceCompatibility = '17'
 
+ext {
+	mapstructVersion = "1.5.5.Final"
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -28,11 +32,13 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.7'
 	implementation 'org.modelmapper:modelmapper:3.1.1'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-gson:0.11.5'
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.kafka:spring-kafka-test'
 	testImplementation 'org.springframework.security:spring-security-test'
@@ -40,4 +46,10 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs = [
+			'-Amapstruct.defaultComponentModel=spring'
+	]
 }

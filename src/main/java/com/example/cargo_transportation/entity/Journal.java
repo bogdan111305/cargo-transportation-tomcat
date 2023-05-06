@@ -31,7 +31,7 @@ public class Journal {
     private String waybill;
     private String nameDriver;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Car car;
 
     @OneToMany(mappedBy = "journal",
