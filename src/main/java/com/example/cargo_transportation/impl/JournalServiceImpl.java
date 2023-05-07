@@ -15,7 +15,9 @@ import com.example.cargo_transportation.service.ServiceService;
 import com.example.cargo_transportation.service.JournalService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,27 +39,21 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
+    @Transactional
     public JournalResponse getJournalById(Long journalId) {
         return journalMapper.toDTO(findJournalById(journalId));
     }
 
     @Override
-    public List<JournalResponse> getAllJournal() {
-        List<Journal> journals = journalRepository.findAll();
+    public List<JournalResponse> getJournals(JournalStatus status, String gosNum, String sts) {
+        List<Journal> journals = journalRepository.findJournalsByFilters(status, gosNum, sts);
         return journals.stream()
                 .map(journalMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<JournalResponse> getOpenJournals(Long carId, String gosNum, String sts) {
-        List<Journal> journals = journalRepository.findOpenJournals(carId, gosNum, sts);
-        return journals.stream()
-                .map(journalMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
+    @Transactional
     public List<GetServiceDTO> getServicesFromJournal(Long journalId) {
         return findJournalById(journalId).getGetServices().stream()
                 .map(GetServiceDTO::new)
@@ -79,6 +75,7 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
+    @Transactional
     public JournalResponse updateJournal(JournalRequest journalRequest, Long journalId) {
         Journal journal = findJournalById(journalId);
 
@@ -103,6 +100,7 @@ public class JournalServiceImpl implements JournalService {
     }
 
     @Override
+    @Transactional
     public JournalResponse updateJournalStatus(Long journalId, JournalStatus status) {
         Journal journal = findJournalById(journalId);
 
@@ -128,7 +126,7 @@ public class JournalServiceImpl implements JournalService {
 
         Journal finalJournal = journal;
         List<Long> servicesId = services.stream()
-                .map(s -> s.getServiceId())
+                .map(GetServiceDTO::getServiceId)
                 .collect(Collectors.toList());
         serviceService.findServicesById(servicesId)
                 .forEach(service -> {
@@ -173,5 +171,10 @@ public class JournalServiceImpl implements JournalService {
     public Journal findJournalById(Long journalId) {
         return journalRepository.findById(journalId)
                 .orElseThrow(() -> new EntityNotFoundException("Journal not found with id: " + journalId));
+    }
+
+    @Override
+    public List<JournalStatus> getJournalStatuses() {
+        return Arrays.stream(JournalStatus.values()).toList();
     }
 }

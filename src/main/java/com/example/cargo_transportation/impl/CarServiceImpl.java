@@ -12,6 +12,7 @@ import com.example.cargo_transportation.service.ClientService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public CarResponse getCarById(Long carId) {
         return carMapper.toDTO(findCarById(carId));
     }
@@ -72,6 +74,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public CarResponse updateCar(CarRequest carRequest, Long carId) {
         Car car = findCarById(carId);
 
@@ -100,7 +103,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car findCarById(Long carId) {
-        return carRepository.findCarById(carId)
+        return carRepository.findById(carId)
                 .orElseThrow(() -> new EntityNotFoundException("Car not found with id: " + carId));
     }
 }

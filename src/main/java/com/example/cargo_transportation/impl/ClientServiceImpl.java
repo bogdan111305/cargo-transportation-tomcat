@@ -41,12 +41,6 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client findClientById(Long clientId) {
-        return clientRepository.findClientById(clientId)
-                .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + clientId));
-    }
-
-    @Override
     public ClientResponse createClient(ClientRequest clientRequest) {
         Client client = clientMapper.toEntity(clientRequest);
 
@@ -81,5 +75,11 @@ public class ClientServiceImpl implements ClientService {
 
         clientRepository.delete(client);
         log.info("The client: {} is saved", client.getName());
+    }
+
+    @Override
+    public Client findClientById(Long clientId) {
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + clientId));
     }
 }

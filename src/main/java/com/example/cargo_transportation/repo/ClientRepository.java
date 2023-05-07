@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    Optional<Client> findClientById(Long id);
-
     @Query(value = "SELECT csc.clientId as clientId, sum(csc.count) as count, sum(csc.count * p.cost) as cost, " +
             "min(csc.incomingDate) as incomingDateMin, max(csc.incomingDate) as incomingDateMax \n" +
             "FROM (SELECT cl.id as clientId, c.Id as carId, j.incoming_date as incomingDate,\n" +

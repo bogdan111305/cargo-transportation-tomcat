@@ -43,12 +43,6 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Service findServiceById(Long serviceId) {
-        return serviceRepository.findById(serviceId)
-                .orElseThrow(() -> new EntityNotFoundException("Service not found with id: " + serviceId));
-    }
-
-    @Override
     public ServiceResponse createService(ServiceRequest serviceRequest) {
         Service service = serviceMapper.toEntity(serviceRequest);
 
@@ -77,5 +71,11 @@ public class ServiceServiceImpl implements ServiceService {
 
         serviceRepository.delete(service);
         log.info("The service: {} is saved", service.getName());
+    }
+
+    @Override
+    public Service findServiceById(Long serviceId) {
+        return serviceRepository.findById(serviceId)
+                .orElseThrow(() -> new EntityNotFoundException("Service not found with id: " + serviceId));
     }
 }

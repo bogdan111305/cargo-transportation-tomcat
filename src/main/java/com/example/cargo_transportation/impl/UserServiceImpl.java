@@ -62,11 +62,22 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDTO.getUsername());
         user.setFirstname(userDTO.getFirstname());
         user.setLastname(userDTO.getLastname());
+        user.setPatronymic(userDTO.getPatronymic());
 
         user = userRepository.save(user);
         log.info("The user: {} is updated", user.getUsername());
 
         return userMapper.toDTO(user);
+    }
+
+    @Override
+    public void addRoleForUser(ERole role, Long userId) {
+        User user = getUserById(userId);
+
+        user.getRoles().add(role);
+
+        userRepository.save(user);
+        log.info("The user: {} role: {} added", user.getUsername(), role.name());
     }
 
     @Override

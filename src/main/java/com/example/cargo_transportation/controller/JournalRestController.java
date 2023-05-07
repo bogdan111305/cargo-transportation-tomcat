@@ -27,15 +27,10 @@ public class JournalRestController {
     }
 
     @GetMapping("/journals")
-    public List<JournalResponse> getAllJournal() {
-        return journalService.getAllJournal();
-    }
-
-    @GetMapping("/findOpenJournals")
-    public List<JournalResponse> getOpenJournals(@RequestParam(name = "carId", required = false) Long carId,
-                                                @RequestParam(name = "gosNum", required = false) String gosNum,
-                                                @RequestParam(name = "sts", required = false) String sts) {
-        return journalService.getOpenJournals(carId, gosNum, sts);
+    public List<JournalResponse> getJournals(@RequestParam(name = "status", required = false) JournalStatus status,
+                                             @RequestParam(name = "gosNum", required = false) String gosNum,
+                                             @RequestParam(name = "sts", required = false) String sts) {
+        return journalService.getJournals(status, gosNum, sts);
     }
 
     @GetMapping("/{journalId}/services")
@@ -55,7 +50,8 @@ public class JournalRestController {
     }
 
     @PutMapping("/status/{journalId}")
-    public JournalResponse updateJournalStatus(@PathVariable Long journalId, @RequestParam JournalStatus status) {
+    public JournalResponse updateJournalStatus(@PathVariable Long journalId,
+                                               @RequestParam JournalStatus status) {
         return journalService.updateJournalStatus(journalId, status);
     }
 
@@ -81,5 +77,10 @@ public class JournalRestController {
     public void removeServiceFromJournal(@PathVariable("journalId") Long journalId,
                                          @PathVariable("serviceId") Long serviceId) {
         journalService.removeServiceFromJournal(journalId, serviceId);
+    }
+
+    @GetMapping("/statuses")
+    public List<JournalStatus> getJournalStatuses() {
+        return journalService.getJournalStatuses();
     }
 }

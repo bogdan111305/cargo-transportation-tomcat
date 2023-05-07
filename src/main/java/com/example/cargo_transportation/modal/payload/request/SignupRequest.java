@@ -15,6 +15,7 @@ public class SignupRequest {
     @NotEmpty(message = "Please enter your username")
     private String username;
     @NotEmpty(message = "Password is required")
+    private String patronymic;
     @Size(min = 5)
     private String password;
     private String confirmPassword;

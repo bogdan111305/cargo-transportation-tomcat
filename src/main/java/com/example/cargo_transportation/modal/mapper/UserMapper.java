@@ -10,14 +10,12 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     UserDTO toDTO(User user);
     @Mapping(target = "password", ignore = true)
-    @Mapping(target = "patronymic", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "sessionJWT", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "authorities", ignore = true)
     User toEntity(UserDTO userDTO);
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "patronymic", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "sessionJWT", ignore = true)
     @Mapping(target = "roles", ignore = true)

@@ -1,5 +1,7 @@
 package com.example.cargo_transportation.controller;
 
+import com.example.cargo_transportation.entity.enums.ERole;
+import com.example.cargo_transportation.entity.enums.JournalStatus;
 import com.example.cargo_transportation.modal.dto.UserDTO;
 import com.example.cargo_transportation.service.UserService;
 import jakarta.validation.Valid;
@@ -28,6 +30,13 @@ public class UserController {
     @PutMapping
     public UserDTO updateUser(@Valid @RequestBody UserDTO user, Principal principal){
         return userService.updateUser(user, principal);
+    }
+
+    @PutMapping("/role/{userId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public void addRoleForUser(@RequestParam ERole role, @PathVariable Long userId) {
+        userService.addRoleForUser(role, userId);
     }
 
     @DeleteMapping("/{userId}")

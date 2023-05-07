@@ -11,9 +11,7 @@ import java.util.List;
 public interface JournalService {
     JournalResponse getJournalById(Long journalId);
 
-    List<JournalResponse> getAllJournal();
-
-    List<JournalResponse> getOpenJournals(Long carId, String gosNum, String sts);
+    List<JournalResponse> getJournals(JournalStatus status, String gosNum, String sts);
 
     JournalResponse createJournal(JournalRequest journalRequest);
 
@@ -32,4 +30,6 @@ public interface JournalService {
     void removeServiceFromJournal(Long journalId, Long serviceId);
 
     Journal findJournalById(Long journalId);
+
+    List<JournalStatus> getJournalStatuses();
 }

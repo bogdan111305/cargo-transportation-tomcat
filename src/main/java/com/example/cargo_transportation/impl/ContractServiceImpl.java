@@ -16,6 +16,7 @@ import com.example.cargo_transportation.service.ServiceService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,6 +50,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional
     public ContractResponse getContractById(Long contractId) {
         return contractMapper.toDTO(findContractById(contractId));
     }
@@ -69,6 +71,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional
     public ContractResponse updateContract(ContractRequest contractRequest, Long contractId) {
         Contract contract = findContractById(contractId);
 
@@ -100,6 +103,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional
     public List<PriceDTO> getPricesFromContract(Long contractId) {
         return findContractById(contractId).getPrices().stream()
                 .map(PriceDTO::new)
@@ -112,7 +116,7 @@ public class ContractServiceImpl implements ContractService {
 
         Contract finalContract = contract;
         List<Long> servicesId = services.stream()
-                .map(s -> s.getServiceId())
+                .map(PriceDTO::getServiceId)
                 .collect(Collectors.toList());
         serviceService.findServicesById(servicesId)
                 .forEach(service -> {
@@ -143,6 +147,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
+    @Transactional
     public void removePriceFromContract(Long contractId, Long serviceId) {
         Contract contract = findContractById(contractId);
         com.example.cargo_transportation.entity.Service service = serviceService.findServiceById(serviceId);
