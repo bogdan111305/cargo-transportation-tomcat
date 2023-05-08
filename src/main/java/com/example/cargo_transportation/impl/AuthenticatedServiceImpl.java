@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import static com.example.cargo_transportation.security.TypeToken.ACCESS_TOKEN;
 import static com.example.cargo_transportation.security.TypeToken.REFRESH_TOKEN;
 
 @Service
@@ -51,6 +52,18 @@ public class AuthenticatedServiceImpl implements AuthenticatedService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtTokenProvider.getTokens(authentication);
+    }
+
+    public void logout(HttpServletRequest request) {
+        UserDetails userDetails = jwtTokenProvider.getUserDetailsByRequest(request, ACCESS_TOKEN);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        jwtTokenProvider.deleteSession(authentication);
     }
 }
 

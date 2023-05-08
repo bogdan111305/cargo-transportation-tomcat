@@ -88,6 +88,11 @@ public class JWTTokenProvider {
         return new JWTToken(200, TOKEN_PREFIX + " ", accessToken, accessExpiryDate, refreshToken, refreshExpiryDate);
     }
 
+    public void deleteSession(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        sessionJWTService.deleteSession(user);
+    }
+
     private String generateToken(User user, TypeToken typeToken, SecretKey secretKey, Date expiryDate, Date now) {
         Map<String, Object> claimsMap = new HashMap<>();
         claimsMap.put("typeToken", typeToken.toString());

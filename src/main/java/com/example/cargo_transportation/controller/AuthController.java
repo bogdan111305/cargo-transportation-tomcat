@@ -38,5 +38,10 @@ public class AuthController {
     public UserDTO registerUser(@Valid @RequestBody SignupRequest signupRequest){
         return userService.createUser(signupRequest);
     }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request) {
+        authenticatedService.logout(request);
+    }
 }
 

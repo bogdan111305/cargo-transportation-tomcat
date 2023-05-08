@@ -9,5 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface AuthenticatedService {
     JWTToken authenticateUser(@Valid @RequestBody LoginRequest loginRequest);
     JWTToken refreshUser(HttpServletRequest request);
+    void logout(HttpServletRequest request);
 }
 
