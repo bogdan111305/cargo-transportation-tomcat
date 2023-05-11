@@ -2,7 +2,7 @@ package com.example.cargo_transportation.impl;
 
 import com.example.cargo_transportation.modal.dto.ContractRequest;
 import com.example.cargo_transportation.modal.dto.ContractResponse;
-import com.example.cargo_transportation.modal.dto.PriceDTO;
+import com.example.cargo_transportation.modal.dto.PriceRequest;
 import com.example.cargo_transportation.modal.mapper.ContractMapper;
 import com.example.cargo_transportation.entity.Car;
 import com.example.cargo_transportation.entity.Client;
@@ -42,9 +42,7 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public List<ContractResponse> getAllContract() {
-        List<Contract> contracts = contractRepository.findAll();
-
-        return contracts.stream()
+        return contractRepository.findAll().stream()
                 .map(contractMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -63,6 +61,11 @@ public class ContractServiceImpl implements ContractService {
         Contract contract = contractMapper.toEntity(contractRequest);
         contract.setCar(car);
         contract.setClient(client);
+
+        if (contractRequest.getPrices() != null &&
+                !contractRequest.getPrices().isEmpty()) {
+            addPricesFromContract(contract, contractRequest.getPrices());
+        }
 
         contract = contractRepository.save(contract);
         log.info("The contract: {} is created", contract.getId());
@@ -102,37 +105,18 @@ public class ContractServiceImpl implements ContractService {
         log.info("The contract: {} is deleted", contract.getId());
     }
 
-    @Override
-    @Transactional
-    public List<PriceDTO> getPricesFromContract(Long contractId) {
-        return findContractById(contractId).getPrices().stream()
-                .map(PriceDTO::new)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<PriceDTO> addPricesFromContract(Long contractId, List<PriceDTO> services) {
-        Contract contract = findContractById(contractId);
-
-        Contract finalContract = contract;
-        List<Long> servicesId = services.stream()
-                .map(PriceDTO::getServiceId)
+    private void addPricesFromContract(Contract contract, List<PriceRequest> prices) {
+        List<Long> servicesId = prices.stream()
+                .map(PriceRequest::getServiceId)
                 .collect(Collectors.toList());
         serviceService.findServicesById(servicesId)
                 .forEach(service -> {
-                    Integer count = services.stream()
+                    Integer count = prices.stream()
                             .filter(f -> f.getServiceId().equals(service.getId()))
                             .findFirst().get()
                             .getCost();
-                    finalContract.addPrice(service, count);
+                    contract.addPrice(service, count);
                 });
-
-        contract = contractRepository.save(finalContract);
-        log.info("The prices for services by contract: {} is saved", contract.getId());
-
-        return contract.getPrices().stream()
-                .map(PriceDTO::new)
-                .collect(Collectors.toList());
     }
 
     @Override

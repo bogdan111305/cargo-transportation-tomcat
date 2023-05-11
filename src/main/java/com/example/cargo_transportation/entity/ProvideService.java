@@ -14,10 +14,10 @@ import java.util.Objects;
 @ToString(onlyExplicitlyIncluded = true)
 @Entity
 @Table
-public class GetService {
+public class ProvideService {
     @EmbeddedId
     @ToString.Include
-    private GetServiceId id;
+    private ProvideServiceId id;
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("journalId")
     private Journal journal;
@@ -28,18 +28,18 @@ public class GetService {
     @Column(nullable = false)
     private Integer count;
 
-    public GetService(Service service, Journal journal, Integer count) {
+    public ProvideService(Service service, Journal journal, Integer count) {
         this.service = service;
         this.journal = journal;
         this.count = count;
-        this.id = new GetServiceId(journal.getId(), service.getId());
+        this.id = new ProvideServiceId(journal.getId(), service.getId());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GetService that = (GetService) o;
+        ProvideService that = (ProvideService) o;
         return Objects.equals(service, that.service) && Objects.equals(journal, that.journal);
     }
 

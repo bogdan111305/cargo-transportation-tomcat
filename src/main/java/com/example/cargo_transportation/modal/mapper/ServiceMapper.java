@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface ServiceMapper {
     ServiceResponse toDTO(Service service);
-    @Mapping(target = "getServices", ignore = true)
+    @Mapping(target = "provideServices", ignore = true)
     @Mapping(target = "prices", ignore = true)
     @Mapping(target = "id", ignore = true)
     Service toEntity(ServiceRequest serviceRequest);

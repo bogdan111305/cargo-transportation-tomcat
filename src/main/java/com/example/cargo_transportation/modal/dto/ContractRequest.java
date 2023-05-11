@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ContractRequest {
@@ -20,4 +21,6 @@ public class ContractRequest {
     private Long carId;
     @NotNull
     private Long clientId;
+
+    private List<PriceRequest> prices;
 }

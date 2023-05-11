@@ -37,22 +37,22 @@ public class Journal {
     @OneToMany(mappedBy = "journal",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<GetService> getServices = new ArrayList<>();
+    private List<ProvideService> provideServices = new ArrayList<>();
 
     public void addService(Service service, Integer count) {
-        GetService getService = new GetService(service, this, count);
-        getServices.add(getService);
+        ProvideService provideService = new ProvideService(service, this, count);
+        provideServices.add(provideService);
     }
 
     public void removeService(Service service) {
-        GetService getService = getServices.stream()
+        ProvideService provideService = provideServices.stream()
                 .filter(rf -> rf.getJournal().equals(this) && rf.getService().equals(service))
                 .findFirst()
                 .orElse(null);
-        if (getService != null) {
-            getService.setService(null);
-            getService.setJournal(null);
-            this.getServices.remove(getService);
+        if (provideService != null) {
+            provideService.setService(null);
+            provideService.setJournal(null);
+            this.provideServices.remove(provideService);
         }
     }
 

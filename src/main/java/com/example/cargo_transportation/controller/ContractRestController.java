@@ -2,7 +2,7 @@ package com.example.cargo_transportation.controller;
 
 import com.example.cargo_transportation.modal.dto.ContractRequest;
 import com.example.cargo_transportation.modal.dto.ContractResponse;
-import com.example.cargo_transportation.modal.dto.PriceDTO;
+import com.example.cargo_transportation.modal.dto.PriceRequest;
 import com.example.cargo_transportation.service.ContractService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,17 +44,6 @@ public class ContractRestController {
     @DeleteMapping("/{contractId}")
     public void deleteContract(@PathVariable Long contractId) {
         contractService.deleteContract(contractId);
-    }
-
-    @GetMapping("/{contractId}/prices")
-    public List<PriceDTO> getPricesFromContract(@PathVariable Long contractId) {
-        return contractService.getPricesFromContract(contractId);
-    }
-
-    @PostMapping("/{contractId}/prices")
-    public List<PriceDTO> addPricesFromContract(@PathVariable Long contractId,
-                                                @Valid @RequestBody List<PriceDTO> services) {
-        return contractService.addPricesFromContract(contractId, services);
     }
 
     @PostMapping("/{contractId}/price/{serviceId}")

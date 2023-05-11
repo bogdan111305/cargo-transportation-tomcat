@@ -25,7 +25,7 @@ public class Service {
     private String description;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<GetService> getServices = new ArrayList<>();
+    private List<ProvideService> provideServices = new ArrayList<>();
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> prices = new ArrayList<>();

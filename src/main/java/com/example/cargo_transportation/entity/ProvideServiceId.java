@@ -13,7 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 @Embeddable
-public class GetServiceId implements Serializable {
+public class ProvideServiceId implements Serializable {
 
     @Column(name = "journal_id")
     @ToString.Include
@@ -26,7 +26,7 @@ public class GetServiceId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GetServiceId that = (GetServiceId) o;
+        ProvideServiceId that = (ProvideServiceId) o;
         return Objects.equals(journalId, that.journalId) && Objects.equals(serviceId, that.serviceId);
     }
 

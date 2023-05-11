@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class JournalRequest {
@@ -19,4 +20,5 @@ public class JournalRequest {
     private String nameDriver;
     @NotNull
     private Long carId;
+    private List<ProvideServiceRequest> provideServices;
 }

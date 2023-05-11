@@ -11,10 +11,15 @@ public class ValidationException extends RuntimeException{
     private static final String DEFAULT_MESSAGE = "Ошибка валидации, проверьте ваши поля";
     private List<String> messages;
 
+    public ValidationException(String message) {
+        super(message);
+    }
+
     public ValidationException(List<String> messages) {
         super(DEFAULT_MESSAGE);
         this.messages = messages;
     }
+
     public ValidationException(String message, Throwable throwable){
         super(message, throwable);
     }

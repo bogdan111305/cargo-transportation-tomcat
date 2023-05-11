@@ -6,10 +6,12 @@ import com.example.cargo_transportation.entity.User;
 import com.example.cargo_transportation.exception.SessionJWTException;
 import com.example.cargo_transportation.repo.SessionJWTRepository;
 import com.example.cargo_transportation.service.SessionJWTService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class SessionJWTServiceImpl implements SessionJWTService {
     private final SessionJWTRepository sessionJWTRepository;
 
@@ -34,11 +36,16 @@ public class SessionJWTServiceImpl implements SessionJWTService {
             sessionJWT.setUser(user);
         }
         sessionJWT.setSecretKey(secretKeyString);
-        return sessionJWTRepository.save(sessionJWT);
+
+        sessionJWTRepository.save(sessionJWT);
+        log.info("The session by user: {} is updated", user.getUsername());
+
+        return sessionJWT;
     }
 
     @Override
     public void deleteSession(User user) {
         sessionJWTRepository.deleteByUser(user);
+        log.info("The session by user: {} is deleted", user.getUsername());
     }
 }

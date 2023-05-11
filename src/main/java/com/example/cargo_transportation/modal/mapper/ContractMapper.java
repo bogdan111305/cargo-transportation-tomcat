@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public interface ContractMapper {
-    @Mapping(target = "car.client", ignore = true)
     ContractResponse toDTO(Contract contract);
     @Mapping(target = "car", ignore = true)
     @Mapping(target = "client", ignore = true)

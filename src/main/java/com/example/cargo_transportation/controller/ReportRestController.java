@@ -1,6 +1,5 @@
 package com.example.cargo_transportation.controller;
 
-import com.example.cargo_transportation.modal.report.JournalReport;
 import com.example.cargo_transportation.modal.report.StatisticsReport;
 import com.example.cargo_transportation.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +20,6 @@ public class ReportRestController {
     @Autowired
     public ReportRestController(ReportService reportService) {
         this.reportService = reportService;
-    }
-
-    @GetMapping("/journal")
-    public List<JournalReport> getJournalReport(@RequestParam(value = "gosNum", required = false) String gosNum,
-                                                @RequestParam(value = "clientId", required = false) Long clientId,
-                                                @RequestParam(value = "startDate", required = false)
-                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                                        LocalDateTime startDate,
-                                                @RequestParam(value = "endDate", required = false)
-                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-                                                        LocalDateTime endDate) {
-        return reportService.getJournalReport(gosNum, clientId, startDate, endDate);
     }
 
     @GetMapping("/statistics")

@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
     @Override
-    @EntityGraph(attributePaths = {"client, car"})
+    @EntityGraph(attributePaths = {"car", "prices"})
     List<Contract> findAll();
 }
