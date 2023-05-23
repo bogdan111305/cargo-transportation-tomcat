@@ -24,7 +24,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceResponse> getAllService() {
+    public List<ServiceResponse> getAllServices() {
         List<Service> services = serviceRepository.findAll();
 
         return services.stream()

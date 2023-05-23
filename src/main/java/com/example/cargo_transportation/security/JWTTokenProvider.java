@@ -24,22 +24,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.cargo_transportation.security.TypeToken.ACCESS_TOKEN;
-import static com.example.cargo_transportation.security.TypeToken.REFRESH_TOKEN;
-
 @Component
 @Log4j2
 public class JWTTokenProvider {
     @Value("${security-setting.access-expiration-time}")
-    private String ACCESS_EXPIRATION_TIME;
+    private String accessExpirationTime;
     @Value("${security-setting.refresh-expiration-time}")
-    private String REFRESH_EXPIRATION_TIME;
+    private String refreshExpirationTime;
     @Value("${security-setting.token-prefix}")
-    private String TOKEN_PREFIX;
+    private String tokenPrefix;
     @Value("${security-setting.header-string}")
-    private String HEADER_STRING;
+    private String headerString;
     @Value("${security-setting.allowed-clock-skew-seconds}")
-    private Long ALLOWED_CLOCK_SKEW_SECONDS;
+    private Long allowedClockSkewSeconds;
 
     private final SessionJWTService sessionJWTService;
     private final SigningKeyResolver signingKeyResolver;
@@ -49,43 +46,35 @@ public class JWTTokenProvider {
     public JWTTokenProvider(SessionJWTService sessionJWTService, UserDetailsService userDetailsService) {
         this.sessionJWTService = sessionJWTService;
         this.userDetailsService = userDetailsService;
-        this.signingKeyResolver = new SigningKeyResolverAdapter() {
-            @Override
-            public Key resolveSigningKey(JwsHeader header, Claims claims) {
-                String username = (String) claims.get("username");
-                SessionJWT sessionJWT = sessionJWTService.getByUsername(username);
-                return Keys.hmacShaKeyFor(Decoders.BASE64.decode(sessionJWT.getSecretKey()));
-            }
-        };
+        this.signingKeyResolver = createSigningKeyResolver();
     }
 
     public UserDetails getUserDetailsByRequest(HttpServletRequest request, TypeToken typeToken) {
-        String username = getUsernameFromToken(
-                getJWTFromRequest(request),
-                typeToken
-        );
-        return StringUtils.hasText(username)
-                ? userDetailsService.loadUserByUsername(username)
-                : null;
-
+        String username = getUsernameFromToken(getJWTFromRequest(request), typeToken);
+        return StringUtils.hasText(username) ? userDetailsService.loadUserByUsername(username) : null;
     }
 
     public JWTToken getTokens(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-
         Date now = new Date(System.currentTimeMillis());
-        Date accessExpiryDate = new Date(now.getTime() + Long.parseLong(ACCESS_EXPIRATION_TIME));
-        Date refreshExpiryDate = new Date(now.getTime() + Long.parseLong(REFRESH_EXPIRATION_TIME));
-
+        Date accessExpiryDate = new Date(now.getTime() + Long.parseLong(accessExpirationTime));
+        Date refreshExpiryDate = new Date(now.getTime() + Long.parseLong(refreshExpirationTime));
         SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         String secretKeyString = Encoders.BASE64.encode(secretKey.getEncoded());
 
-        String accessToken = generateToken(user, ACCESS_TOKEN, secretKey, accessExpiryDate, now);
-        String refreshToken = generateToken(user, REFRESH_TOKEN, secretKey, refreshExpiryDate, now);
+        String accessToken = generateToken(user, TypeToken.ACCESS_TOKEN, secretKey, accessExpiryDate, now);
+        String refreshToken = generateToken(user, TypeToken.REFRESH_TOKEN, secretKey, refreshExpiryDate, now);
 
         sessionJWTService.saveOrUpdateSession(user, secretKeyString);
 
-        return new JWTToken(200, TOKEN_PREFIX + " ", accessToken, accessExpiryDate, refreshToken, refreshExpiryDate);
+        return new JWTToken(
+                200,
+                tokenPrefix + " ",
+                accessToken,
+                accessExpiryDate,
+                refreshToken,
+                refreshExpiryDate
+        );
     }
 
     public void deleteSession(Authentication authentication) {
@@ -113,7 +102,7 @@ public class JWTTokenProvider {
         try {
             if (StringUtils.hasText(token)) {
                 Claims claims = Jwts.parserBuilder()
-                        .setAllowedClockSkewSeconds(ALLOWED_CLOCK_SKEW_SECONDS)
+                        .setAllowedClockSkewSeconds(allowedClockSkewSeconds)
                         .setSigningKeyResolver(signingKeyResolver)
                         .build()
                         .parseClaimsJws(token)
@@ -129,10 +118,21 @@ public class JWTTokenProvider {
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {
-        String bearToken = request.getHeader(HEADER_STRING);
-        if (StringUtils.hasText(bearToken) && bearToken.startsWith(TOKEN_PREFIX + " ")) {
-            return bearToken.split(" ")[1];
+        String bearerToken = request.getHeader(headerString);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(tokenPrefix + " ")) {
+            return bearerToken.split(" ")[1];
         }
         return null;
+    }
+
+    private SigningKeyResolver createSigningKeyResolver() {
+        return new SigningKeyResolverAdapter() {
+            @Override
+            public Key resolveSigningKey(JwsHeader header, Claims claims) {
+                String username = (String) claims.get("username");
+                SessionJWT sessionJWT = sessionJWTService.getByUsername(username);
+                return Keys.hmacShaKeyFor(Decoders.BASE64.decode(sessionJWT.getSecretKey()));
+            }
+        };
     }
 }

@@ -14,17 +14,17 @@ public interface JournalRepository extends JpaRepository<Journal, Long> {
     @EntityGraph(attributePaths = {"car.client", "provideServices"})
     @Query("SELECT j " +
             "FROM Journal j " +
-            "WHERE j.status = COALESCE(:status, j.status) and " +
-            "j.car.gosNum = COALESCE(:gosNum, j.car.gosNum) and " +
-            "j.car.sts = COALESCE(:sts, j.car.sts) and " +
-            "j.car.client.id = COALESCE(:clientId, j.car.client.id) and " +
-            "j.incomingDate between :startDate and :endDate")
+            "WHERE (:status IS NULL OR j.status = :status) " +
+            "AND (:gosNum IS NULL OR j.car.gosNum = :gosNum) " +
+            "AND (:sts IS NULL OR j.car.sts = :sts) " +
+            "AND (:clientId IS NULL OR j.car.client.id = :clientId) " +
+            "AND j.incomingDate BETWEEN :startDate AND :endDate")
     List<Journal> findJournalsByFilters(
             @Param("status") JournalStatus status,
             @Param("gosNum") String gosNum,
             @Param("sts") String sts,
             @Param("clientId") Long clientId,
-            @Param("startDate") LocalDateTime startDateReport,
-            @Param("endDate") LocalDateTime endDateReport
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
     );
 }

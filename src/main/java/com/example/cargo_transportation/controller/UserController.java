@@ -1,7 +1,6 @@
 package com.example.cargo_transportation.controller;
 
 import com.example.cargo_transportation.entity.enums.ERole;
-import com.example.cargo_transportation.entity.enums.JournalStatus;
 import com.example.cargo_transportation.modal.dto.UserDTO;
 import com.example.cargo_transportation.service.UserService;
 import jakarta.validation.Valid;

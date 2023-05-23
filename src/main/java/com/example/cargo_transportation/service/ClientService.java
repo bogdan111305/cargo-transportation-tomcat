@@ -10,7 +10,7 @@ import java.util.List;
 public interface ClientService {
     ClientResponse getClientById(Long clientId);
 
-    List<ClientResponse> getAllClient();
+    List<ClientResponse> getAllClients();
 
     ClientResponse createClient(ClientRequest clientRequest);
 

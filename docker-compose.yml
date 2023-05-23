@@ -1,13 +1,16 @@
+version: '3.8'
+
 services:
   cargo-transportation-tomcat:
     container_name: cargo_transportation_tomcat
     build:
-      dockerfile: Dockerfile
       context: .
+      dockerfile: Dockerfile
     ports:
       - "28080:8080"
     depends_on:
       - db
+
   db:
     container_name: pg_container
     image: postgres
@@ -19,4 +22,4 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgresql:/var/lib/postgresql/data_message
+      - ./postgresql:/var/lib/postgresql/data

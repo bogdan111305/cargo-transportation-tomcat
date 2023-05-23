@@ -19,23 +19,23 @@ public class AuthController {
     private final AuthenticatedService authenticatedService;
 
     @Autowired
-    public AuthController(UserService userService, AuthenticatedServiceImpl authenticatedService){
+    public AuthController(UserService userService, AuthenticatedServiceImpl authenticatedService) {
         this.userService = userService;
         this.authenticatedService = authenticatedService;
     }
 
     @PostMapping("/login")
-    public JWTToken authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
+    public JWTToken authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return authenticatedService.authenticateUser(loginRequest);
     }
 
     @PostMapping("/refresh")
-    public JWTToken refreshUser(HttpServletRequest request){
+    public JWTToken refreshUser(HttpServletRequest request) {
         return authenticatedService.refreshUser(request);
     }
 
     @PostMapping("/register")
-    public UserDTO registerUser(@Valid @RequestBody SignupRequest signupRequest){
+    public UserDTO registerUser(@Valid @RequestBody SignupRequest signupRequest) {
         return userService.createUser(signupRequest);
     }
 
@@ -44,4 +44,3 @@ public class AuthController {
         authenticatedService.logout(request);
     }
 }
-

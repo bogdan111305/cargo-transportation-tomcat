@@ -20,8 +20,8 @@ public class CarRestController {
     }
 
     @GetMapping("/cars")
-    public List<CarResponse> getAllCar() {
-        return carService.getAllCar();
+    public List<CarResponse> getAllCars() {
+        return carService.getAllCars();
     }
 
     @GetMapping("/findBySTS/{sts}")
@@ -40,13 +40,13 @@ public class CarRestController {
     }
 
     @PostMapping()
-    public CarResponse createCar(@Valid @RequestBody CarRequest car) {
-        return carService.createCar(car);
+    public CarResponse createCar(@Valid @RequestBody CarRequest carRequest) {
+        return carService.createCar(carRequest);
     }
 
     @PutMapping("/{carId}")
-    public CarResponse updateCar(@Valid @RequestBody CarRequest car, @PathVariable Long carId) {
-        return carService.updateCar(car, carId);
+    public CarResponse updateCar(@Valid @RequestBody CarRequest carRequest, @PathVariable Long carId) {
+        return carService.updateCar(carRequest, carId);
     }
 
     @DeleteMapping("/{carId}")

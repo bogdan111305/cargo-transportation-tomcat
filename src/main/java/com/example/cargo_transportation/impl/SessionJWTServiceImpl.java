@@ -28,10 +28,8 @@ public class SessionJWTServiceImpl implements SessionJWTService {
 
     @Override
     public SessionJWT saveOrUpdateSession(User user, String secretKeyString) {
-        SessionJWT sessionJWT;
-        if (user.getSessionJWT() != null) {
-            sessionJWT = user.getSessionJWT();
-        } else {
+        SessionJWT sessionJWT = user.getSessionJWT();
+        if (sessionJWT == null) {
             sessionJWT = new SessionJWT();
             sessionJWT.setUser(user);
         }

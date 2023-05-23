@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.1'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 
 group = 'com.example'
@@ -10,12 +11,6 @@ sourceCompatibility = '17'
 
 ext {
 	mapstructVersion = "1.5.5.Final"
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
 }
 
 repositories {
@@ -52,4 +47,13 @@ tasks.withType(JavaCompile) {
 	options.compilerArgs = [
 			'-Amapstruct.defaultComponentModel=spring'
 	]
+}
+
+bootJar {
+	archiveFileName = 'app.jar'
+}
+
+shadowJar {
+	archiveFileName = 'app-all.jar'
+	mergeServiceFiles()
 }

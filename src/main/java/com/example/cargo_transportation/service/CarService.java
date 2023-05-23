@@ -13,7 +13,7 @@ public interface CarService {
 
     CarResponse getCarById(Long carId);
 
-    List<CarResponse> getAllCar();
+    List<CarResponse> getAllCars();
 
     CarResponse createCar(CarRequest carRequest);
 

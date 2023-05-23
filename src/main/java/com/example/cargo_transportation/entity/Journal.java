@@ -8,7 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -21,13 +22,17 @@ public class Journal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ToString.Include
     private Long id;
+
     @Column(nullable = false)
     private LocalDateTime incomingDate;
+
     @Column(nullable = false)
     private LocalDateTime outDate;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private JournalStatus status;
+
     private String waybill;
     private String nameDriver;
 
@@ -63,11 +68,12 @@ public class Journal {
         if (o == null || getClass() != o.getClass())
             return false;
         Journal journal = (Journal) o;
-        return Objects.equals(id, journal.id);
+        return id.equals(journal.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, car);
+        return id.hashCode();
     }
 }
+

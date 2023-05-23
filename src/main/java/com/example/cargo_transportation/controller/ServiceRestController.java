@@ -20,8 +20,8 @@ public class ServiceRestController {
     }
 
     @GetMapping("/services")
-    public List<ServiceResponse> getAllService() {
-        return serviceService.getAllService();
+    public List<ServiceResponse> getAllServices() {
+        return serviceService.getAllServices();
     }
 
     @GetMapping("/{serviceId}")

@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +43,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public List<ContractResponse> getAllContract() {
+    public List<ContractResponse> getAllContracts() {
         return contractRepository.findAll().stream()
                 .map(contractMapper::toDTO)
                 .collect(Collectors.toList());
@@ -62,10 +64,7 @@ public class ContractServiceImpl implements ContractService {
         contract.setCar(car);
         contract.setClient(client);
 
-        if (contractRequest.getPrices() != null &&
-                !contractRequest.getPrices().isEmpty()) {
-            addPricesFromContract(contract, contractRequest.getPrices());
-        }
+        fillPricesFromContract(contract, contractRequest.getPrices());
 
         contract = contractRepository.save(contract);
         log.info("The contract: {} is created", contract.getId());
@@ -91,6 +90,8 @@ public class ContractServiceImpl implements ContractService {
             contract.setClient(client);
         }
 
+        fillPricesFromContract(contract, contractRequest.getPrices());
+
         contract = contractRepository.save(contract);
         log.info("The contract: {} is updated", contract.getId());
 
@@ -105,18 +106,18 @@ public class ContractServiceImpl implements ContractService {
         log.info("The contract: {} is deleted", contract.getId());
     }
 
-    private void addPricesFromContract(Contract contract, List<PriceRequest> prices) {
-        List<Long> servicesId = prices.stream()
-                .map(PriceRequest::getServiceId)
-                .collect(Collectors.toList());
-        serviceService.findServicesById(servicesId)
-                .forEach(service -> {
-                    Integer count = prices.stream()
-                            .filter(f -> f.getServiceId().equals(service.getId()))
-                            .findFirst().get()
-                            .getCost();
-                    contract.addPrice(service, count);
-                });
+    private void fillPricesFromContract(Contract contract, List<PriceRequest> prices) {
+        if (contract == null || prices == null || prices.isEmpty()) {
+            return;
+        }
+
+        contract.getPrices().clear();
+
+        Map<Long, Integer> pricesMap = prices.stream()
+                .collect(Collectors.toMap(PriceRequest::getServiceId, PriceRequest::getCost));
+
+        List<com.example.cargo_transportation.entity.Service> services = serviceService.findServicesById(new ArrayList<>(pricesMap.keySet()));
+        services.forEach(service -> contract.addPrice(service, pricesMap.get(service.getId())));
     }
 
     @Override

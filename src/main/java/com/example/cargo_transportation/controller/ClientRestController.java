@@ -20,8 +20,8 @@ public class ClientRestController {
     }
 
     @GetMapping("/clients")
-    public List<ClientResponse> getAllClient() {
-        return clientService.getAllClient();
+    public List<ClientResponse> getAllClients() {
+        return clientService.getAllClients();
     }
 
     @GetMapping("/{clientId}")
@@ -29,14 +29,14 @@ public class ClientRestController {
         return clientService.getClientById(clientId);
     }
 
-    @PostMapping
-    public ClientResponse createClient(@Valid @RequestBody ClientRequest client) {
-        return clientService.createClient(client);
+    @PostMapping()
+    public ClientResponse createClient(@Valid @RequestBody ClientRequest clientRequest) {
+        return clientService.createClient(clientRequest);
     }
 
     @PutMapping("/{clientId}")
-    public ClientResponse updateClient(@Valid @RequestBody ClientRequest client, @PathVariable Long clientId) {
-        return clientService.updateClient(client, clientId);
+    public ClientResponse updateClient(@Valid @RequestBody ClientRequest clientRequest, @PathVariable Long clientId) {
+        return clientService.updateClient(clientRequest, clientId);
     }
 
     @DeleteMapping("/{clientId}")

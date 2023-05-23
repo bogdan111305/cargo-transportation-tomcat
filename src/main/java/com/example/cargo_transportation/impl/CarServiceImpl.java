@@ -52,7 +52,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<CarResponse> getAllCar() {
+    public List<CarResponse> getAllCars() {
         List<Car> cars = carRepository.findAll();
 
         return cars.stream()

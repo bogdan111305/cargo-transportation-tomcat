@@ -21,8 +21,8 @@ public class ContractRestController {
     }
 
     @GetMapping("/contracts")
-    public List<ContractResponse> getAllContract() {
-        return contractService.getAllContract();
+    public List<ContractResponse> getAllContracts() {
+        return contractService.getAllContracts();
     }
 
     @GetMapping("/{contractId}")

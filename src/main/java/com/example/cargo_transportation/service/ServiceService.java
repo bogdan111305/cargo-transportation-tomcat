@@ -7,7 +7,7 @@ import com.example.cargo_transportation.modal.dto.ServiceResponse;
 import java.util.List;
 
 public interface ServiceService {
-    List<ServiceResponse> getAllService();
+    List<ServiceResponse> getAllServices();
 
     List<Service> findServicesById(List<Long> ids);
 

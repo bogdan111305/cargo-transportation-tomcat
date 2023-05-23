@@ -64,6 +64,6 @@ public class Contract {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, car, client);
+        return Objects.hash(id);
     }
 }
