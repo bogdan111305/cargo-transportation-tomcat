@@ -59,9 +59,9 @@ public class JournalRestController {
         return journalService.updateJournal(journal, journalId);
     }
 
-    @PutMapping("/{journalId}/status")
-    public void updateJournalStatus(@PathVariable Long journalId,
-                                    @RequestBody JournalStatus status) {
+    @PutMapping("/{journalId}/status/{status}")
+    public void updateJournalStatus(@PathVariable("journalId") Long journalId,
+                                    @PathVariable("status") JournalStatus status) {
         journalService.updateJournalStatus(journalId, status);
     }
 
