@@ -48,12 +48,3 @@ tasks.withType(JavaCompile) {
 			'-Amapstruct.defaultComponentModel=spring'
 	]
 }
-
-bootJar {
-	archiveFileName = 'app.jar'
-}
-
-shadowJar {
-	archiveFileName = 'app-all.jar'
-	mergeServiceFiles()
-}
