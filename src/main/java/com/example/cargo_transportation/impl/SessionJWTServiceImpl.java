@@ -5,6 +5,7 @@ import com.example.cargo_transportation.entity.SessionJWT;
 import com.example.cargo_transportation.entity.User;
 import com.example.cargo_transportation.exception.SessionJWTException;
 import com.example.cargo_transportation.repo.SessionJWTRepository;
+import com.example.cargo_transportation.repo.UserRepository;
 import com.example.cargo_transportation.service.SessionJWTService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,12 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class SessionJWTServiceImpl implements SessionJWTService {
     private final SessionJWTRepository sessionJWTRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public SessionJWTServiceImpl(SessionJWTRepository sessionJWTRepository) {
+    public SessionJWTServiceImpl(SessionJWTRepository sessionJWTRepository, UserRepository userRepository) {
         this.sessionJWTRepository = sessionJWTRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -28,7 +31,9 @@ public class SessionJWTServiceImpl implements SessionJWTService {
 
     @Override
     public SessionJWT saveOrUpdateSession(User user, String secretKeyString) {
-        SessionJWT sessionJWT = user.getSessionJWT();
+        SessionJWT sessionJWT = sessionJWTRepository.findByUserUsername(user.getUsername())
+                .orElse(null);
+
         if (sessionJWT == null) {
             sessionJWT = new SessionJWT();
             sessionJWT.setUser(user);
