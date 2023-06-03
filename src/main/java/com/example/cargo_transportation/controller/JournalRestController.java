@@ -61,7 +61,7 @@ public class JournalRestController {
 
     @PutMapping("/{journalId}/status")
     public void updateJournalStatus(@PathVariable Long journalId,
-                                               @RequestParam JournalStatus status) {
+                                    @RequestBody JournalStatus status) {
         journalService.updateJournalStatus(journalId, status);
     }
 
@@ -73,7 +73,7 @@ public class JournalRestController {
     @PostMapping("/{journalId}/service/{serviceId}")
     public void addServiceFromJournal(@PathVariable("journalId") Long journalId,
                                       @PathVariable("serviceId") Long serviceId,
-                                      @RequestParam Integer count) {
+                                      @RequestParam("count") Integer count) {
         journalService.addServiceFromJournal(journalId, serviceId, count);
     }
 
