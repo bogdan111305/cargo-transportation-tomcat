@@ -38,6 +38,7 @@ public class SessionJWTServiceImpl implements SessionJWTService {
             sessionJWT = new SessionJWT();
             sessionJWT.setUser(user);
         }
+
         sessionJWT.setSecretKey(secretKeyString);
 
         sessionJWTRepository.save(sessionJWT);
